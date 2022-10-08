@@ -67,7 +67,7 @@ CREATE TABLE Cities (
 
 
 CREATE TABLE Companies (
-	CompanyCode nvarchar(7) NOT NULL,
+	CompCode nvarchar(7) NOT NULL,
 	CompName nvarchar(250) NOT NULL,
 	CompAddName nvarchar(250) NULL,
 	CompDescr nvarchar(500) NULL,
@@ -76,7 +76,7 @@ CREATE TABLE Companies (
 	Mail nvarchar(60) NULL,
 	Website nvarchar(100) NULL,
 
-	CONSTRAINT pk_Companies PRIMARY KEY (CompanyCode)
+	CONSTRAINT pk_Companies PRIMARY KEY (CompCode)
 );
 
 
@@ -94,37 +94,40 @@ CREATE TABLE Addresses (
 
 
 CREATE TABLE CompanyAddresses (
-	CompanyCode nvarchar(7) NOT NULL,
+	CompCode nvarchar(7) NOT NULL,
 	AddressID int NOT NULL,
 
-	CONSTRAINT pk_CompanyAddresses PRIMARY KEY (CompanyCode, AddressID),
-	CONSTRAINT fk_CompanyAddresses_Companies FOREIGN KEY (CompanyCode) REFERENCES Companies (CompanyCode),
+	CONSTRAINT pk_CompanyAddresses PRIMARY KEY (CompCode, AddressID),
+	CONSTRAINT fk_CompanyAddresses_Companies FOREIGN KEY (CompCode) REFERENCES Companies (CompCode),
 	CONSTRAINT fk_CompanyAddresses_Addresses FOREIGN KEY (AddressID) REFERENCES Addresses (AddressID)
 );
 
 
 CREATE TABLE ProductGroups (
 	ProductGroupNr int NOT NULL,
-	CompanyCode nvarchar(7) NOT NULL,
+	CompCode nvarchar(7) NOT NULL,
 	GroupName nvarchar(150) NOT NULL,
 	GroupDescr nvarchar(500) NULL,
 	OrderNr int NOT NULL,
 	ParentNr int NULL,
+	CategoryID int NOT NULL,
 
-	CONSTRAINT pk_ProductGroups PRIMARY KEY (ProductGroupNr, CompanyCode),
-	CONSTRAINT fk_ProductGroups_Companies FOREIGN KEY (CompanyCode) REFERENCES Companies (CompanyCode)
+	CONSTRAINT pk_ProductGroups PRIMARY KEY (ProductGroupNr, CompCode),
+	CONSTRAINT fk_ProductGroups_Companies FOREIGN KEY (CompCode) REFERENCES Companies (CompCode),
+	CONSTRAINT fk_ProductGroups_Categories FOREIGN KEY (CategoryID) REFERENCES Categories (CategoryID)
 );
 
 
 CREATE TABLE Products (
 	ProductNr int NOT NULL,
 	ProductGroupNr int NOT NULL,
+	CompCode nvarchar(7) NOT NULL,
 	ProductName nvarchar(150) NOT NULL,
 	ProductDescr nvarchar(800) NOT NULL,
 	OrderNr int NOT NULL,
 
 	CONSTRAINT pk_Products PRIMARY KEY (ProductGroupNr, ProductNr),
-	CONSTRAINT fk_Products_ProductGroups FOREIGN KEY (ProductGroupNr) REFERENCES ProductGroups (ProductGroupNr)
+	CONSTRAINT fk_Products_ProductGroups FOREIGN KEY (ProductGroupNr, CompCode) REFERENCES ProductGroups (ProductGroupNr, CompCode)
 );
 
 
@@ -153,7 +156,7 @@ CREATE TABLE Articles (
 	F3 nvarchar(150) NULL,
 	F4 nvarchar(150) NULL,
 	F5 nvarchar(150) NULL,
-	Price decimal(5, 3) NOT NULL,
+	Price money NOT NULL,
 	Discount decimal(3, 2) NULL,
 	OverruleUserDiscount bit NOT NULL,
 
