@@ -14,10 +14,6 @@ namespace DevShop.Models
 		public int UserDiscountID { get; set; }
 
 		[Required]
-		[ForeignKey("UserID")]
-		public int UserID { get; set; }
-
-		[Required]
 		[ForeignKey("ProductNr")]
 		public int ProductNr { get; set; }
 

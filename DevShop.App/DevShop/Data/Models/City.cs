@@ -9,13 +9,13 @@ namespace DevShop.Models
 	/// </summary>
 	public class City
 	{
-		[Key]
+		// Key
 		[Required]
 		[DataType(DataType.PostalCode)]
 		[StringLength(5)]
 		public string ZIP { get; set; } = string.Empty;
 
-		[Key]
+		// Key
 		[Required]
 		[ForeignKey("StateID")]
 		public int StateID { get; set; }

@@ -10,12 +10,12 @@ namespace DevShop.Models
 	/// </summary>
 	public class Product
 	{
-		[Key]
+		// Key
 		[Required]
 		[Display(Name = "Product-Nr")]
 		public int ProductNr { get; set; }
 
-		[Key]
+		// Key
 		[Required]
 		[ForeignKey("ProductGroupNr")]
 		public int ProductGroupNr { get; set; }
