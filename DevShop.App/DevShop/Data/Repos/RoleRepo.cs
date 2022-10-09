@@ -10,7 +10,7 @@ namespace DevShop.Data.Repos
 	public class RoleRepo : IRoleRepo
 	{
 		#region Variables/Properties
-		protected DevShopDbContext _context;
+		private DevShopDbContext _context;
 		#endregion
 
 
