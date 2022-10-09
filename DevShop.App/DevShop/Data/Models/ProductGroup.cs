@@ -9,12 +9,12 @@ namespace DevShop.Models
 	/// </summary>
 	public class ProductGroup
 	{
-		[Key]
+		// Key
 		[Required]
 		[Display(Name = "Product-Group-Nr")]
 		public int ProductGroupNr { get; set; }
 
-		[Key]
+		// Key
 		[Required]
 		[StringLength(7, MinimumLength = 7)]
 		[ForeignKey("CompCode")]

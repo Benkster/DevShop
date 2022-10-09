@@ -9,12 +9,12 @@ namespace DevShop.Models
 	/// </summary>
 	public class Country
 	{
-		[Key]
+		// Key
 		[Required]
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int CountryID { get; set; }
 
-		[Key]
+		// Key
 		[Required]
 		[Display(Name = "Country-Code")]
 		[StringLength(3)]

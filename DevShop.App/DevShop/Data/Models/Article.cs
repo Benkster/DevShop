@@ -9,12 +9,12 @@ namespace DevShop.Models
 	/// </summary>
 	public class Article
 	{
-		[Key]
+		// Key
 		[Required]
 		[Display(Name = "Article-Nr")]
 		public int ArticleNr { get; set; }
 
-		[Key]
+		// Key
 		[Required]
 		[ForeignKey("ProductNr")]
 		public int ProductNr { get; set; }
@@ -74,7 +74,7 @@ namespace DevShop.Models
 		[Required]
 		[DataType(DataType.Currency)]
 		[Range(0.01, 9999.99)]
-		public SqlMoney Price { get; set; }
+		public float Price { get; set; }
 
 		[Range(0.00, 1.00)]
 		public float? Discount { get; set; }
