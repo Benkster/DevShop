@@ -39,7 +39,7 @@ namespace DevShop.Data
 
 			#region Keys
 			builder.Entity<Article>()
-				.HasKey(a => new { a.ArticleNr, a.ProductNr, a.CompCode });
+				.HasKey(a => new { a.ArticleNr, a.ProductNr });
 
 
 			builder.Entity<City>()
