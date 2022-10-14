@@ -19,6 +19,13 @@ namespace DevShop.Models
 		[ForeignKey("ProductNr")]
 		public int ProductNr { get; set; }
 
+		// Key
+		[Required]
+		[Display(Name = "Company-Code")]
+		[StringLength(7, MinimumLength = 7)]
+		[ForeignKey("CompCode")]
+		public string CompCode { get; set; } = string.Empty;
+
 		[Required]
 		[ForeignKey("ProductGroupNr")]
 		public int ProductGroupNr { get; set; }
@@ -89,6 +96,8 @@ namespace DevShop.Models
 		public Product Product { get; set; }
 
 		public Unit Unit { get; set; }
+
+		public Company Company { get; set; }
 		#endregion
 	}
 }

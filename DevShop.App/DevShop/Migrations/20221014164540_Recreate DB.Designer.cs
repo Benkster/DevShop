@@ -4,16 +4,18 @@ using DevShop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DevShop.Data.Migrations
+namespace DevShop.Migrations
 {
     [DbContext(typeof(DevShopDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221014164540_Recreate DB")]
+    partial class RecreateDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,6 +91,10 @@ namespace DevShop.Data.Migrations
                     b.Property<int>("ProductNr")
                         .HasColumnType("int");
 
+                    b.Property<string>("CompCode")
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
                     b.Property<string>("ArticleCode")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
@@ -161,7 +167,9 @@ namespace DevShop.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(3)");
 
-                    b.HasKey("ArticleNr", "ProductNr");
+                    b.HasKey("ArticleNr", "ProductNr", "CompCode");
+
+                    b.HasIndex("CompCode");
 
                     b.HasIndex("UnitCode");
 
@@ -432,6 +440,10 @@ namespace DevShop.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserDiscountID"), 1L, 1);
 
+                    b.Property<string>("ArticleCompCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(7)");
+
                     b.Property<int>("ArticleNr")
                         .HasColumnType("int");
 
@@ -440,6 +452,11 @@ namespace DevShop.Data.Migrations
 
                     b.Property<int>("ArticleProductNr")
                         .HasColumnType("int");
+
+                    b.Property<string>("CompCode")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
 
                     b.Property<float?>("Discount")
                         .IsRequired()
@@ -455,7 +472,7 @@ namespace DevShop.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("ArticleNr1", "ArticleProductNr");
+                    b.HasIndex("ArticleNr1", "ArticleProductNr", "ArticleCompCode");
 
                     b.ToTable("UserDiscounts");
                 });
@@ -729,6 +746,12 @@ namespace DevShop.Data.Migrations
 
             modelBuilder.Entity("DevShop.Models.Article", b =>
                 {
+                    b.HasOne("DevShop.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompCode")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DevShop.Models.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitCode")
@@ -740,6 +763,8 @@ namespace DevShop.Data.Migrations
                         .HasForeignKey("ProductNr1", "ProductGroupNr1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Company");
 
                     b.Navigation("Product");
 
@@ -806,7 +831,7 @@ namespace DevShop.Data.Migrations
 
                     b.HasOne("DevShop.Models.Article", "Article")
                         .WithMany()
-                        .HasForeignKey("ArticleNr1", "ArticleProductNr")
+                        .HasForeignKey("ArticleNr1", "ArticleProductNr", "ArticleCompCode")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

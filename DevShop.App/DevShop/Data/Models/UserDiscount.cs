@@ -22,6 +22,12 @@ namespace DevShop.Models
 		public int ArticleNr { get; set; }
 
 		[Required]
+		[Display(Name = "Company-Code")]
+		[StringLength(7, MinimumLength = 7)]
+		[ForeignKey("CompCode")]
+		public string CompCode { get; set; } = string.Empty;
+
+		[Required]
 		[Range(0.00, 1.00)]
 		public float? Discount { get; set; }
 

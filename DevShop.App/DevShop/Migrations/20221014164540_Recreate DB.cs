@@ -1,59 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DevShop.Data.Migrations
+namespace DevShop.Migrations
 {
-    public partial class CreatedModels : Migration
+    public partial class RecreateDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Discriminator",
-                table: "AspNetUsers",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
-                name: "FirstName",
-                table: "AspNetUsers",
-                type: "nvarchar(150)",
-                maxLength: 150,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "LastName",
-                table: "AspNetUsers",
-                type: "nvarchar(150)",
-                maxLength: 150,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "PostTitle",
-                table: "AspNetUsers",
-                type: "nvarchar(50)",
-                maxLength: 50,
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "PreTitle",
-                table: "AspNetUsers",
-                type: "nvarchar(50)",
-                maxLength: 50,
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "RoleNr",
-                table: "AspNetUsers",
-                type: "int",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "RoleNr1",
-                table: "AspNetUsers",
-                type: "int",
-                nullable: true);
+            migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Categories",
@@ -129,6 +97,27 @@ namespace DevShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductGroups",
                 columns: table => new
                 {
@@ -181,6 +170,43 @@ namespace DevShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    PreTitle = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PostTitle = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    RoleNr = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Roles_RoleNr",
+                        column: x => x.RoleNr,
+                        principalTable: "Roles",
+                        principalColumn: "RoleNr",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -224,11 +250,97 @@ namespace DevShop.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Articles",
                 columns: table => new
                 {
                     ArticleNr = table.Column<int>(type: "int", nullable: false),
                     ProductNr = table.Column<int>(type: "int", nullable: false),
+                    CompCode = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
                     ProductGroupNr = table.Column<int>(type: "int", nullable: false),
                     ArticleName = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     ArticleDescr = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true),
@@ -245,16 +357,20 @@ namespace DevShop.Data.Migrations
                     Price = table.Column<float>(type: "real", nullable: false),
                     Discount = table.Column<float>(type: "real", nullable: true),
                     OverruleUserDiscount = table.Column<bool>(type: "bit", nullable: false),
-                    ProductNr1 = table.Column<int>(type: "int", nullable: false),
-                    ProductGroupNr1 = table.Column<int>(type: "int", nullable: false),
                     UnitCode = table.Column<string>(type: "nvarchar(3)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Articles", x => new { x.ArticleNr, x.ProductNr });
+                    table.PrimaryKey("PK_Articles", x => new { x.ArticleNr, x.ProductNr, x.CompCode });
                     table.ForeignKey(
-                        name: "FK_Articles_Products_ProductNr1_ProductGroupNr1",
-                        columns: x => new { x.ProductNr1, x.ProductGroupNr1 },
+                        name: "FK_Articles_Companies_CompCode",
+                        column: x => x.CompCode,
+                        principalTable: "Companies",
+                        principalColumn: "CompCode",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Articles_Products_ProductNr_ProductGroupNr",
+                        columns: x => new { x.ProductNr, x.ProductGroupNr },
                         principalTable: "Products",
                         principalColumns: new[] { "ProductNr", "ProductGroupNr" },
                         onDelete: ReferentialAction.Cascade);
@@ -299,19 +415,20 @@ namespace DevShop.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductNr = table.Column<int>(type: "int", nullable: false),
                     ArticleNr = table.Column<int>(type: "int", nullable: false),
+                    CompCode = table.Column<string>(type: "nvarchar(7)", maxLength: 7, nullable: false),
                     Discount = table.Column<float>(type: "real", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ArticleNr1 = table.Column<int>(type: "int", nullable: false),
-                    ArticleProductNr = table.Column<int>(type: "int", nullable: false)
+                    ArticleProductNr = table.Column<int>(type: "int", nullable: false),
+                    ArticleCompCode = table.Column<string>(type: "nvarchar(7)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserDiscounts", x => x.UserDiscountID);
                     table.ForeignKey(
-                        name: "FK_UserDiscounts_Articles_ArticleNr1_ArticleProductNr",
-                        columns: x => new { x.ArticleNr1, x.ArticleProductNr },
+                        name: "FK_UserDiscounts_Articles_ArticleNr_ArticleProductNr_ArticleCompCode",
+                        columns: x => new { x.ArticleNr, x.ArticleProductNr, x.ArticleCompCode },
                         principalTable: "Articles",
-                        principalColumns: new[] { "ArticleNr", "ProductNr" },
+                        principalColumns: new[] { "ArticleNr", "ProductNr", "CompCode" },
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserDiscounts_AspNetUsers_UserId",
@@ -345,11 +462,6 @@ namespace DevShop.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_RoleNr1",
-                table: "AspNetUsers",
-                column: "RoleNr1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AddressCompany_CompaniesCompCode",
                 table: "AddressCompany",
                 column: "CompaniesCompCode");
@@ -360,14 +472,63 @@ namespace DevShop.Data.Migrations
                 columns: new[] { "CityStateID", "CityZIP" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_ProductNr1_ProductGroupNr1",
+                name: "IX_Articles_CompCode",
                 table: "Articles",
-                columns: new[] { "ProductNr1", "ProductGroupNr1" });
+                column: "CompCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Articles_ProductNr_ProductGroupNr",
+                table: "Articles",
+                columns: new[] { "ProductNr", "ProductGroupNr" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Articles_UnitCode",
                 table: "Articles",
                 column: "UnitCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserClaims_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserLogins_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_RoleNr",
+                table: "AspNetUsers",
+                column: "RoleNr");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductGroups_CategoryID",
@@ -380,45 +541,45 @@ namespace DevShop.Data.Migrations
                 column: "CompCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_ProductGroupNr1_ProductGroupCompCode",
+                name: "IX_Products_ProductGroupNr_ProductGroupCompCode",
                 table: "Products",
-                columns: new[] { "ProductGroupNr1", "ProductGroupCompCode" });
+                columns: new[] { "ProductGroupNr", "ProductGroupCompCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_States_CountryID1_CountryCode1",
+                name: "IX_States_CountryID_CountryCode",
                 table: "States",
-                columns: new[] { "CountryID1", "CountryCode1" });
+                columns: new[] { "CountryID", "CountryCode" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserDiscounts_ArticleNr1_ArticleProductNr",
+                name: "IX_UserDiscounts_ArticleNr_ArticleProductNr_ArticleCompCode",
                 table: "UserDiscounts",
-                columns: new[] { "ArticleNr1", "ArticleProductNr" });
+                columns: new[] { "ArticleNr", "ArticleProductNr", "ArticleCompCode" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserDiscounts_UserId",
                 table: "UserDiscounts",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Roles_RoleNr1",
-                table: "AspNetUsers",
-                column: "RoleNr1",
-                principalTable: "Roles",
-                principalColumn: "RoleNr",
-                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_Roles_RoleNr1",
-                table: "AspNetUsers");
-
             migrationBuilder.DropTable(
                 name: "AddressCompany");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "AspNetRoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
                 name: "UserDiscounts");
@@ -427,7 +588,13 @@ namespace DevShop.Data.Migrations
                 name: "Addresses");
 
             migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
                 name: "Articles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Cities");
@@ -437,6 +604,9 @@ namespace DevShop.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Units");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "States");
@@ -452,38 +622,6 @@ namespace DevShop.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Companies");
-
-            migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_RoleNr1",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "Discriminator",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "FirstName",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "LastName",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "PostTitle",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "PreTitle",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "RoleNr",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "RoleNr1",
-                table: "AspNetUsers");
         }
     }
 }
