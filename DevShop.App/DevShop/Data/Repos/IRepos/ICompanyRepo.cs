@@ -8,10 +8,10 @@ namespace DevShop.Data.Repos.IRepos
 	/// </summary>
 	public interface ICompanyRepo
 	{
-		void CreateNewCompanyAsync(Company company);
-		void DeleteCompanyAsync(string compCode);
+		Task CreateNewCompanyAsync(Company company);
+		Task DeleteCompanyAsync(string compCode);
 		Task<List<Company>> GetAllCompaniesAsync();
 		Task<Company> GetCompanyByIdAsync(string compCode);
-		void UpdateCompanyAsync(Company company);
+		Task UpdateCompanyAsync(Company company);
 	}
 }
