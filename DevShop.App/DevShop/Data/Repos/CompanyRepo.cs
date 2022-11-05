@@ -75,7 +75,7 @@ namespace DevShop.Data.Repos
 		/// <param name="company">
 		/// The Company, that should be created
 		/// </param>
-		public async void CreateNewCompanyAsync(Company company)
+		public async Task CreateNewCompanyAsync(Company company)
 		{
 			_context.Companies.Add(company);
 			await _context.SaveChangesAsync();
@@ -89,7 +89,7 @@ namespace DevShop.Data.Repos
 		/// <param name="company">
 		/// The Company, that should be updated, containing the new data
 		/// </param>
-		public async void UpdateCompanyAsync(Company company)
+		public async Task UpdateCompanyAsync(Company company)
 		{
 			_context.Companies.Update(company);
 			await _context.SaveChangesAsync();
@@ -105,7 +105,7 @@ namespace DevShop.Data.Repos
 		/// <param name="compCode">
 		/// Code of the Company, that should be deleted
 		/// </param>
-		public async void DeleteCompanyAsync(string compCode)
+		public async Task DeleteCompanyAsync(string compCode)
 		{
 			Company company = await GetCompanyByIdAsync(compCode);
 

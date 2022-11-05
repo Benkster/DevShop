@@ -10,7 +10,7 @@ namespace DevShop.Models
 		[Key]
 		[Required]
 		[Display(Name = "Company-Code")]
-		[StringLength(7, MinimumLength = 7)]
+		[StringLength(7, MinimumLength = 6)]
 		public string CompCode { get; set; } = string.Empty;
 
 		[Required]
