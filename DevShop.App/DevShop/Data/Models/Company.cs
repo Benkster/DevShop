@@ -1,52 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class Company
 {
-	/// <summary>
-	/// Companies represent the service providers, the products belong to
-	/// </summary>
-	public class Company
-	{
-		[Key]
-		[Required]
-		[Display(Name = "Company-Code")]
-		[StringLength(7, MinimumLength = 7)]
-		public string CompCode { get; set; } = string.Empty;
+    public string CompCode { get; set; } = null!;
 
-		[Required]
-		[Display(Name = "Company")]
-		[StringLength(250)]
-		public string CompName { get; set; } = string.Empty;
+    public string CompName { get; set; } = null!;
 
-		[Display(Name = "Company - 2nd line")]
-		[StringLength(250)]
-		public string? CompAddName { get; set; }
+    public string? CompAddName { get; set; }
 
-		[Display(Name = "Description")]
-		[DataType(DataType.MultilineText)]
-		[StringLength(500)]
-		public string? CompDescr { get; set; }
+    public string? Description { get; set; }
 
-		[DataType(DataType.PhoneNumber)]
-		[StringLength(30)]
-		public string? Tel { get; set; }
+    public string? Tel { get; set; }
 
-		[StringLength(30)]
-		public string? Fax { get; set; }
+    public string? Mail { get; set; }
 
-		[DataType(DataType.EmailAddress)]
-		[Display(Name = "E-Mail")]
-		[StringLength(60)]
-		public string? Mail { get; set; }
+    public string? Website { get; set; }
 
-		[DataType(DataType.Url)]
-		[StringLength(100)]
-		public string? Website { get; set; }
+    public virtual ICollection<ProductGroup> ProductGroups { get; } = new List<ProductGroup>();
 
+    public virtual ICollection<User> Users { get; } = new List<User>();
 
-
-		#region Many-To-Many Connections
-		public virtual ICollection<Address> Addresses { get; set; }
-		#endregion
-	}
+    public virtual ICollection<Address> Addresses { get; } = new List<Address>();
 }

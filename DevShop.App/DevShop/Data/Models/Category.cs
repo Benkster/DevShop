@@ -1,30 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class Category
 {
-	/// <summary>
-	/// Product-Groups can be categorized in order to uphold
-	/// a good overview and to make it easier for the customers
-	/// to find the article of their needs.
-	/// </summary>
-	public class Category
-	{
-		[Key]
-		[Required]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int CategoryID { get; set; }
+    public int CategoryId { get; set; }
 
-		[Required]
-		[StringLength(150)]
-		[Display(Name = "Category")]
-		public string CategoryName { get; set; } = string.Empty;
+    public string Category1 { get; set; } = null!;
 
-		[StringLength(350)]
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Description")]
-		public string? CategoryDescr { get; set; }
+    public string? Description { get; set; }
 
-		public int? ParentID { get; set; }
-	}
+    public int? ParentId { get; set; }
+
+    public virtual ICollection<ProductGroup> ProductGroups { get; } = new List<ProductGroup>();
 }

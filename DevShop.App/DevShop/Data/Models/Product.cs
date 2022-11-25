@@ -1,48 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class Product
 {
-	/// <summary>
-	/// A product is a general term for different articles
-	/// E.g. sunglasses are a product and the different types of sunglasses 
-	/// (difference in size or color) are the articles associated with the product
-	/// </summary>
-	public class Product
-	{
-		// Key
-		[Required]
-		[Display(Name = "Product-Nr")]
-		public int ProductNr { get; set; }
+    public int ProductNr { get; set; }
 
-		// Key
-		[Required]
-		[ForeignKey("ProductGroupNr")]
-		public int ProductGroupNr { get; set; }
+    public int ProductGroupNr { get; set; }
 
-		[Required]
-		[StringLength(7, MinimumLength = 7)]
-		[ForeignKey("CompCode")]
-		public string CompCode { get; set; } = string.Empty;
+    public string CompCode { get; set; } = null!;
 
-		[Required]
-		[Display(Name = "Product")]
-		[StringLength(150)]
-		public string ProductName { get; set; } = string.Empty;
+    public string Product1 { get; set; } = null!;
 
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Description")]
-		[StringLength(800)]
-		public string? ProductDescr { get; set; }
+    public string? ProductDescription { get; set; }
 
-		[Display(Name = "Sort-Nr")]
-		[Required]
-		public int SortNr { get; set; }
+    public int SortNr { get; set; }
 
+    public virtual ICollection<ArticleHeader> ArticleHeaders { get; } = new List<ArticleHeader>();
 
+    public virtual ICollection<Article> Articles { get; } = new List<Article>();
 
-		#region Foreign-Keys
-		public ProductGroup ProductGroup { get; set; }
-		#endregion
-	}
+    public virtual ProductGroup ProductGroup { get; set; } = null!;
 }
