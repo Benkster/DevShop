@@ -1,42 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class UserDiscount
 {
-	/// <summary>
-	/// Every user can have individual discounts on certain articles
-	/// </summary>
-	public class UserDiscount
-	{
-		[Key]
-		[Required]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int UserDiscountID { get; set; }
+    public int UserDiscountId { get; set; }
 
-		[Required]
-		[ForeignKey("ProductNr")]
-		public int ProductNr { get; set; }
+    public int UserId { get; set; }
 
-		[Required]
-		[ForeignKey("ArticleNr")]
-		public int ArticleNr { get; set; }
+    public int ArticleNr { get; set; }
 
-		[Required]
-		[Display(Name = "Company-Code")]
-		[StringLength(7, MinimumLength = 6)]
-		[ForeignKey("CompCode")]
-		public string CompCode { get; set; } = string.Empty;
+    public int ProductNr { get; set; }
 
-		[Required]
-		[Range(0.00, 1.00)]
-		public float? Discount { get; set; }
+    public int ProductGroupNr { get; set; }
 
+    public string CompCode { get; set; } = null!;
 
+    public decimal Discount { get; set; }
 
-		#region Foreign-Keys
-		public User User { get; set; }
+    public virtual Article Article { get; set; } = null!;
 
-		public Article Article { get; set; }
-		#endregion
-	}
+    public virtual User User { get; set; } = null!;
 }

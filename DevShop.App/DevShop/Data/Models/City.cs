@@ -1,34 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class City
 {
-	/// <summary>
-	/// Cities are used for addresses of companies/users
-	/// E.g. Ebbs
-	/// </summary>
-	public class City
-	{
-		// Key
-		[Required]
-		[DataType(DataType.PostalCode)]
-		[StringLength(5)]
-		public string ZIP { get; set; } = string.Empty;
+    public int StateId { get; set; }
 
-		// Key
-		[Required]
-		[ForeignKey("StateID")]
-		public int StateID { get; set; }
+    public string Zip { get; set; } = null!;
 
-		[Required]
-		[StringLength(150)]
-		[Display(Name = "City")]
-		public string CityName { get; set; } = string.Empty;
+    public string City1 { get; set; } = null!;
 
+    public virtual ICollection<Address> Addresses { get; } = new List<Address>();
 
-
-		#region Foreign-Keys
-		public State State { get; set; }
-		#endregion
-	}
+    public virtual State State { get; set; } = null!;
 }

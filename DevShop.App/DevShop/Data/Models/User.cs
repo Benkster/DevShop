@@ -1,42 +1,39 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class User
 {
-	/// <summary>
-	/// A User serves two purposes:
-	/// 1. Administrators can log in in order to gain access to the backend
-	/// 2. Customers can log in to receive a special discount for certain articles
-	/// </summary>
-	public class User : IdentityUser
-	{
-		[Required]
-		[Display(Name = "First name")]
-		[StringLength(150)]
-		public string FirstName { get; set; } = string.Empty;
+    public int UserId { get; set; }
 
-		[Required]
-		[Display(Name = "Last name")]
-		[StringLength(150)]
-		public string LastName { get; set; } = string.Empty;
+    public string? FirstName { get; set; }
 
-		[Display(Name = "Title ...")]
-		[StringLength(50)]
-		public string? PreTitle { get; set; }
+    public string LastName { get; set; } = null!;
 
-		[Display(Name = "... Title")]
-		[StringLength(50)]
-		public string? PostTitle { get; set; }
+    public string UserName { get; set; } = null!;
 
-		[Required]
-		[ForeignKey("RoleNr")]
-		public int RoleNr { get; set; }
+    public string? PreTitle { get; set; }
 
+    public string? PostTitle { get; set; }
 
+    public string Password { get; set; } = null!;
 
-		#region Foreign-Keys
-		public Role Role { get; set; }
-		#endregion
-	}
+    public string Mail { get; set; } = null!;
+
+    public string? Tel { get; set; }
+
+    public int RoleNr { get; set; }
+
+    public string? AuthCookie { get; set; }
+
+    public DateTime? LastLogin { get; set; }
+
+    public string CompCode { get; set; } = null!;
+
+    public virtual Company CompCodeNavigation { get; set; } = null!;
+
+    public virtual Role RoleNrNavigation { get; set; } = null!;
+
+    public virtual ICollection<UserDiscount> UserDiscounts { get; } = new List<UserDiscount>();
 }

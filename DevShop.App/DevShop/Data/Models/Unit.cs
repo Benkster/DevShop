@@ -1,23 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class Unit
 {
-	/// <summary>
-	/// The Units secify in which way an article can be bought.
-	/// E.g. can be bought in pieces or in litres
-	/// </summary>
-	public class Unit
-	{
-		[Key]
-		[Required]
-		[Display(Name = "Unit-Code")]
-		[StringLength(3, MinimumLength = 3)]
-		public string UnitCode { get; set; } = string.Empty;
+    public string UnitCode { get; set; } = null!;
 
-		[Required]
-		[Display(Name = "Unit")]
-		[StringLength(50)]
-		public string UnitName { get; set; } = string.Empty;
-	}
+    public string Unit1 { get; set; } = null!;
+
+    public virtual ICollection<Article> ArticleBillingUnitNavigations { get; } = new List<Article>();
+
+    public virtual ICollection<Article> ArticlePackagingUnitNavigations { get; } = new List<Article>();
 }

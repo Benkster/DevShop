@@ -1,37 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class State
 {
-	/// <summary>
-	/// States are used for addresses of companies/users
-	/// E.g. Tirol
-	/// </summary>
-	public class State
-	{
-		[Key]
-		[Required]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int StateID { get; set; }
+    public int StateId { get; set; }
 
-		[Required]
-		[Display(Name = "State")]
-		[StringLength(150)]
-		public string StateName { get; set; } = string.Empty;
+    public int CountryId { get; set; }
 
-		[Required]
-		[ForeignKey("CountryID")]
-		public int CountryID { get; set; }
+    public string CountryCode { get; set; } = null!;
 
-		[Required]
-		[StringLength(3)]
-		[ForeignKey("CountryCode")]
-		public string CountryCode { get; set; } = string.Empty;
+    public string State1 { get; set; } = null!;
 
+    public virtual ICollection<City> Cities { get; } = new List<City>();
 
-
-		#region Foreign-Keys
-		public Country Country { get; set; }
-		#endregion
-	}
+    public virtual Country Country { get; set; } = null!;
 }
