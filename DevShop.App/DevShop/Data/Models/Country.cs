@@ -1,28 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class Country
 {
-	/// <summary>
-	/// Countries are used for addresses of companies/users
-	/// E.g. Austria
-	/// </summary>
-	public class Country
-	{
-		// Key
-		[Required]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int CountryID { get; set; }
+    public int CountryId { get; set; }
 
-		// Key
-		[Required]
-		[Display(Name = "Country-Code")]
-		[StringLength(3)]
-		public string CountryCode { get; set; } = string.Empty;
+    public string CountryCode { get; set; } = null!;
 
-		[Required]
-		[Display(Name = "Country")]
-		[StringLength(150)]
-		public string CountryName { get; set; } = string.Empty;
-	}
+    public string Country1 { get; set; } = null!;
+
+    public virtual ICollection<State> States { get; } = new List<State>();
 }

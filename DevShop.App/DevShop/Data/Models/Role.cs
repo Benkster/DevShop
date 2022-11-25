@@ -1,27 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class Role
 {
-	/// <summary>
-	/// Model that holds the roles, which can be assigned to a user.
-	/// Roles determin the rights a user has e.g. login for discounts
-	/// or login for the backend
-	/// </summary>
-	public class Role
-	{
-		[Key]
-		[Required]
-		[Display(Name = "Role-Nr")]
-		public int RoleNr { get; set; }
+    public int RoleNr { get; set; }
 
-		[Required]
-		[Display(Name = "Role")]
-		[StringLength(100)]
-		public string RoleName { get; set; } = string.Empty;
+    public string Role1 { get; set; } = null!;
 
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Description")]
-		[StringLength(200)]
-		public string? RoleDescr { get; set; }
-	}
+    public string? Description { get; set; }
+
+    public virtual ICollection<User> Users { get; } = new List<User>();
 }

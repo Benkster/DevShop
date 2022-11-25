@@ -1,53 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Principal;
+﻿using System;
+using System.Collections.Generic;
 
-namespace DevShop.Models
+namespace DevShop.Data.Models;
+
+public partial class Address
 {
-	/// <summary>
-	/// Stores all availlable addresses.
-	/// If an address already exists, it should not be created a second time.
-	/// </summary>
-	public class Address
-	{
-		[Key]
-		[Required]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int AddressID { get; set; }
+    public int AddressId { get; set; }
 
-		[Required]
-		[ForeignKey("StateID")]
-		public int StateID { get; set; }
+    public int StateId { get; set; }
 
-		[Required]
-		[StringLength(5)]
-		[DataType(DataType.PostalCode)]
-		[ForeignKey("ZIP")]
-		public string ZIP { get; set; } = string.Empty;
+    public string Zip { get; set; } = null!;
 
-		[Required]
-		[StringLength(150)]
-		public string Street { get; set; } = string.Empty;
+    public string Street { get; set; } = null!;
 
-		[Required]
-		[StringLength(20)]
-		[Display(Name = "House-Nr")]
-		public string HouseNr { get; set; } = string.Empty;
+    public string HouseNr { get; set; } = null!;
 
-		[StringLength(300)]
-		[DataType(DataType.MultilineText)]
-		[Display(Name = "Address information")]
-		public string? AddressInfo { get; set; }
+    public string? Info { get; set; }
 
+    public virtual City City { get; set; } = null!;
 
-
-		#region Foreign-Keys
-		public City City { get; set; }
-		#endregion
-
-
-		#region Many-To-Many Connections
-		public virtual ICollection<Company> Companies { get; set; }
-		#endregion
-	}
+    public virtual ICollection<Company> CompCodes { get; } = new List<Company>();
 }
