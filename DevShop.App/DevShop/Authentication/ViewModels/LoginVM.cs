@@ -1,4 +1,4 @@
-﻿namespace DevShop.Data.ViewModels
+﻿namespace DevShop.Authentication.ViewModels
 {
 	/// <summary>
 	/// This model is beeing used for the login view.
