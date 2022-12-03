@@ -28,6 +28,11 @@ builder.Services
 		options.ExpireTimeSpan = TimeSpan.FromHours(5);
 	});
 
+
+// For the AntiForgeryToken
+builder.Services.AddScoped<TokenProvider>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,6 +1,6 @@
 ﻿using DevShop.Data;
 using DevShop.Data.Models;
-using DevShop.Data.ViewModels;
+using DevShop.Authentication.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ namespace DevShop.Authentication
 	/// The AuthManager handles everything related to authentication:
 	/// # Registration
 	/// # Hashing password
-	/// # Validating the password
+	/// # Validating the password on login
 	/// # Logging in
 	/// </summary>
 	public class AuthManager : IAuthManager
@@ -72,25 +72,40 @@ namespace DevShop.Authentication
 
 
 
+		/// <summary>
+		/// Logs a user in
+		/// </summary>
+		/// <param name="loginData">
+		/// Contains the data, the user put in, necessary for login (E-Mail/Username and Password)
+		/// </param>
+		/// <returns>
+		/// An error message, if the login failed or nothing, if the login succeeded
+		/// </returns>
 		public async Task<string> LoginAsync(LoginVM loginData)
 		{
+			// Get the user from the database via the given e-mail or username
 			User user = await _context.Users.FirstOrDefaultAsync(u => u.Mail == loginData.UserName || u.UserName == loginData.UserName);
 
 
+			// If no user has been found, the given e-mail or username is incorrect
 			if (user == null)
 			{
 				return "Username/E-Mail incorrect";
 			}
 
 
+			// Check, whether the given password matches the password of the user in the databse
 			if (!ValidatePasswordHash(loginData.Password, user.Password))
 			{
 				return "Password is invalid";
 			}
 
 
+			// Get the users role
 			Role role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleNr == user.RoleNr);
 
+
+			// Add claims for the cookie
 			var claims = new List<Claim>();
 			claims.Add(new Claim(ClaimTypes.Name, $"{user.UserName}"));
 			claims.Add(new Claim(ClaimTypes.Email, $"{user.Mail}"));
@@ -101,20 +116,15 @@ namespace DevShop.Authentication
 			var authProperties = new AuthenticationProperties() {};
 
 
-			try
-			{
-				await _accessor.HttpContext.SignInAsync(
-					CookieAuthenticationDefaults.AuthenticationScheme,
-					new ClaimsPrincipal(claimsIdentity),
-					authProperties
-				);
-			}
-			catch (Exception ex)
-			{
-				string error = ex.Message;
-			}
+			// Sign the user in via setting a cookie
+			await _accessor.HttpContext.SignInAsync(
+				CookieAuthenticationDefaults.AuthenticationScheme,
+				new ClaimsPrincipal(claimsIdentity),
+				authProperties
+			);
 
 
+			// Login successful, return no error message
 			return string.Empty;
 		}
 		#endregion
