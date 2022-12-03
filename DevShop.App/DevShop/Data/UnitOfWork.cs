@@ -10,6 +10,7 @@ namespace DevShop.Data
 	{
 		#region Variables/Properties
 		private readonly DevShopContext _context;
+		private readonly TreeBuilder _treeBuilder = new TreeBuilder();
 
 		private CompanyRepo _companyRepo;
 		private RoleRepo _roleRepo;
@@ -46,7 +47,7 @@ namespace DevShop.Data
 			get
             {
 				// Create a new instance, if it has not yet been done
-				_categoryRepo = (_categoryRepo == null) ? new CategoryRepo(_context) : _categoryRepo;
+				_categoryRepo = (_categoryRepo == null) ? new CategoryRepo(_context, _treeBuilder) : _categoryRepo;
 
 				return _categoryRepo;
             }
