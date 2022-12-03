@@ -33,14 +33,13 @@ namespace DevShop.Pages.Views.Categories
             {
                 isEdit = true;
                 category = await uow.CategoryRepo.GetModelByPkAsync(Convert.ToInt32(CategoryID));
+                categories = await uow.CategoryRepo.GetModelsWithoutChildrenAsync(Convert.ToInt32(CategoryID));
             }
             else
             {
                 category = new Category();
+                categories = await uow.CategoryRepo.GetAllModelsAsync(CategorySortType.SortType.Name);
             }
-
-
-            categories = await uow.CategoryRepo.GetAllModelsAsync(CategorySortType.SortType.Name);
         }
 
 

@@ -14,6 +14,7 @@ namespace DevShop.Data.Repos.IRepos
         Task<List<Category>> GetAllModelsAsync();
         Task<List<Category>> GetAllModelsAsync(CategorySortType.SortType sortType, bool descending = false);
         Task<Category> GetModelByPkAsync(int _pk);
+        Task<List<Category>> GetModelsWithoutChildrenAsync(int _rootID);
         Task UpdateModelAsync(Category _category);
     }
 }
