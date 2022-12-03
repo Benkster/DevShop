@@ -75,9 +75,8 @@ public partial class DevShopContext : DbContext
 			entity.HasKey(e => new { e.ArticleNr, e.ProductNr, e.ProductGroupNr, e.CompCode }).HasName("pk_Articles");
 
 			entity.Property(e => e.CompCode).HasMaxLength(6);
-			entity.Property(e => e.Article1)
-				.HasMaxLength(150)
-				.HasColumnName("Article");
+			entity.Property(e => e.ArticleName)
+				.HasMaxLength(150);
 			entity.Property(e => e.ArticleCode).HasMaxLength(30);
 			entity.Property(e => e.ArticleDescription).HasMaxLength(700);
 			entity.Property(e => e.ArticleHeaderId).HasColumnName("ArticleHeaderID");
@@ -152,9 +151,8 @@ public partial class DevShopContext : DbContext
 			entity.HasKey(e => e.CategoryId).HasName("pk_Categories");
 
 			entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
-			entity.Property(e => e.Category1)
-				.HasMaxLength(150)
-				.HasColumnName("Category");
+			entity.Property(e => e.CategoryName)
+				.HasMaxLength(150);
 			entity.Property(e => e.Description).HasMaxLength(350);
 			entity.Property(e => e.ParentId).HasColumnName("ParentID");
 		});
@@ -167,9 +165,8 @@ public partial class DevShopContext : DbContext
 			entity.Property(e => e.Zip)
 				.HasMaxLength(5)
 				.HasColumnName("ZIP");
-			entity.Property(e => e.City1)
-				.HasMaxLength(150)
-				.HasColumnName("City");
+			entity.Property(e => e.CityName)
+				.HasMaxLength(150);
 
 			entity.HasOne(d => d.State).WithMany(p => p.Cities)
 				.HasForeignKey(d => d.StateId)
@@ -216,9 +213,8 @@ public partial class DevShopContext : DbContext
 				.ValueGeneratedOnAdd()
 				.HasColumnName("CountryID");
 			entity.Property(e => e.CountryCode).HasMaxLength(3);
-			entity.Property(e => e.Country1)
-				.HasMaxLength(150)
-				.HasColumnName("Country");
+			entity.Property(e => e.CountryName)
+				.HasMaxLength(150);
 		});
 
 		modelBuilder.Entity<Product>(entity =>
@@ -226,9 +222,8 @@ public partial class DevShopContext : DbContext
 			entity.HasKey(e => new { e.ProductNr, e.ProductGroupNr, e.CompCode }).HasName("pk_Products");
 
 			entity.Property(e => e.CompCode).HasMaxLength(6);
-			entity.Property(e => e.Product1)
-				.HasMaxLength(150)
-				.HasColumnName("Product");
+			entity.Property(e => e.ProductName)
+				.HasMaxLength(150);
 			entity.Property(e => e.ProductDescription).HasMaxLength(700);
 
 			entity.HasOne(d => d.ProductGroup).WithMany(p => p.Products)
@@ -264,9 +259,9 @@ public partial class DevShopContext : DbContext
 
 			entity.Property(e => e.RoleNr).ValueGeneratedNever();
 			entity.Property(e => e.Description).HasMaxLength(250);
-			entity.Property(e => e.Role1)
+			entity.Property(e => e.RoleName)
 				.HasMaxLength(100)
-				.HasColumnName("Role");
+				.HasColumnName("RoleName");
 		});
 
 		modelBuilder.Entity<State>(entity =>
@@ -276,9 +271,8 @@ public partial class DevShopContext : DbContext
 			entity.Property(e => e.StateId).HasColumnName("StateID");
 			entity.Property(e => e.CountryCode).HasMaxLength(3);
 			entity.Property(e => e.CountryId).HasColumnName("CountryID");
-			entity.Property(e => e.State1)
-				.HasMaxLength(150)
-				.HasColumnName("State");
+			entity.Property(e => e.StateName)
+				.HasMaxLength(150);
 
 			entity.HasOne(d => d.Country).WithMany(p => p.States)
 				.HasForeignKey(d => new { d.CountryId, d.CountryCode })
@@ -290,12 +284,11 @@ public partial class DevShopContext : DbContext
 		{
 			entity.HasKey(e => e.UnitCode).HasName("pk_Units");
 
-			entity.HasIndex(e => e.Unit1, "uc_Units").IsUnique();
+			entity.HasIndex(e => e.UnitName, "uc_Units").IsUnique();
 
 			entity.Property(e => e.UnitCode).HasMaxLength(3);
-			entity.Property(e => e.Unit1)
-				.HasMaxLength(50)
-				.HasColumnName("Unit");
+			entity.Property(e => e.UnitName)
+				.HasMaxLength(50);
 		});
 
 		modelBuilder.Entity<User>(entity =>

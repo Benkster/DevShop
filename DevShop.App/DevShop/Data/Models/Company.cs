@@ -19,6 +19,8 @@ public partial class Company
 
     public string? Website { get; set; }
 
+    public bool? IsProducer { get; set; } = false;
+
     public virtual ICollection<ProductGroup> ProductGroups { get; } = new List<ProductGroup>();
 
     public virtual ICollection<User> Users { get; } = new List<User>();
