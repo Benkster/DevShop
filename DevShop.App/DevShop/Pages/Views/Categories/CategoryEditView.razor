@@ -1,0 +1,49 @@
+﻿@page "/category/create"
+@page "/category/edit/{CategoryID}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+
+
+
+<h1>Category</h1>
+@if (category != null)
+{
+    <EditForm Model="category" OnValidSubmit="Save" OnInvalidSubmit="Error">
+        <div>
+            @errorMessage
+        </div>
+        <input type="text" placeholder="Category" @bind="@category.CategoryName"><br>
+        <textarea placeholder="Description" @bind="@category.Description"></textarea><br>
+        @if (categories != null)
+        {
+            <select @onchange="@((e) => ChangeParentElem(e))">
+                <option value="0">root</option>
+                @foreach (var _category in categories)
+                {
+                    @if (isEdit && category.ParentId != null && _category.CategoryId == category.ParentId)
+                    {
+                        <option value="@_category.CategoryId" selected>
+                            @_category.CategoryName
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@_category.CategoryId">
+                            @_category.CategoryName
+                        </option>
+                    }
+                }
+            </select>
+        }
+        <br><br>
+        <input type="submit" value="save">
+    </EditForm>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
