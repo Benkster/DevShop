@@ -11,7 +11,7 @@ public partial class State
 
     public string CountryCode { get; set; } = null!;
 
-    public string State1 { get; set; } = null!;
+    public string StateName { get; set; } = null!;
 
     public virtual ICollection<City> Cities { get; } = new List<City>();
 

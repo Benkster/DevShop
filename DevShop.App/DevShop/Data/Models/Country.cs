@@ -9,7 +9,7 @@ public partial class Country
 
     public string CountryCode { get; set; } = null!;
 
-    public string Country1 { get; set; } = null!;
+    public string CountryName { get; set; } = null!;
 
     public virtual ICollection<State> States { get; } = new List<State>();
 }
