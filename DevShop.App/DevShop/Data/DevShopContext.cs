@@ -264,9 +264,9 @@ public partial class DevShopContext : DbContext
 
 			entity.Property(e => e.RoleNr).ValueGeneratedNever();
 			entity.Property(e => e.Description).HasMaxLength(250);
-			entity.Property(e => e.Role1)
+			entity.Property(e => e.RoleName)
 				.HasMaxLength(100)
-				.HasColumnName("Role");
+				.HasColumnName("RoleName");
 		});
 
 		modelBuilder.Entity<State>(entity =>
