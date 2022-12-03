@@ -1,0 +1,92 @@
+﻿@page "/register"
+@using DevShop.Authentication
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject IAuthManager auth
+@inject NavigationManager nav
+
+
+
+<h1>Register</h1>
+@if (user != null)
+{
+    if (companies != null || role != null)
+    {
+        <div>@errorMessage</div>
+        <EditForm Model="user" OnValidSubmit="Save" OnInvalidSubmit="Error">
+            <div class="grid">
+                <div>
+                    Title ...
+                </div><div>
+                    <input type="text" @bind="@user.PreTitle">
+                </div>
+                <div>
+                    ... Title
+                </div><div>
+                    <input type="text" @bind="@user.PostTitle">
+                </div>
+                <div>
+                    First name
+                </div><div>
+                    <input type="text" @bind="@user.FirstName">
+                </div>
+                <div>
+                    Last Name
+                </div><div>
+                    <input type="text" @bind="@user.LastName">
+                </div>
+                <div>
+                    Username
+                </div><div>
+                    <input type="text" @bind="@user.UserName">
+                </div>
+                <div>
+                    Password
+                </div><div>
+                    <input type="password" @bind="@user.Password">
+                </div>
+                <div>
+                    E-Mail
+                </div><div>
+                    <input type="email" @bind="@user.Mail">
+                </div>
+                <div>
+                    Number
+                </div><div>
+                    <input type="text" @bind="@user.Tel">
+                </div>
+                <div>
+                    Company
+                </div><div>
+                    <select @onchange="@((args) => ChangeCompany(args))">
+                        @foreach (var _company in companies)
+                        {
+                            @if (_company.CompCode == company.CompCode)
+                            {
+                                <option value="@_company.CompCode" selected>@_company.CompName</option>
+                            }
+                            else
+                            {
+                                <option value="@_company.CompCode">@_company.CompName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <br><br>
+                <input type="submit" value="save">
+            </div>
+        </EditForm>
+    }
+    else
+    {
+        <span>
+            In order to create a new user, a company and a role has to be created first.
+        </span>
+    }
+}
+else
+{
+    <span>
+        ... loading
+    </span>
+}
