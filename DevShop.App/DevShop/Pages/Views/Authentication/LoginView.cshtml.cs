@@ -1,5 +1,5 @@
 using DevShop.Authentication;
-using DevShop.Data.ViewModels;
+using DevShop.Authentication.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
