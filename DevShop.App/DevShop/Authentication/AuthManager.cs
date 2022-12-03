@@ -110,7 +110,7 @@ namespace DevShop.Authentication
 			var claims = new List<Claim>();
 			claims.Add(new Claim(ClaimTypes.Name, $"{user.UserName}"));
 			claims.Add(new Claim(ClaimTypes.Email, $"{user.Mail}"));
-			claims.Add(new Claim(ClaimTypes.Role, $"{role.RoleName}"));
+			claims.Add(new Claim(ClaimTypes.Role, $"{role.RoleNr}"));
 
 
 			var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
