@@ -1,4 +1,5 @@
 ﻿using DevShop.Data.Models;
+using DevShop.Data.SortTypes;
 using DevShop.Data.Repos.IRepos;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +36,40 @@ namespace DevShop.Data.Repos
 		public async Task<List<Category>> GetAllModelsAsync()
         {
             List<Category> models = await _context.Categories.ToListAsync();
+
+            return models;
+        }
+
+
+
+        /// <summary>
+        /// Get all existing Categories ordered from the database
+        /// </summary>
+        /// <param name="sortType">
+        /// Specifies the column after which the models should be sorted
+        /// </param>
+        /// <param name="descending">
+        /// If true, sorts models in descending order
+        /// </param>
+        /// <returns>
+        /// An ordered list of objects of type Category
+        /// </returns>
+        public async Task<List<Category>> GetAllModelsAsync(CategorySortType.SortType sortType, bool descending = false)
+        {
+            List<Category> models = new List<Category>();
+
+            switch (sortType)
+            {
+                // Sort by ID
+                case CategorySortType.SortType.ID:
+                    models = (descending) ? await _context.Categories.OrderByDescending(m => m.CategoryId).ToListAsync() : await _context.Categories.OrderBy(m => m.CategoryId).ToListAsync();
+                    break;
+                // Sort by Name
+                case CategorySortType.SortType.Name:
+                    models = (descending) ? await _context.Categories.OrderByDescending(m => m.CategoryName).ToListAsync() : await _context.Categories.OrderBy(m => m.CategoryName).ToListAsync();
+                    break;
+            }
+
 
             return models;
         }

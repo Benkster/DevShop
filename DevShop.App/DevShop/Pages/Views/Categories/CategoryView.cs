@@ -25,7 +25,8 @@ namespace DevShop.Pages.Views.Categories
 
         private async Task Delete(int _pk)
         {
-
+            await uow.CategoryRepo.DeleteModelAsync(_pk);
+            categories = await uow.CategoryRepo.GetAllModelsAsync();
         }
         #endregion
     }
