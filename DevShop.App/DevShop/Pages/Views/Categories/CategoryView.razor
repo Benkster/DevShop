@@ -1,1 +1,51 @@
 ﻿@page "/category"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+
+
+
+<h1>Categories</h1>
+@if (categories != null)
+{
+    <table>
+        <tbody>
+            @foreach (var _category in categories)
+            {
+                <tr>
+                    <td>
+                        @_category.CategoryId
+                    </td>
+                    <td>
+                        @_category.Category1
+                    </td>
+                    <td>
+                        @_category.Description
+                    </td>
+                    <td>
+                        @_category.ParentId
+                    </td>
+                    <td>
+                        <a href="./category/edit/@_category.CategoryId">
+                            Edit
+                        </a>
+                    </td>
+                    <td>
+                        <input type="button" value="Delete" @onclick="@(() => Delete(_category.CategoryId))">
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br /><br />
+    <a href="./category/create">
+        Create a new category
+    </a>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
