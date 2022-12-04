@@ -1,43 +1,18 @@
 ﻿@page "/category"
 @using DevShop.Data
 @inject IUnitOfWork uow
-@inject NavigationManager nav
+@inject TreeBuilder treeBuilder
 @attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
 
 
 
 <h1>Categories</h1>
-@if (categories != null)
+@if (!string.IsNullOrEmpty(treeViewMarkup.Value))
 {
-    <table>
-        <tbody>
-            @foreach (var _category in categories)
-            {
-                <tr>
-                    <td>
-                        @_category.CategoryId
-                    </td>
-                    <td>
-                        @_category.CategoryName
-                    </td>
-                    <td>
-                        @_category.Description
-                    </td>
-                    <td>
-                        @_category.ParentId
-                    </td>
-                    <td>
-                        <a href="./category/edit/@_category.CategoryId">
-                            Edit
-                        </a>
-                    </td>
-                    <td>
-                        <input type="button" value="Delete" @onclick="@(() => Delete(_category.CategoryId))">
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div>
+        @treeViewMarkup
+    </div>
     <br /><br />
     <a href="./category/create">
         Create a new category
