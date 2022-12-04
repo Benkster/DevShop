@@ -1,0 +1,35 @@
+﻿@inject TokenProvider _tokenProvider
+
+
+
+<div>
+    <div>
+        <ul>
+            <li>
+                <a href="./">
+                    Articles
+                </a>
+                <ul>
+                    <li>
+                        <a href="./category">
+                            Categories
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="./">
+                    User
+                </a>
+                <ul>
+                    <li>
+                        <form method="post" action="/logout">
+                            <input type="hidden" name="__RequestVerificationToken" value="@_tokenProvider.AntiForgeryToken">
+                            <input type="submit" value="logout">
+                        </form>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

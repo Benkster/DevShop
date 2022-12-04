@@ -1,5 +1,4 @@
 ﻿@page "/"
-@inject TokenProvider _tokenProvider
 
 
 
@@ -8,11 +7,3 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
-<AuthorizeView>
-    <Authorized>
-        <form method="post" action="/logout">
-            <input type="hidden" name="__RequestVerificationToken" value="@_tokenProvider.AntiForgeryToken">
-            <input type="submit" value="logout">
-        </form>
-    </Authorized>
-</AuthorizeView>
