@@ -1,0 +1,45 @@
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	line-height: 1.3rem;
+	color: #333;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+h1 { font-size: 230%; line-height: 2.2rem; }
+h2 { font-size: 190%; line-height: 2rem; }
+h3 { font-size: 150%; line-height: 1.6rem; }
+
+
+
+body, html { margin: 0px; }
+
+h1, h2,
+h3, h4 { margin: 0px; }
+
+ul, ol {
+	margin: 0px;
+	padding-left: 20px;
+}
+
+input[type="radio"],
+input[type="checkbox"] { display: none; }
+
+
+
+@media screen and (max-width: 1024px) {
+	h1 { font-size: 200%; }
+	h2 { font-size: 170%; }
+	h3 { font-size: 135%; }
+}
+
+
+@media screen and (max-width: 768px) {
+	h1 { font-size: 185%; }
+	h2 { font-size: 155%; }
+	h3 { font-size: 125%; }
+}
