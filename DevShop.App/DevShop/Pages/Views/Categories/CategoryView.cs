@@ -1,4 +1,6 @@
 ﻿using DevShop.Data.Models;
+using DevShop.Data.ViewModels.TreeBuilderVMs;
+using Microsoft.AspNetCore.Components;
 using System.Net.NetworkInformation;
 
 namespace DevShop.Pages.Views.Categories
@@ -10,23 +12,34 @@ namespace DevShop.Pages.Views.Categories
     public partial class CategoryView
     {
         #region Variables
-        private List<Category> categories;
+        // Holds the HTML-Code for the TreeView
+        MarkupString treeViewMarkup;
         #endregion
 
 
 
         #region Methods
+        /// <summary>
+        /// Called automatically, when the page loads.
+        /// Sets variables needed for the view.
+        /// </summary>
         protected override async Task OnInitializedAsync()
         {
-            categories = await uow.CategoryRepo.GetAllModelsAsync();
-        }
+            // List of all categories
+            List<Category> categories = await uow.CategoryRepo.GetAllModelsAsync();
+
+            // Convert the list of categories to TreeView-elements
+            List<TreeViewElementVM> categoriesTV = categories.Select(c => new TreeViewElementVM()
+            {
+                ElemID = c.CategoryId,
+                ElemText = c.CategoryName,
+                ParentID = c.ParentId,
+                ElemLink = "./category/edit/" + c.CategoryId.ToString()
+            }).ToList();
 
 
-
-        private async Task Delete(int _pk)
-        {
-            await uow.CategoryRepo.DeleteModelAsync(_pk);
-            categories = await uow.CategoryRepo.GetAllModelsAsync();
+            // Get the HTML-Code for the TreeView
+            treeViewMarkup = treeBuilder.BuildTree(categoriesTV);
         }
         #endregion
     }
