@@ -15,6 +15,7 @@ namespace DevShop.Data
 		private CompanyRepo _companyRepo;
 		private RoleRepo _roleRepo;
 		private CategoryRepo _categoryRepo;
+		private CountryRepo _countryRepo;
 
 
 		// Allows access to the Company-Repository
@@ -52,6 +53,18 @@ namespace DevShop.Data
 				return _categoryRepo;
             }
         }
+
+		// Allows access to the Company-Repository
+		public CountryRepo CountryRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_countryRepo = (_countryRepo == null) ? new CountryRepo(_context) : _countryRepo;
+
+				return _countryRepo;
+			}
+		}
 		#endregion
 
 
