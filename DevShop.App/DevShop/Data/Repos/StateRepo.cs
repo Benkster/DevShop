@@ -44,6 +44,9 @@ namespace DevShop.Data.Repos
 		/// <summary>
 		/// Get all existing States of a given Country from the database
 		/// </summary>
+		/// <param name="_countryCode">
+		/// The code of the Country, to which the State belongs
+		/// </param>
 		/// <returns>
 		/// A list of objects of type State
 		/// </returns>

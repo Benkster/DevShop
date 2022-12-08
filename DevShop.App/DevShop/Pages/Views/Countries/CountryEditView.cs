@@ -16,7 +16,7 @@ namespace DevShop.Pages.Views.Countries
 		private bool isEdit;
 
 		// This error-message is shown, if the submittion of the form failed/was invalid
-		private string errorMessage;
+		private MarkupString errorMessage;
 
 		// The country, that is beeing created/edited
 		private Country country;
@@ -96,7 +96,7 @@ namespace DevShop.Pages.Views.Countries
 		/// </summary>
 		private async Task Error()
 		{
-			errorMessage = "Something went wrong. Please try again";
+			errorMessage = (MarkupString)"Something went wrong.<br>Please try again";
 		}
 
 
@@ -109,8 +109,21 @@ namespace DevShop.Pages.Views.Countries
 			// Only delete it, if a country is beeing edited and not created
 			if (isEdit)
 			{
-				await uow.CountryRepo.DeleteModelAsync(CountryCode);
-				nav.NavigateTo("/country");
+				// Get all states, that belong to the selected country
+				List<State> countryStates = await uow.StateRepo.GetAllModelsAsync(CountryCode);
+
+
+				// If the country has any states related to it, the user is not allowed to delete it
+				if (countryStates.Count > 0)
+				{
+					errorMessage = (MarkupString)("There are one or more states related to this country.<br>In order to delete this country, the states have to be deleted first.<br>Click <a href=\"./state/" + CountryCode + "\">here</a> to view all states of this country.");
+				}
+				// If no states are related to this country, delete it
+				else
+				{
+					await uow.CountryRepo.DeleteModelAsync(CountryCode);
+					nav.NavigateTo("/country");
+				}
 			}
 		}
 		#endregion

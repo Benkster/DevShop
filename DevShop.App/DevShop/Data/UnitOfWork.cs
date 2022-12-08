@@ -17,6 +17,7 @@ namespace DevShop.Data
 		private CategoryRepo _categoryRepo;
 		private CountryRepo _countryRepo;
 		private StateRepo _stateRepo;
+		private CityRepo _cityRepo;
 
 
 		// Allows access to the Company-Repository
@@ -55,7 +56,7 @@ namespace DevShop.Data
             }
         }
 
-		// Allows access to the Company-Repository
+		// Allows access to the Country-Repository
 		public CountryRepo CountryRepo
 		{
 			get
@@ -67,7 +68,7 @@ namespace DevShop.Data
 			}
 		}
 
-		// Allows access to the Company-Repository
+		// Allows access to the State-Repository
 		public StateRepo StateRepo
 		{
 			get
@@ -76,6 +77,18 @@ namespace DevShop.Data
 				_stateRepo = (_stateRepo == null) ? new StateRepo(_context) : _stateRepo;
 
 				return _stateRepo;
+			}
+		}
+
+		// Allows access to the City-Repository
+		public CityRepo CityRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_cityRepo = (_cityRepo == null) ? new CityRepo(_context) : _cityRepo;
+
+				return _cityRepo;
 			}
 		}
 		#endregion

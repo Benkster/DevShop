@@ -1,0 +1,145 @@
+﻿@page "/city/create"
+@page "/city/edit/{CountryCode}/{StateID}/{Zip}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Cities</h1>
+@if (countries != null)
+{
+    @if (countries.Count > 0)
+    {
+        <select @onchange="@((e) => ChangeCountry(e))">
+            <option value="0">Please select a country</option>
+            @foreach (var _country in countries)
+            {
+                @if (isEdit && country != null && _country.CountryCode == country.CountryCode)
+                {
+                    <option value="@_country.CountryCode" selected>@_country.CountryName</option>
+                }
+                else
+                {
+                    <option value="@_country.CountryCode">@_country.CountryName</option>
+                }
+            }
+        </select>
+        @if (dropDownStates != null && dropDownStates.Count > 0)
+        {
+            <select @onchange="@((e) => ChangeState(e))">
+                <option value="0">Please select a state</option>
+                @foreach (var _state in dropDownStates)
+                {
+                    @if (isEdit && state != null && Convert.ToInt32(_state.Value) == state.StateId)
+                    {
+                        <option value="@_state.Value" selected>@_state.DisplayName</option>
+                    }
+                    else
+                    {
+                        <option value="@_state.Value">@_state.DisplayName</option>
+                    }
+                }
+            </select>
+            @if (dropDownCities != null && dropDownCities.Count > 0)
+            {
+                <br /><br />
+                <select @onchange="@((e) => ChangeCity(e))">
+                    @foreach (var _city in dropDownCities)
+                    {
+                        @if (isEdit && city != null && _city.Value == city.Zip)
+                        {
+                            <option value="@_city.Value" selected>@_city.DisplayName</option>
+                        }
+                        else
+                        {
+                            <option value="@_city.Value">@_city.DisplayName</option>
+                        }
+                    }
+                </select>
+            }
+            <br><br />
+            <EditForm Model="city" OnValidSubmit="Save" OnInvalidSubmit="Error">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <b>@errorMessage</b>
+                    <br /><br />
+                }
+
+                @if (isEdit)
+                {
+                    <div>
+                        @city.Zip
+                    </div>
+                }
+                else
+                {
+                    <input type="text" placeholder="6020" maxlength="5" pattern="[0-9]{4,5}" @bind="city.Zip" required><br />
+                }
+
+                <input type="text" placeholder="Innsbruck" maxlength="150" @bind="city.CityName" required><br>
+                <select @onchange="@((e) => SetCountry(e))">
+                    @foreach (var _country in countries)
+                    {
+                        @if (_country.CountryCode == selCountry.CountryCode)
+                        {
+                            <option value="@_country.CountryCode" selected>@_country.CountryName</option>
+                        }
+                        else
+                        {
+                            <option value="@_country.CountryCode">@_country.CountryName</option>
+                        }
+                    }
+                </select><br>
+                @if (selState != null)
+                {
+                    <select @onchange="@((e) => SetState(e))">
+                        @foreach (var _state in states)
+                        {
+                            @if (_state.StateId == selState.StateId)
+                            {
+                                <option value="@_state.StateId" selected>@_state.StateName</option>
+                            }
+                            else
+                            {
+                                <option value="@_state.StateId">@_state.StateName</option>
+                            }
+                        }
+                    </select>
+                }
+                <br><br>
+                <input type="submit" value="Save">
+                @if(isEdit)
+                {
+                    <input type="button" value="Delete" @onclick="@(() => Delete())"/>
+                }
+                <br><br>
+                <a href="./city/create">
+                    Create a new state
+                </a>
+            </EditForm>
+        }
+        else
+        {
+            <div>
+                No states have been found.<br>
+                Click <a href="./state/create">here</a> to create states before proceeding.
+            </div>
+        }
+    }
+    else
+    {
+        <div>
+            No country has been found.<br>
+            Click <a href="./country/create">here</a> to create a country before proceeding.
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
