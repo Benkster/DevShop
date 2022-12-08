@@ -49,8 +49,9 @@ namespace DevShop.Pages.Views.States
                 // Get the country, that the user selected in the edit-view
                 selCountry = await uow.CountryRepo.GetModelByPkAsync(CountryCode);
 
-                // Get all states of the country, the user selected
+                // Get all states of the country, the user selected, and sort them by name
                 states = await uow.StateRepo.GetAllModelsAsync(CountryCode);
+                states = states.OrderBy(s => s.StateName).ToList();
             }
         }
         #endregion
@@ -71,7 +72,9 @@ namespace DevShop.Pages.Views.States
             if (!string.IsNullOrEmpty(args.Value.ToString()) && args.Value.ToString() != "0")
             {
                 selCountry = await uow.CountryRepo.GetModelByPkAsync(args.Value.ToString());
+
                 states = await uow.StateRepo.GetAllModelsAsync(args.Value.ToString());
+                states = states.OrderBy(s => s.StateName).ToList();
             }
             // The option "Please select a country" has been selected
             else
