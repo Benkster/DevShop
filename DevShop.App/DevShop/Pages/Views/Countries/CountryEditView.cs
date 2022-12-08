@@ -36,7 +36,7 @@ namespace DevShop.Pages.Views.Countries
 		#region Main Methods
 		/// <summary>
 		/// Called, when the parameters of the URL change.
-		/// This is needed instead of the OnInitializedAsync, because when the user selects an existing country (which changes the parameters of the URL), the displayed data in the form has to update.
+		/// This is needed instead of OnInitializedAsync, because when the user selects an existing country (which changes the parameters of the URL), the displayed data in the form has to update.
 		/// </summary>
 		protected override async Task OnParametersSetAsync()
 		{

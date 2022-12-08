@@ -8,5 +8,6 @@ namespace DevShop.Data
 		RoleRepo RoleRepo { get; }
         CategoryRepo CategoryRepo { get; }
 		CountryRepo CountryRepo { get; }
-	}
+        StateRepo StateRepo { get; }
+    }
 }
