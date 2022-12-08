@@ -1,0 +1,64 @@
+﻿@page "/category/create"
+@page "/category/edit/{CategoryID}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@inject TreeBuilder treeBuilder
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Category</h1>
+@if (category != null)
+{
+    @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
+    {
+        <div>
+            @treeViewMarkup
+        </div>
+    }
+    <EditForm Model="category" OnValidSubmit="Save" OnInvalidSubmit="Error">
+        <div>
+            @errorMessage
+        </div>
+        <input type="text" placeholder="Category" @bind="@category.CategoryName"><br>
+        <textarea placeholder="Description" @bind="@category.Description"></textarea><br>
+        @if (formCategories != null)
+        {
+            <select @onchange="@((e) => ChangeParentElem(e))">
+                <option value="0">root</option>
+                @foreach (var _category in formCategories)
+                {
+                    @if (isEdit && category.ParentId != null && _category.CategoryId == category.ParentId)
+                    {
+                        <option value="@_category.CategoryId" selected>
+                            @_category.CategoryName
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@_category.CategoryId">
+                            @_category.CategoryName
+                        </option>
+                    }
+                }
+            </select>
+        }
+        <br><br>
+        @if (isEdit)
+        {
+            <input type="submit" value="save"><input type="button" value="delete" @onclick="@(() => Delete())">
+            <br><br>
+        }
+        <a href="./category">
+            Back
+        </a>
+    </EditForm>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

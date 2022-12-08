@@ -1,0 +1,64 @@
+﻿@page "/country/create"
+@page "/country/edit/{CountryCode}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Countries</h1>
+@if (country != null)
+{
+    <EditForm Model="country" OnValidSubmit="Save" OnInvalidSubmit="Error">
+        @if (dropDownList != null && dropDownList.Count > 0)
+        {
+            <select @onchange="@((e) => ChangeCountry(e))">
+                <option value="0">Please select a country</option>
+                @foreach (var _elem in dropDownList)
+                {
+                    @if (_elem.Value == country.CountryCode)
+                    {
+                        <option value="@_elem.Value" selected>@_elem.DisplayName</option>
+                    }
+                    else
+                    {
+                        <option value="@_elem.Value">@_elem.DisplayName</option>
+                    }
+                }
+            </select>
+        }
+        @if (!string.IsNullOrEmpty(errorMessage.Value))
+        {
+            <br><br />
+            <b>@errorMessage</b>
+        }
+        <br /><br />
+        @if (isEdit)
+        {
+            <input type="text" value="@country.CountryCode" readonly /><br />
+        }
+        else
+        {
+            <input type="text" placeholder="AT" maxlength="3" pattern="[A-Z]{2,3}" @bind="country.CountryCode"/><br />
+        }
+        <input type="text" placeholder="Austria" @bind="country.CountryName" />
+        <br /><br />
+        <input type="submit" value="Save" />
+        @if (isEdit)
+        {
+            <input type="button" value="Delete" @onclick="@(() => Delete())" />
+        }
+        <br>
+        <a href="./country/create">
+            Create new country
+        </a>
+    </EditForm>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

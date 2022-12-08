@@ -1,0 +1,32 @@
+﻿@inject TokenProvider _tokenProvider
+
+
+
+<div>
+    <ul>
+        <li>
+            <AuthorizeView>
+                <Authorized>
+                    <form method="post" action="/logout">
+                        <input type="hidden" name="__RequestVerificationToken" value="@_tokenProvider.AntiForgeryToken">
+                        <input type="submit" value="logout">
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="./login">
+                        Login
+                    </a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </li>
+        <AuthorizeView Roles="7">
+            <Authorized>
+                <li>
+                    <a href="./category">
+                        Management
+                    </a>
+                </li>
+            </Authorized>
+        </AuthorizeView>
+    </ul>
+</div>

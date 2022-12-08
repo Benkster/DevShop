@@ -32,6 +32,8 @@ builder.Services
 // For the AntiForgeryToken
 builder.Services.AddScoped<TokenProvider>();
 
+builder.Services.AddScoped<TreeBuilder>();
+
 
 var app = builder.Build();
 
