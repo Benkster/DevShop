@@ -7,5 +7,6 @@ namespace DevShop.Data
 		CompanyRepo CompanyRepo { get; }
 		RoleRepo RoleRepo { get; }
         CategoryRepo CategoryRepo { get; }
-    }
+		CountryRepo CountryRepo { get; }
+	}
 }
