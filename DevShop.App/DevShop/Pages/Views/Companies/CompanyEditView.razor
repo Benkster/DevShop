@@ -10,21 +10,21 @@
 
 
 <h1>Companies</h1>
-@if (companies != null && dropDownCountries != null)
+@if (dropDownCompanies != null && dropDownCountries != null)
 {
     @if (dropDownCountries.Count > 0)
     {
         <select @onchange="@((e) => ChangeCompany(e))">
             <option value="0">Please select a company</option>
-            @foreach (var _company in companies)
+            @foreach (var _company in dropDownCompanies)
             {
-                @if (isEdit && !companyChanged && company != null && _company.CompCode == company.CompCode)
+                @if (isEdit && !companyChanged && company != null && _company.Value == company.CompCode)
                 {
-                    <option value="@_company.CompCode" selected>@_company.CompName</option>
+                    <option value="@_company.Value" selected>@_company.DisplayName</option>
                 }
                 else
                 {
-                    <option value="@_company.CompCode">@_company.CompName</option>
+                    <option value="@_company.Value">@_company.DisplayName</option>
                 }
             }
         </select>

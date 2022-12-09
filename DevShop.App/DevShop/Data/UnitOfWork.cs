@@ -19,6 +19,7 @@ namespace DevShop.Data
 		private StateRepo _stateRepo;
 		private CityRepo _cityRepo;
 		private UserRepo _userRepo;
+		private UserDiscountRepo _userDiscountRepo;
 
 
 		// Allows access to the Company-Repository
@@ -102,6 +103,18 @@ namespace DevShop.Data
 				_userRepo = (_userRepo == null) ? new UserRepo(_context) : _userRepo;
 
 				return _userRepo;
+			}
+		}
+
+		// Allows access to the UserDiscount-Repository
+		public UserDiscountRepo UserDiscountRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_userDiscountRepo = (_userDiscountRepo == null) ? new UserDiscountRepo(_context) : _userDiscountRepo;
+
+				return _userDiscountRepo;
 			}
 		}
 		#endregion
