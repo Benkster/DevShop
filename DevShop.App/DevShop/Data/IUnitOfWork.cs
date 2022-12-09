@@ -11,5 +11,6 @@ namespace DevShop.Data
         StateRepo StateRepo { get; }
 		CityRepo CityRepo { get; }
         UserRepo UserRepo { get; }
+        UserDiscountRepo UserDiscountRepo { get; }
     }
 }

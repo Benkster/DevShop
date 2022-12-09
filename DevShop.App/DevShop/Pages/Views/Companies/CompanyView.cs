@@ -23,7 +23,7 @@ namespace DevShop.Pages.Views.Companies
 		protected override async Task OnInitializedAsync()
 		{
 			companies = await uow.CompanyRepo.GetAllModelsAsync();
-			companies = companies.OrderBy(c => c.CompName).ToList();
+			companies = companies.OrderBy(c => c.CompName).OrderBy(c => c.CompCode.Substring(0, 2)).ToList();
 		}
 		#endregion
 

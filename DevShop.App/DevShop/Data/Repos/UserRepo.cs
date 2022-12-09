@@ -58,26 +58,30 @@ namespace DevShop.Data.Repos
 			List<User> models = await _context.Users.Where(m => m.RoleNr == _roleNr).ToListAsync();
 
 			return models;
-        }
-		#endregion
-
-
-
-		#region Create/Update
-		/// <summary>
-		/// Create a new entry in the database
-		/// </summary>
-		/// <param name="_model">
-		/// Data of the model
-		/// </param>
-		public async Task CreateModelAsync(User _model)
-		{
-			_context.Users.Add(_model);
-			await _context.SaveChangesAsync();
 		}
 
 
 
+		/// <summary>
+		/// Get a single User from the database
+		/// </summary>
+		/// <param name="_pk">
+		/// The Primary Key of the object in the database
+		/// </param>
+		/// <returns>
+		/// A single object of type User
+		/// </returns>
+		public async Task<User> GetModelByPkAsync(int _pk)
+		{
+			User model = await _context.Users.FirstOrDefaultAsync(m => m.UserId == _pk);
+
+			return model;
+		}
+		#endregion
+
+
+
+		#region Update
 		/// <summary>
 		/// Update an existing entry in the database
 		/// </summary>
@@ -88,6 +92,27 @@ namespace DevShop.Data.Repos
 		{
 			_context.Users.Update(_model);
 			await _context.SaveChangesAsync();
+		}
+		#endregion
+
+
+
+		#region Delete
+		/// <summary>
+		/// Remove an entry from the database
+		/// </summary>
+		/// <param name="_pk">
+		/// Primary Key of the model, that should be removed
+		/// </param>
+		public async Task DeleteModelAsync(int _pk)
+		{
+			User model = await GetModelByPkAsync(_pk);
+
+			if (model != null)
+			{
+				_context.Users.Remove(model);
+				await _context.SaveChangesAsync();
+			}
 		}
 		#endregion
 		#endregion

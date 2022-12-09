@@ -1,16 +1,149 @@
 ﻿@page "/register"
+@page "/user/edit/{CompCode}/{UserId}"
 @using DevShop.Authentication
 @using DevShop.Data
+@using DevShop.Data.Helpers
 @inject IUnitOfWork uow
 @inject IAuthManager auth
 @inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
 
 
 
 <h1>Register</h1>
-@if (user != null)
+@if (companies != null)
 {
-    if (companies != null || role != null)
+    @if (companies.Count > 0)
+    {
+        @if (roles.Count > 0)
+        {
+            <select @onchange="@((e) => ChangeCompany(e))">
+                <option value="0">Please select a company</option>
+                @foreach (var _company in companies)
+                {
+                    @if (isEdit && company != null && _company.CompCode == company.CompCode)
+                    {
+                        <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                    else
+                    {
+                        <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                }
+            </select>
+            @if (dropDownUsers != null && dropDownUsers.Count > 0)
+            {
+                <br /><br />
+                <select @onchange="@((e) => ChangeUser(e))">
+                    @foreach (var _user in dropDownUsers)
+                    {
+                        @if (isEdit && user != null && Convert.ToInt32(_user.Value) == user.UserId)
+                        {
+                            <option value="@_user.Value" selected>@_user.DisplayName</option>
+                        }
+                        else
+                        {
+                            <option value="@_user.Value">@_user.DisplayName</option>
+                        }
+                    }
+                </select>
+            }
+            <br><br />
+            <EditForm Model="user" OnValidSubmit="Save" OnInvalidSubmit="Error">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <b>@errorMessage</b>
+                    <br /><br />
+                }
+                @if (isEdit)
+                {
+                    <div>
+                        @user.UserId
+                    </div>
+                }
+                <select @onchange="@((e) => SetCompany(e))">
+                    @foreach (var _company in companies)
+                    {
+                        @if (_company.CompCode == selCompany.CompCode)
+                        {
+                            <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                        }
+                        else
+                        {
+                            <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                        }
+                    }
+                </select><br>
+                <input type="text" maxlength="50" placeholder="Title ..." @bind="user.PreTitle"><br>
+                <input type="text" maxlength="50" placeholder="... title" @bind="user.PostTitle"><br>
+                <input type="text" maxlength="150" placeholder="First name" @bind="user.FirstName"><br>
+                <input type="text" maxlength="150" placeholder="Last name *" @bind="user.LastName" required><br>
+                <input type="text" maxlength="50" placeholder="Username *" @bind="user.UserName" required><br>
+                @if (isEdit)
+                {
+                    <input type="text" value="@user.Password" readonly /><br />
+                }
+                else
+                {
+                    <input type="password" placeholder="Password *" @bind="user.Password" required/><br />
+                }
+                <select @onchange="@((e) => SetRole(e))">
+                    @foreach (var _role in roles)
+                    {
+                        @if (_role.RoleNr == selRole.RoleNr)
+                        {
+                            <option value="@_role.RoleNr" selected>@_role.RoleName</option>
+                        }
+                        else
+                        {
+                            <option value="@_role.RoleNr">@_role.RoleName</option>
+                        }
+                    }
+                </select><br>
+                <input type="email" maxlength="300" placeholder="E-Mail *" @bind="user.Mail" required><br>
+                <input type="text" maxlength="30" placeholder="+43 660 5203 444" pattern="@ViewPatterns.TelPattern" @bind="user.Tel">
+                <br><br>
+                <input type="submit" value="Save">
+                @if(isEdit)
+                {
+                    <input type="button" value="Delete" @onclick="@(() => Delete())"/>
+                }
+                <br><br>
+                <a href="./register">
+                    Create a new user
+                </a>
+            </EditForm>
+        }
+        else
+        {
+            <div>
+                No roles have been created yet.<br>
+                Click <a href="./role/create">here</a> to create a role before proceeding.
+            </div>
+        }
+    }
+    else
+    {
+        <div>
+            No company has been created yet.<br>
+            Click <a href="./company/create">here</a> to create a company before proceeding.
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
+
+
+
+
+@*@if (user != null)
+{
+    if (companies != null || selRole != null)
     {
         <div>@errorMessage</div>
         <EditForm Model="user" OnValidSubmit="Save" OnInvalidSubmit="Error">
@@ -61,7 +194,7 @@
                     <select @onchange="@((args) => ChangeCompany(args))">
                         @foreach (var _company in companies)
                         {
-                            @if (_company.CompCode == company.CompCode)
+                            @if (_company.CompCode == selCompany.CompCode)
                             {
                                 <option value="@_company.CompCode" selected>@_company.CompName</option>
                             }
@@ -89,4 +222,4 @@ else
     <span>
         ... loading
     </span>
-}
+}*@

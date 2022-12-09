@@ -28,7 +28,7 @@ namespace DevShop.Pages.Views.Companies
 		private Company company;
 
 		// A list of all companies
-		private List<Company> companies;
+		private List<DropDownVM> dropDownCompanies;
 		// A list of all countries
 		private List<DropDownVM> dropDownCountries;
 
@@ -49,8 +49,12 @@ namespace DevShop.Pages.Views.Companies
 		protected override async Task OnParametersSetAsync()
 		{
 			// Get all companies from the DB and sort them by name
-			companies = await uow.CompanyRepo.GetAllModelsAsync();
-			companies = companies.OrderBy(c => c.CompName).ToList();
+			List<Company> companies = await uow.CompanyRepo.GetAllModelsAsync();
+			dropDownCompanies = companies.OrderBy(c => c.CompName).OrderBy(c => c.CompCode.Substring(0, 2)).Select(c => new DropDownVM()
+            {
+				Value = c.CompCode,
+				DisplayName = c.CompCode.Substring(0, 2) + " - " + c.CompName
+			}).ToList();
 
 			// Get all existing countries and sort them by name
 			List<Country> countries = await uow.CountryRepo.GetAllModelsAsync();
