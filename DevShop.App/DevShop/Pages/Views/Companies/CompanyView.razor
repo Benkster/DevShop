@@ -1,0 +1,30 @@
+﻿@page "/company"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Companies</h1>
+@if (companies != null)
+{
+    <select @onchange="@((e) => ChangeCompany(e))">
+        <option value="0">Please select a company</option>
+        @foreach (var _company in companies)
+        {
+            <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+        }
+    </select>
+    <br /><br />
+    <a href="./company/create">
+        Create a new company
+    </a>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
