@@ -1,0 +1,94 @@
+﻿@page "/company/create"
+@page "/company/edit/{CompCode}"
+@using DevShop.Data
+@using DevShop.Data.Helpers
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Companies</h1>
+@if (companies != null && dropDownCountries != null)
+{
+    @if (dropDownCountries.Count > 0)
+    {
+        <select @onchange="@((e) => ChangeCompany(e))">
+            <option value="0">Please select a company</option>
+            @foreach (var _company in companies)
+            {
+                @if (isEdit && !companyChanged && company != null && _company.CompCode == company.CompCode)
+                {
+                    <option value="@_company.CompCode" selected>@_company.CompName</option>
+                }
+                else
+                {
+                    <option value="@_company.CompCode">@_company.CompName</option>
+                }
+            }
+        </select>
+        <br /><br />
+        <EditForm Model="company" OnValidSubmit="Save" OnInvalidSubmit="Error">
+            @if (!string.IsNullOrEmpty(errorMessage.Value))
+            {
+                <b>@errorMessage</b>
+                <br><br />
+            }
+
+            @if (isEdit)
+            {
+                <div>@company.CompCode</div>
+            }
+            else
+            {
+                <select @onchange="@((e) => ChangeCountry(e))">
+                    @foreach (var _elem in dropDownCountries)
+                    {
+                        @if (_elem.Value == selCountryCode)
+                        {
+                            <option value="@_elem.Value" selected>@_elem.DisplayName</option>
+                        }
+                        else
+                        {
+                            <option value="@_elem.Value">@_elem.DisplayName</option>
+                        }
+                    }
+                </select><br />
+                <input type="text" placeholder="AT1520" maxlength="6" pattern="@ViewPatterns.CompCodePattern" @bind="company.CompCode" required readonly><br>
+            }
+            <input type="text" placeholder="Name of company" maxlength="250" @bind="company.CompName" required><br>
+            <input type="text" placeholder="Additional name of company" maxlength="250" @bind="company.CompAddName"><br>
+            <label for="chk_producer">
+                Company is a producer
+            </label> <input id="chk_producer" type="checkbox" @bind="company.IsProducer"><br>
+            <input type="text" placeholder="+43 660 5203 444" pattern="@ViewPatterns.TelPattern" @bind="company.Tel"><br>
+            <input type="email" placeholder="E-Mail" @bind="company.Mail"><br>
+            <input type="text" placeholder="https://www.devshop.com" pattern="@ViewPatterns.WebsitePattern" @bind="company.Website"><br>
+            <textarea placeholder="Description" @bind="company.Description"></textarea>
+            <br><br>
+            <input type="submit" value="Save">
+            @if (isEdit)
+            {
+                <input type="button" value="Delete" @onclick="@(() => Delete())" />
+            }
+            <br><br>
+            <a href="./company/create">
+                Create a new company
+            </a>
+        </EditForm>
+    }
+    else
+    {
+        <div>
+            No countries have been found.<br>
+            Please click <a href="./country/create">here</a> to create a country before proceeding
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
