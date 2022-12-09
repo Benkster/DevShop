@@ -8,6 +8,9 @@ namespace DevShop.Data.Repos.IRepos
     /// </summary>
     public interface IUserRepo
     {
+        Task CreateModelAsync(User _model);
         Task<List<User>> GetAllModelsAsync(string _compCode);
+        Task<List<User>> GetAllModelsAsync(int _roleNr);
+        Task UpdateModelAsync(User _model);
     }
 }

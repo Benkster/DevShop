@@ -21,7 +21,7 @@ namespace DevShop.Pages.Views.Authentication
 		protected override async Task OnInitializedAsync()
 		{
 			user = new User();
-			role = await uow.RoleRepo.GetModelViaPk(1);
+			role = await uow.RoleRepo.GetModelByPkAsync(1);
 
 			companies = await uow.CompanyRepo.GetAllModelsAsync();
 
