@@ -132,20 +132,18 @@ namespace DevShop.Pages.Views.Cities
         {
             if (selState != null)
             {
-                // Specify the state, to which this city belongs
-                city.StateId = selState.StateId;
-
-
-                // Update an existing city
+                // Delete the city, if it should be updated. This is neccessary, as EF won't allow changing the StateID-Column in the DB, due to it beeing part of a PK
                 if (isEdit)
                 {
-                    await uow.CityRepo.UpdateModelAsync(city);
+                    //await uow.CityRepo.UpdateModelAsync(city);
+                    await uow.CityRepo.DeleteModelAsync(city.StateId, city.Zip);
                 }
-                // Create a new city
-                else
-                {
-                    await uow.CityRepo.CreateModelAsync(city);
-                }
+
+                // Specify the state, to which this city belongs
+                city.StateId = selState.StateId;
+                city.State = selState;
+
+                await uow.CityRepo.CreateModelAsync(city);
 
 
                 // Return to the overview

@@ -18,6 +18,7 @@ namespace DevShop.Data
 		private CountryRepo _countryRepo;
 		private StateRepo _stateRepo;
 		private CityRepo _cityRepo;
+		private UserRepo _userRepo;
 
 
 		// Allows access to the Company-Repository
@@ -89,6 +90,18 @@ namespace DevShop.Data
 				_cityRepo = (_cityRepo == null) ? new CityRepo(_context) : _cityRepo;
 
 				return _cityRepo;
+			}
+		}
+
+		// Allows access to the User-Repository
+		public UserRepo UserRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_userRepo = (_userRepo == null) ? new UserRepo(_context) : _userRepo;
+
+				return _userRepo;
 			}
 		}
 		#endregion

@@ -106,7 +106,6 @@ namespace DevShop.Pages.Views.Categories
         /// <summary>
         /// Delete a category from the database
         /// </summary>
-        /// <returns></returns>
         private async Task Delete()
 		{
             // Get all existing categories
