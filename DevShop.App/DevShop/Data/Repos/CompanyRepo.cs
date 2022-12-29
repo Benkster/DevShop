@@ -41,6 +41,22 @@ namespace DevShop.Data.Repos
 
 
 
+
+		/// <summary>
+		/// Get all existing Companies, that are marked as beeing producers of products, from the database
+		/// </summary>
+		/// <returns>
+		/// A list of objects of type Company
+		/// </returns>
+		public async Task<List<Company>> GetAllModelsAsync(bool _onlyProducer)
+		{
+			List<Company> model = (_onlyProducer) ? await _context.Companies.Where(m => m.IsProducer == true).ToListAsync() : await _context.Companies.ToListAsync();
+
+			return model;
+		}
+
+
+
 		/// <summary>
 		/// Get a single Company from the database
 		/// </summary>

@@ -1,0 +1,144 @@
+﻿@page "/product-group/create"
+@page "/product-group/edit/{CompCode}/{ProductGroupNr}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject TreeBuilder treeBuilder
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Product-Groups</h1>
+@if (companies != null)
+{
+    @if (companies.Count > 0)
+    {
+        <select @onchange="@((e) => ChangeCompany(e))">
+            <option value="0">Please select a company</option>
+            @foreach (var _company in companies)
+            {
+                @if (!string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
+                {
+                    <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                }
+                else
+                {
+                    <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                }
+            }
+        </select>
+        @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
+        {
+            <br />
+            <div>
+                @treeViewMarkup
+            </div>
+        }
+        <br /><br />
+        <EditForm Model="productGroup" OnValidSubmit="Save" OnInvalidSubmit="Error">
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <b>@errorMessage</b>
+                <br /><br />
+            }
+
+            @if (isEdit)
+            {
+                <div>@productGroup.ProductGroupNr</div>
+            }
+            else
+            {
+                <input type="text" placeholder="Product-Group Nr" value="@nextPK" readonly required/><br />
+            }
+
+            @if (!isEdit)
+            {
+                <div>
+                    Company:
+                </div>
+                <select @onchange="@((e) => ChangeAssignedCompany(e))">
+                    @foreach (var _company in companies)
+                    {
+                        <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                </select>
+                <br><br>
+            }
+
+            <input type="text" placeholder="Name" maxlength="150" @bind="productGroup.GroupName" required><br>
+            <input type="number" placeholder="Sort-Nr" @bind="productGroup.SortNr" required><br>
+            @if (categories != null)
+            {
+                <div>
+                    Category:
+                </div>
+                <select @onchange="@((e) => ChangeCategory(e))">
+                    @foreach (var _category in categories)
+                    {
+                        @if (isEdit && _category.CategoryId == productGroup.CategoryId)
+                        {
+                            <option value="@_category.CategoryId" selected>
+                                @_category.CategoryName
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@_category.CategoryId">
+                                @_category.CategoryName
+                            </option>
+                        }
+                    }
+                </select>
+                <br><br />
+            }
+
+            @if (formGroups != null)
+            {
+                <div>
+                    Parent-Element:
+                </div>
+                <select @onchange="@((e) => ChangeParentElem(e))">
+                    <option value="0">root</option>
+                    @foreach (var _prodGroup in formGroups)
+                    {
+                        @if (isEdit && productGroup.ParentId != null && _prodGroup.ProductGroupNr == productGroup.ParentId)
+                        {
+                            <option value="@_prodGroup.ProductGroupNr" selected>@_prodGroup.GroupName</option>
+                        }
+                        else
+                        {
+                            <option value="@_prodGroup.ProductGroupNr">@_prodGroup.GroupName</option>
+                        }
+                    }
+                </select>
+                <br><br />
+            }
+
+            <textarea placeholder="Description" @bind="productGroup.GroupDescription"></textarea>
+            <br><br>
+            <input type="submit" value="save">
+            @if (isEdit)
+            {
+                <input type="button" value="Delete" @onclick="@(() => Delete())" />
+            }
+            <br><br>
+            <a href="./product-group/create">
+                Create a new Product-Group
+            </a>
+        </EditForm>
+    }
+    else
+    {
+        <div>
+            No companies were found.<br>
+            Please click <a href="./company/create">here</a> to create a new company before proceeding.
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
