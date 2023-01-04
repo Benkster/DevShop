@@ -77,6 +77,12 @@ namespace DevShop.Pages.Views.ProductGroups
                 // Get all product-groups, that can be selected as parent-elements
                 formGroups = await uow.ProductGroupRepo.GetModelsWithoutChildrenAsync(Convert.ToInt32(ProductGroupNr), CompCode);
 
+                if (productGroup.ParentId != null && productGroup.ParentId > 0)
+                {
+                    ProductGroup groupParent = await uow.ProductGroupRepo.GetModelByPkAsync(CompCode, Convert.ToInt32(productGroup.ParentId));
+                    categories = await uow.CategoryRepo.GetChildrenAsync(groupParent.CategoryId, true);
+                }
+
                 // Get the category of the current product-group
                 selCategory = await uow.CategoryRepo.GetModelByPkAsync(productGroup.CategoryId);
 
