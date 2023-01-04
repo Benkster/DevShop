@@ -1,0 +1,127 @@
+﻿@page "/product/create"
+@page "/product/edit/{CompCode}/{ProductGroupNr}/{ProductNr}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject TreeBuilder treeBuilder
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Products</h1>
+@if (companies != null)
+{
+    @if (companies.Count > 0)
+    {
+        <select @onchange="@((e) => ChangeCompany(e))">
+            <option value="0">Please select a company</option>
+            @foreach (var _company in companies)
+            {
+                @if (!string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
+                {
+                    <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                }
+                else
+                {
+                    <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                }
+            }
+        </select>
+        @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
+        {
+            <br />
+            <div>
+                @treeViewMarkup
+            </div>
+        }
+        <br /><br />
+        <EditForm Model="product" OnValidSubmit="Save" OnInvalidSubmit="Error">
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <b>@errorMessage</b>
+                <br /><br />
+            }
+
+            @if (isEdit)
+            {
+                <div>@product.ProductNr</div>
+            }
+            else
+            {
+                <input type="text" placeholder="Product Nr" value="@nextPK" readonly required/><br />
+            }
+
+            @if (!isEdit)
+            {
+                <div>
+                    Company:
+                </div>
+                <select @onchange="@((e) => ChangeAssignedCompany(e))">
+                    @foreach (var _company in companies)
+                    {
+                        <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                </select>
+                <br><br>
+                    
+                    
+                @if (productGroups != null && productGroups.Count > 0)
+                {
+                    <div>
+                        Product-Group:
+                    </div>
+                    <select @onchange="@((e) => ChangeProdGroup(e))">
+                        @foreach (var _prodGroup in productGroups)
+                        {
+                            <option value="@_prodGroup.ProductGroupNr">@_prodGroup.GroupName</option>
+                        }
+                    </select>
+                    <br><br>
+                }
+                else
+                {
+                    <div>
+                        No Product-Groups were found.<br>
+                        Please select another Company or click <a href="./product-group/create">here</a> to create a new Product-Group.
+                    </div>
+                }
+            }
+
+
+            <input type="text" maxlength="150" placeholder="Product-Name" @bind="product.ProductName" required><br>
+            <input type="number" placeholder="Sort-Nr" @bind="product.SortNr" required><br>
+            <textarea maxlength="700" placeholder="Description" @bind="product.ProductDescription"></textarea>
+            <br><br>
+
+
+            @if (productGroups != null && productGroups.Count > 0)
+            {
+                <input type="submit" value="Save"/>
+            }
+
+            @if (isEdit)
+            {
+                <input type="button" value="Delete" @onclick="@(() => Delete())" />
+            }
+
+            <br><br>
+            <a href="./product/create">
+                Create a new Product
+            </a>
+        </EditForm>
+    }
+    else
+    {
+        <div>
+            No companies were found.<br>
+            Please click <a href="./company/create">here</a> to create a new company before proceeding.
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

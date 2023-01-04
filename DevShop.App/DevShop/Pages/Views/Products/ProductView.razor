@@ -1,0 +1,56 @@
+﻿@page "/product"
+@page "/product/{CompCode}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@inject TreeBuilder treeBuilder
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Products</h1>
+@if (companies != null)
+{
+    @if (companies.Count > 0)
+    {
+        <select @onchange="@((e) => ChangeCompany(e))">
+            <option value="0">Please select a company</option>
+            @foreach (var _company in companies)
+            {
+                @if (!changedCompany && !string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
+                {
+                    <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                }
+                else
+                {
+                    <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                }
+            }
+        </select>
+        @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
+        {
+            <br />
+            <div>
+                @treeViewMarkup
+            </div>
+        }
+        <br /><br />
+        <a href="./product/create">
+            Create a new Product
+        </a>
+    }
+    else
+    {
+        <div>
+            No companies have been found.<br>
+            Click <a href="./company/create">here</a> to create a company before proceeding.
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
