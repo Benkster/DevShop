@@ -16,5 +16,6 @@ namespace DevShop.Data
 		ProductRepo ProductRepo { get; }
 		ArticleRepo ArticleRepo { get; }
 		ArticleHeaderRepo ArticleHeaderRepo { get; }
+		UnitRepo UnitRepo { get; }
 	}
 }

@@ -24,6 +24,7 @@ namespace DevShop.Data
 		private ProductRepo _productRepo;
 		private ArticleRepo _articleRepo;
 		private ArticleHeaderRepo _articleHeaderRepo;
+		private UnitRepo _unitRepo;
 
 
 		// Allows access to the Company-Repository
@@ -167,6 +168,18 @@ namespace DevShop.Data
 				_articleHeaderRepo = (_articleHeaderRepo == null) ? new ArticleHeaderRepo(_context) : _articleHeaderRepo;
 
 				return _articleHeaderRepo;
+			}
+		}
+
+		// Allows access to the Unit-Repository
+		public UnitRepo UnitRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_unitRepo = (_unitRepo == null) ? new UnitRepo(_context) : _unitRepo;
+
+				return _unitRepo;
 			}
 		}
 		#endregion
