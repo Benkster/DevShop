@@ -53,7 +53,7 @@ namespace DevShop.Data.Helpers
 			{
 				ElemID = a.ArticleNr + 200000,
 				ElemText = a.ArticleName,
-				ParentID = a.ProductNr,
+				ParentID = a.ProductNr + 100000,
 				ElemLink = "./article/edit/" + a.CompCode + "/" + a.ProductGroupNr.ToString() + "/" + a.ProductNr.ToString() + "/" + a.ArticleNr.ToString()
 			}).ToList();
 

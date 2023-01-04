@@ -191,7 +191,7 @@ namespace DevShop.Pages.Views.Products
             List<Product> products = await uow.ProductRepo.GetAllModelsAsync(CompCode);
             List<Article> articles = await uow.ArticleRepo.GetAllModelsAsync(CompCode);
 
-            List<TreeViewElementVM> treeViewElements = ConcatArticleTree.ConcatFromLists(productGroups, products, articles);
+            List<TreeViewElementVM> treeViewElements = ConcatArticleTree.ConcatFromLists(allProductGroups, products, articles);
 
 
             // Get the HTML-Code for the TreeView
