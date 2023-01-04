@@ -23,6 +23,7 @@ namespace DevShop.Data
 		private ProductGroupRepo _productGroupRepo;
 		private ProductRepo _productRepo;
 		private ArticleRepo _articleRepo;
+		private ArticleHeaderRepo _articleHeaderRepo;
 
 
 		// Allows access to the Company-Repository
@@ -154,6 +155,18 @@ namespace DevShop.Data
 				_articleRepo = (_articleRepo == null) ? new ArticleRepo(_context) : _articleRepo;
 
 				return _articleRepo;
+			}
+		}
+
+		// Allows access to the ArticleHeader-Repository
+		public ArticleHeaderRepo ArticleHeaderRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_articleHeaderRepo = (_articleHeaderRepo == null) ? new ArticleHeaderRepo(_context) : _articleHeaderRepo;
+
+				return _articleHeaderRepo;
 			}
 		}
 		#endregion
