@@ -20,6 +20,13 @@ namespace DevShop.Data
 
 
 
+        #region Add Children To Selection
+        // Contains all child-elements, that are beeing included in a select-list
+        private List<SelectListDataVM> includeElemList;
+        #endregion
+
+
+
         #region Build TreeView
         // Keeps track of the current depth-level while generating the Code for the TreeView
         int treeDepth = 0;
@@ -36,6 +43,7 @@ namespace DevShop.Data
         {
             treeViewResultHtmlStringBuilder = new StringBuilder();
             excludeElemList = new List<SelectListDataVM>();
+            includeElemList = new List<SelectListDataVM>();
         }
         #endregion
 
@@ -107,21 +115,91 @@ namespace DevShop.Data
                 }
             }
         }
-		#endregion
+        #endregion
 
 
 
-		#region Build TreeView
-		/// <summary>
-		/// Create HTML-Code for a TreeView (nested ul and li-elements) out of a list of elements
-		/// </summary>
-		/// <param name="_treeViewElements">
-		/// A list of elements, that should be displayed in the TreeView
-		/// </param>
-		/// <returns>
-		/// A MarkupString containing the HTML-Code of the TreeView
-		/// </returns>
-		public MarkupString BuildTree(List<TreeViewElementVM> _treeViewElements)
+        #region Add Children To Selection
+        /// <summary>
+        /// Include only the child-elements of a specified element for a select-list.
+        /// (i.e. it should only be possible to select the category and all sub-categories of the parent Product-Group)
+        /// e.g.:
+        /// PG 1 => ID: 1 ParentID: 0 (has no Parent-Element) and Category "IT"
+        /// PG 2 => ID: 2 ParentID: 1 (it is a Sub-Group of PG 1) and is only allowed to select "IT" and all its sub-Categories, no other categories
+        /// </summary>
+        /// <param name="_fullList">
+        /// A list of all elements, that exist
+        /// </param>
+        /// <param name="_rootID">
+        /// ID of the element, the children of which should be included
+        /// </param>
+        /// <param name="_includeParent">
+        /// Indicates, whether the Category of the Parent-Product-Group is also allowed to be selected or not
+        /// </param>
+        /// <returns>
+        /// A list of all elements, that are allowed to be selected
+        /// </returns>
+        public List<SelectListDataVM> AddChildrenToSelectList(List<SelectListDataVM> _fullList, int _rootID, bool _includeParent = false)
+        {
+            // Contains all elements, that should be included
+            includeElemList = new List<SelectListDataVM>();
+
+            // Include the root-element as well, if it is allowed to be selected
+            if (_includeParent)
+			{
+                includeElemList.Add(_fullList.Where(fl => fl.ElemID == _rootID).FirstOrDefault());
+			}
+
+            // Fill the list of elements, that should be included
+            AddToIncludeElemList(_fullList, _fullList.Where(l => l.ParentID == _rootID).ToList());
+
+
+            return includeElemList;
+        }
+
+
+
+        /// <summary>
+        /// This recursive method adds all elements, that should be included in a selection
+        /// </summary>
+        /// <param name="_fullList">
+        /// A list containing all existing elements
+        /// </param>
+        /// <param name="_childList">
+        /// A list containing all child-elements of a certain element.
+        /// Pass the direct child-elements of the element, whose children should be included in the selection, to loop through all children
+        /// </param>
+        private void AddToIncludeElemList(List<SelectListDataVM> _fullList, List<SelectListDataVM> _childList)
+        {
+            // Loop through all children of the current parent-element
+            foreach (SelectListDataVM elem in _childList)
+            {
+                // Add the child to the list, that holds all elements, that should be included
+                includeElemList.Add(elem);
+
+
+                // If the current child-element also has children, add them to the include-list as well
+                if (_fullList.Any(l => l.ParentID == elem.ElemID))
+                {
+                    AddToIncludeElemList(_fullList, _fullList.Where(l => l.ParentID == elem.ElemID).ToList());
+                }
+            }
+        }
+        #endregion
+
+
+
+        #region Build TreeView
+        /// <summary>
+        /// Create HTML-Code for a TreeView (nested ul and li-elements) out of a list of elements
+        /// </summary>
+        /// <param name="_treeViewElements">
+        /// A list of elements, that should be displayed in the TreeView
+        /// </param>
+        /// <returns>
+        /// A MarkupString containing the HTML-Code of the TreeView
+        /// </returns>
+        public MarkupString BuildTree(List<TreeViewElementVM> _treeViewElements)
         {
             // Result HTML as string
             string treeViewResultHtml = string.Empty;
@@ -167,8 +245,10 @@ namespace DevShop.Data
             if (treeDepth > 1)
 			{
                 treeViewResultHtmlStringBuilder.Append(
-                    "<input id=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"rad_tree_openSub\" type=\"radio\" name=\"rad_tree_openSub\">" +
-                    "<label id=\"lbl_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_openSub\" for=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>"
+                    "<input id=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"rad_tree_openSub\" type=\"radio\" name=\"rad_tree_openSub_" + treeDepth.ToString() + "\">" +
+                    "<input id=\"rad_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"rad_tree_closeSub\" type=\"radio\" name=\"rad_tree_openSub_" + treeDepth.ToString() + "\">" +
+                    "<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_openSub\" for=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>" +
+                    "<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_closeSub\" for=\"rad_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>"
                 );
 			}
             // Before the TreeView begins, add radio-buttons and a label to be able to open it on mobile-devices
@@ -190,7 +270,7 @@ namespace DevShop.Data
             // Add a label to close the sub-menu (on mobile devices)
             if (treeDepth > 1)
 			{
-                treeViewResultHtmlStringBuilder.Append("<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_closeSub\" for=\"rad_tree_closeSub\"></label>");
+                //treeViewResultHtmlStringBuilder.Append("<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_closeSub\" for=\"rad_tree_closeSub\"></label>");
 			}
             // Add a label to close the TreeView (on mobile devices)
             else

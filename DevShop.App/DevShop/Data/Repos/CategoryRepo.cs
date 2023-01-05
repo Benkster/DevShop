@@ -113,6 +113,43 @@ namespace DevShop.Data.Repos
 
 
         /// <summary>
+        /// Include only the children of a given element in a select-list
+        /// </summary>
+        /// <param name="_rootID">
+        /// ID of the element, the children of which should be included
+        /// </param>
+        /// <param name="_includeParent">
+        /// Indicates, whether the root-element is also allowed to be selected or not
+        /// </param>
+        /// <returns>
+        /// A list of all child-elements
+        /// </returns>
+        public async Task<List<Category>> GetChildrenAsync(int _rootID, bool _includeParent = false)
+		{
+            // List of all existing elements
+            List<Category> allModels = await _context.Categories.ToListAsync();
+
+            // Convert the type of the list of all elements to SelectListDataVM, which is a general model that is used for the methods of the TreeBuilder
+            List<SelectListDataVM> allSelectListModels = allModels.Select(m => new SelectListDataVM()
+            {
+                ElemID = m.CategoryId,
+                ElemName = m.CategoryName,
+                ParentID = m.ParentId
+            }).ToList();
+
+            // Add all children of the given element to the result-list
+            List<SelectListDataVM> resultSelectList = _treeBuilder.AddChildrenToSelectList(allSelectListModels, _rootID, _includeParent);
+
+            // Convert the type of the result-list back to the type of the model, that is used in the view
+            List<Category> childModels = allModels.Where(m => !resultSelectList.All(r => r.ElemID != m.CategoryId)).ToList();
+
+
+            return childModels;
+		}
+
+
+
+        /// <summary>
         /// Get a single Category from the database
         /// </summary>
         /// <param name="_pk">

@@ -7,20 +7,20 @@
 
 
 
-<h1>Roles</h1>
+<h1 class="bm18">Roles</h1>
 @if (roles != null)
 {
-    <select @onchange="@((e) => ChangeRole(e))">
-        <option value="0">Please select a role</option>
-        @foreach (var _role in roles)
-        {
-            <option value="@_role.RoleNr">@_role.RoleName</option>
-        }
-    </select>
-    <br /><br />
-    <a href="./role/create">
-        Create a new role
-    </a>
+    <div id="managementSelectBox">
+        <select @onchange="@((e) => ChangeRole(e))">
+            <option value="0">Please select a role</option>
+            @foreach (var _role in roles)
+            {
+                <option value="@_role.RoleNr">@_role.RoleName</option>
+            }
+        </select>
+        <br /><br />
+        <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./role/create"></a>
+    </div>
 }
 else
 {

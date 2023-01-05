@@ -20,6 +20,11 @@ namespace DevShop.Data
 		private CityRepo _cityRepo;
 		private UserRepo _userRepo;
 		private UserDiscountRepo _userDiscountRepo;
+		private ProductGroupRepo _productGroupRepo;
+		private ProductRepo _productRepo;
+		private ArticleRepo _articleRepo;
+		private ArticleHeaderRepo _articleHeaderRepo;
+		private UnitRepo _unitRepo;
 
 
 		// Allows access to the Company-Repository
@@ -115,6 +120,66 @@ namespace DevShop.Data
 				_userDiscountRepo = (_userDiscountRepo == null) ? new UserDiscountRepo(_context) : _userDiscountRepo;
 
 				return _userDiscountRepo;
+			}
+		}
+
+		// Allows access to the ProductGroup-Repository
+		public ProductGroupRepo ProductGroupRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_productGroupRepo = (_productGroupRepo == null) ? new ProductGroupRepo(_context, _treeBuilder) : _productGroupRepo;
+
+				return _productGroupRepo;
+			}
+		}
+
+		// Allows access to the Product-Repository
+		public ProductRepo ProductRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_productRepo = (_productRepo == null) ? new ProductRepo(_context) : _productRepo;
+
+				return _productRepo;
+			}
+		}
+
+		// Allows access to the Article-Repository
+		public ArticleRepo ArticleRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_articleRepo = (_articleRepo == null) ? new ArticleRepo(_context) : _articleRepo;
+
+				return _articleRepo;
+			}
+		}
+
+		// Allows access to the ArticleHeader-Repository
+		public ArticleHeaderRepo ArticleHeaderRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_articleHeaderRepo = (_articleHeaderRepo == null) ? new ArticleHeaderRepo(_context) : _articleHeaderRepo;
+
+				return _articleHeaderRepo;
+			}
+		}
+
+		// Allows access to the Unit-Repository
+		public UnitRepo UnitRepo
+		{
+			get
+			{
+				// Create a new instance, if it has not yet been done
+				_unitRepo = (_unitRepo == null) ? new UnitRepo(_context) : _unitRepo;
+
+				return _unitRepo;
 			}
 		}
 		#endregion

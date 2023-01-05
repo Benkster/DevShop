@@ -20,7 +20,7 @@ namespace DevShop.Pages.Views.Categories
         private int parentID = 0;
 
         // Displays an error message, if something went wrong
-        private string errorMessage = string.Empty;
+        private MarkupString errorMessage = new MarkupString();
 
         // Holds the HTML-Code for the TreeView
         MarkupString treeViewMarkup;
@@ -48,6 +48,9 @@ namespace DevShop.Pages.Views.Categories
         /// </summary>
 		protected override async Task OnParametersSetAsync()
         {
+            errorMessage = new MarkupString();
+
+
             // An existing category is beeing edited
             if (!string.IsNullOrEmpty(CategoryID))
             {
@@ -58,6 +61,7 @@ namespace DevShop.Pages.Views.Categories
             // A new category is beeing created
             else
             {
+                isEdit = false;
                 category = new Category();
                 formCategories = await uow.CategoryRepo.GetAllModelsAsync(CategorySortType.SortType.Name);
             }
@@ -89,16 +93,15 @@ namespace DevShop.Pages.Views.Categories
             if (isEdit)
             {
                 await uow.CategoryRepo.UpdateModelAsync(category);
-
-                // Parent-element might have changed, so the TreeView must be updated
-                GenerateTreeView();
             }
             // Create a new category
             else
             {
                 await uow.CategoryRepo.CreateModelAsync(category);
-                nav.NavigateTo("/category");
             }
+
+
+            nav.NavigateTo("/category");
         }
 
 
@@ -110,12 +113,17 @@ namespace DevShop.Pages.Views.Categories
 		{
             // Get all existing categories
             List<Category> allCategories = await uow.CategoryRepo.GetAllModelsAsync();
+            List<ProductGroup> allProdGroups = await uow.ProductGroupRepo.GetAllModelsAsync();
 
 
             // If the category, that should be deleted, has any child-elements, the user is not allowed to delete it
             if (allCategories.Any(c => c.ParentId == category.CategoryId))
 			{
-                errorMessage = "This element has one or more child-elements attached to it. Please delete all child-elements first in order to delete this element.";
+                errorMessage = (MarkupString)"This element has one or more child-elements attached to it.<br>Please delete all child-elements first in order to delete this element.";
+			}
+            else if (allProdGroups.Any(pg => pg.CategoryId == category.CategoryId))
+			{
+                errorMessage = (MarkupString)"This category is currently assigned to one or more product-groups.<br>Please change the category of those groups before deleting this element.";
 			}
             // The category has no child-elements => delete it
 			else
@@ -132,7 +140,7 @@ namespace DevShop.Pages.Views.Categories
         /// </summary>
         private async Task Error()
         {
-            errorMessage = "Something went wrong. Please try again";
+            errorMessage = (MarkupString)"Something went wrong.<br>Please try again";
         }
         #endregion
 
