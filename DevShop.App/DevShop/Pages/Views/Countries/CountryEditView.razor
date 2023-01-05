@@ -8,10 +8,10 @@
 
 
 
-<h1>Countries</h1>
+<h1 class="bm18">Countries</h1>
 @if (country != null)
 {
-    <EditForm Model="country" OnValidSubmit="Save" OnInvalidSubmit="Error">
+    <div id="managementSelectBox">
         @if (dropDownList != null && dropDownList.Count > 0)
         {
             <select @onchange="@((e) => ChangeCountry(e))">
@@ -29,32 +29,40 @@
                 }
             </select>
         }
-        @if (!string.IsNullOrEmpty(errorMessage.Value))
-        {
-            <br><br />
-            <b>@errorMessage</b>
-        }
-        <br /><br />
-        @if (isEdit)
-        {
-            <input type="text" value="@country.CountryCode" readonly /><br />
-        }
-        else
-        {
-            <input type="text" placeholder="AT" maxlength="3" pattern="[A-Z]{2,3}" @bind="country.CountryCode"/><br />
-        }
-        <input type="text" placeholder="Austria" @bind="country.CountryName" />
-        <br /><br />
-        <input type="submit" value="Save" />
-        @if (isEdit)
-        {
-            <input type="button" value="Delete" @onclick="@(() => Delete())" />
-        }
-        <br>
-        <a href="./country/create">
-            Create new country
-        </a>
-    </EditForm>
+        
+        <div class="hide650">
+            <br><br>
+            <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./country/create"></a>
+        </div>
+    </div><div id="managementOutputBox" class="lp18">
+        <EditForm Model="country" OnValidSubmit="Save" OnInvalidSubmit="Error">
+            @if (!string.IsNullOrEmpty(errorMessage.Value))
+            {
+                <b class="dangerColor">@errorMessage</b>
+                <br /><br />
+            }
+
+            @if (isEdit)
+            {
+                <div class="bm9">
+                    @country.CountryCode
+                </div>
+            }
+            else
+            {
+                <input class="bm5" type="text" placeholder="AT" maxlength="3" pattern="[A-Z]{2,3}" @bind="country.CountryCode"/><br />
+            }
+
+            <input type="text" placeholder="Austria" @bind="country.CountryName" />
+            <br /><br />
+
+            <a class="show650 mIcon mIconNew backSignalColor hoverBackDarkSignalColor rm18" href="./country/create"></a><input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+            @if (isEdit)
+            {
+                <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+            }
+        </EditForm>
+    </div>
 }
 else
 {

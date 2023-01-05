@@ -9,107 +9,108 @@
 
 
 
-<h1>Products</h1>
+<h1 class="bm18">Products</h1>
 @if (companies != null)
 {
     @if (companies.Count > 0)
     {
-        <select @onchange="@((e) => ChangeCompany(e))">
-            <option value="0">Please select a company</option>
-            @foreach (var _company in companies)
-            {
-                @if (!string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
+        <div id="managementSelectBox" class="selectTree">
+            <select class="bm9" @onchange="@((e) => ChangeCompany(e))">
+                <option value="0">Please select a company</option>
+                @foreach (var _company in companies)
                 {
-                    <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
-                }
-                else
-                {
-                    <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
-                }
-            }
-        </select>
-        @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
-        {
-            <br />
-            <div>
-                @treeViewMarkup
-            </div>
-        }
-        <br /><br />
-        <EditForm Model="product" OnValidSubmit="Save" OnInvalidSubmit="Error">
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <b>@errorMessage</b>
-                <br /><br />
-            }
-
-            @if (isEdit)
-            {
-                <div>@product.ProductNr</div>
-            }
-            else
-            {
-                <input type="text" placeholder="Product Nr" value="@nextPK" readonly required/><br />
-            }
-
-            @if (!isEdit)
-            {
-                <div>
-                    Company:
-                </div>
-                <select @onchange="@((e) => ChangeAssignedCompany(e))">
-                    @foreach (var _company in companies)
+                    @if (!string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
+                    {
+                        <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                    else
                     {
                         <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
                     }
-                </select>
+                }
+            </select>
+            @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
+            {
+                @treeViewMarkup
+            }
+        
+            <div class="hide650">
                 <br><br>
-                    
-                    
-                @if (productGroups != null && productGroups.Count > 0)
+                <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./product/create"></a>
+            </div>
+        </div><div id="managementOutputBox" class="lp18">
+            <EditForm Model="product" OnValidSubmit="Save" OnInvalidSubmit="Error">
+                @if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    <div>
-                        Product-Group:
-                    </div>
-                    <select @onchange="@((e) => ChangeProdGroup(e))">
-                        @foreach (var _prodGroup in productGroups)
-                        {
-                            <option value="@_prodGroup.ProductGroupNr">@_prodGroup.GroupName</option>
-                        }
-                    </select>
-                    <br><br>
+                    <b class="dangerColor">@errorMessage</b>
+                    <br /><br />
+                }
+
+                @if (isEdit)
+                {
+                    <div class="bm9">@product.ProductNr</div>
                 }
                 else
                 {
-                    <div>
-                        No Product-Groups were found.<br>
-                        Please select another Company or click <a href="./product-group/create">here</a> to create a new Product-Group.
-                    </div>
+                    <input class="bm5" type="text" placeholder="Product Nr" value="@nextPK" readonly required/><br />
                 }
-            }
+
+                @if (!isEdit)
+                {
+                    <div>
+                        Company:
+                    </div>
+                    <select class="bm5" @onchange="@((e) => ChangeAssignedCompany(e))">
+                        @foreach (var _company in companies)
+                        {
+                            <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                        }
+                    </select><br />
+                    
+                    
+                    @if (productGroups != null && productGroups.Count > 0)
+                    {
+                        <div>
+                            Product-Group:
+                        </div>
+                        <select class="bm5" @onchange="@((e) => ChangeProdGroup(e))">
+                            @foreach (var _prodGroup in productGroups)
+                            {
+                                <option value="@_prodGroup.ProductGroupNr">@_prodGroup.GroupName</option>
+                            }
+                        </select><br />
+                    }
+                    else
+                    {
+                        <div class="bm9">
+                            No Product-Groups were found.<br>
+                            Please select another Company or click <a class="bold primaryColor" href="./product-group/create">here</a> to create a new Product-Group.
+                        </div>
+                    }
+                }
 
 
-            <input type="text" maxlength="150" placeholder="Product-Name" @bind="product.ProductName" required><br>
-            <input type="number" placeholder="Sort-Nr" @bind="product.SortNr" required><br>
-            <textarea maxlength="700" placeholder="Description" @bind="product.ProductDescription"></textarea>
-            <br><br>
+                <input class="bm5" type="text" maxlength="150" placeholder="Product-Name" @bind="product.ProductName" required><br>
+                <div>
+                    Sort-Nr.:
+                </div>
+                <input class="bm5" type="number" min="1" placeholder="Sort-Nr" @bind="product.SortNr" required><br>
+                <textarea maxlength="700" placeholder="Description" @bind="product.ProductDescription"></textarea>
+                <br><br>
 
 
-            @if (productGroups != null && productGroups.Count > 0)
-            {
-                <input type="submit" value="Save"/>
-            }
+                <a class="show650 mIcon mIconNew backSignalColor hoverBackDarkSignalColor rm18" href="./product/create"></a>
+                @if (productGroups != null && productGroups.Count > 0)
+                {
+                    <input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+                }
 
-            @if (isEdit)
-            {
-                <input type="button" value="Delete" @onclick="@(() => Delete())" />
-            }
-
-            <br><br>
-            <a href="./product/create">
-                Create a new Product
-            </a>
-        </EditForm>
+                @if (isEdit)
+                {
+                    <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+                }
+            </EditForm>
+        </div>
 
 
         @if (isEdit)
@@ -124,7 +125,7 @@
     {
         <div>
             No companies were found.<br>
-            Please click <a href="./company/create">here</a> to create a new company before proceeding.
+            Please click <a class="bold primaryColor" href="./company/create">here</a> to create a new company before proceeding.
         </div>
     }
 }
