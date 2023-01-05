@@ -1,0 +1,46 @@
+﻿@page "/management"
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1>Management</h1>
+<div id="managementOverviewWrapper" class="grid tm18">
+    <div class="managementOverviewBox dib vt hp9 vp9 backLightColor">
+        <div class="bm9">
+            <div class="mIconArticle mIconOverview"></div>
+        </div>
+        <div class="center">
+            <h3 class="bm9">
+                <a href="./article">Articles</a>
+            </h3>
+            <div>
+                Create and maintain product-groups, products and the corresponding articles, that are displayed in the shop.
+            </div>
+        </div>
+    </div><div class="managementOverviewBox dib vt hp9 vp9 backLightColor">
+        <div class="bm9">
+            <div class="mIconLoc mIconOverview"></div>
+        </div>
+        <div class="center">
+            <h3 class="bm9">
+                <a href="./country">Location</a>
+            </h3>
+            <div>
+                Add countries, states and cities or specify the address of a company.
+            </div>
+        </div>
+    </div><div class="managementOverviewBox dib vt hp9 vp9 backLightColor">
+        <div class="bm9">
+            <div class="mIconUser mIconOverview"></div>
+        </div>
+        <div class="center">
+            <h3 class="bm9">
+                <a href="./user">Users</a> / <a href="./company">Companies</a>
+            </h3>
+            <div>
+                Create companies, add users and give certain roles to those users.
+            </div>
+        </div>
+    </div>
+</div>
