@@ -245,8 +245,10 @@ namespace DevShop.Data
             if (treeDepth > 1)
 			{
                 treeViewResultHtmlStringBuilder.Append(
-                    "<input id=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"rad_tree_openSub\" type=\"radio\" name=\"rad_tree_openSub\">" +
-                    "<label id=\"lbl_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_openSub\" for=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>"
+                    "<input id=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"rad_tree_openSub\" type=\"radio\" name=\"rad_tree_openSub_" + treeDepth.ToString() + "\">" +
+                    "<input id=\"rad_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"rad_tree_closeSub\" type=\"radio\" name=\"rad_tree_openSub_" + treeDepth.ToString() + "\">" +
+                    "<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_openSub\" for=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>" +
+                    "<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_closeSub\" for=\"rad_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>"
                 );
 			}
             // Before the TreeView begins, add radio-buttons and a label to be able to open it on mobile-devices
@@ -268,7 +270,7 @@ namespace DevShop.Data
             // Add a label to close the sub-menu (on mobile devices)
             if (treeDepth > 1)
 			{
-                treeViewResultHtmlStringBuilder.Append("<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_closeSub\" for=\"rad_tree_closeSub\"></label>");
+                //treeViewResultHtmlStringBuilder.Append("<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_closeSub\" for=\"rad_tree_closeSub\"></label>");
 			}
             // Add a label to close the TreeView (on mobile devices)
             else

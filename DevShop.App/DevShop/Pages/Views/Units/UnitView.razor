@@ -7,20 +7,20 @@
 
 
 
-<h1>Units</h1>
+<h1 class="bm18">Units</h1>
 @if (units != null)
 {
-    <select @onchange="@((e) => ChangeUnit(e))">
-        <option value="0">Please select a Unit</option>
-        @foreach (var _unit in units)
-        {
-            <option value="@_unit.UnitCode">@_unit.UnitCode - @_unit.UnitName</option>
-        }
-    </select>
-    <br /><br />
-    <a href="./unit/create">
-        Create a new Unit
-    </a>
+    <div id="managementSelectBox">
+        <select @onchange="@((e) => ChangeUnit(e))">
+            <option value="0">Please select a Unit</option>
+            @foreach (var _unit in units)
+            {
+                <option value="@_unit.UnitCode">@_unit.UnitCode - @_unit.UnitName</option>
+            }
+        </select>
+        <br /><br />
+        <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./unit/create"></a>
+    </div>
 }
 else
 {

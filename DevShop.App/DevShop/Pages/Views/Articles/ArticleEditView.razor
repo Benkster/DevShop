@@ -9,256 +9,263 @@
 
 
 
-<h1>Articles</h1>
+<h1 class="bm18">Articles</h1>
 @if (companies != null)
 {
     @if (companies.Count > 0)
     {
-        <select @onchange="@((e) => ChangeCompany(e))">
-            <option value="0">Please select a company</option>
-            @foreach (var _company in companies)
-            {
-                @if (!string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
+        <div id="managementSelectBox" class="selectTree">
+            <select class="bm9" @onchange="@((e) => ChangeCompany(e))">
+                <option value="0">Please select a company</option>
+                @foreach (var _company in companies)
                 {
-                    <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
-                }
-                else
-                {
-                    <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
-                }
-            }
-        </select>
-        @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
-        {
-            <br />
-            <div>
-                @treeViewMarkup
-            </div>
-        }
-        <br /><br />
-        <EditForm Model="article" OnValidSubmit="Save" OnInvalidSubmit="Error">
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <b>@errorMessage</b>
-                <br><br />
-            }
-
-            @if (isEdit)
-            {
-                <div>@article.ArticleNr</div>
-            }
-            else
-            {
-                <input type="text" placeholder="Article Nr" value="@nextPK" readonly required/><br />
-            }
-
-
-            @if (!isEdit)
-            {
-                @* Select Companies *@
-                <div>
-                    Company:
-                </div>
-                <select @onchange="@((e) => ChangeAssignedCompany(e))">
-                    @foreach (var _company in companies)
+                    @if (!string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
                     {
-                        <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
-                    }
-                </select>
-                <br><br>
-                    
-                
-                @* Select Product-Groups *@
-                @if (productGroups != null && productGroups.Count > 0)
-                {
-                    <div>
-                        Product-Group:
-                    </div>
-                    <select @onchange="@((e) => ChangeProdGroup(e))">
-                        @foreach (var _prodGroup in productGroups)
-                        {
-                            <option value="@_prodGroup.ProductGroupNr">@_prodGroup.GroupName</option>
-                        }
-                    </select>
-                    <br><br>
-                }
-                else
-                {
-                    <div>
-                        No Product-Groups were found.<br>
-                        Please select another Company or click <a href="./product-group/create">here</a> to create a new Product-Group.
-                    </div>
-                }
-                    
-                
-                @* Select Products *@
-                @if (products != null && products.Count > 0)
-                {
-                    <div>
-                        Products:
-                    </div>
-                    <select @onchange="@((e) => ChangeProduct(e))">
-                        @foreach (var _product in products)
-                        {
-                            <option value="@_product.ProductNr">@_product.ProductName</option>
-                        }
-                    </select>
-                    <br><br>
-                }
-                else
-                {
-                    <div>
-                        No Products were found.<br>
-                        Please select another Product-Group or click <a href="./product/create">here</a> to create a new Product.
-                    </div>
-                }
-            }
-
-
-            <input type="text" maxlength="150" placeholder="Article Name" @bind="article.ArticleName" required><br>
-            <input type="text" maxlength="30" placeholder="Code (Art.Nr.)" @bind="article.ArticleCode"><br>
-            <input type="text" maxlength="13" placeholder="EAN" pattern="^[0-9]{0,13}$" @bind="article.Ean"><br>
-            <input type="number" min="1" placeholder="Sort Nr." @bind="article.SortNr" required><br>
-            <input type="number" min="1" placeholder="Unit-Amount" @bind="article.UnitAmount" required>
-            <br /><br>
-
-
-            @if (units.Count > 0)
-            {
-                <div>
-                    Billing-Unit:
-                </div>
-                <select @onchange="@((e) => ChangeBillingUnit(e))">
-                    @foreach (var _unit in units)
-                    {
-                        @if (isEdit && _unit.UnitCode == article.BillingUnit)
-                        {
-                            <option value="@_unit.UnitCode" selected>@_unit.UnitCode</option>
-                        }
-                        else
-                        {
-                            <option value="@_unit.UnitCode">@_unit.UnitCode</option>
-                        }
-                    }
-                </select>
-                <br><br />
-                <div>
-                    Packaging-Unit:
-                </div>
-                <select @onchange="@((e) => ChangePackagingUnit(e))">
-                    @foreach (var _unit in units)
-                    {
-                        @if (isEdit && _unit.UnitCode == article.PackagingUnit)
-                        {
-                            <option value="@_unit.UnitCode" selected>@_unit.UnitCode</option>
-                        }
-                        else
-                        {
-                            <option value="@_unit.UnitCode">@_unit.UnitCode</option>
-                        }
-                    }
-                </select>
-            }
-            else
-            {
-                <div>
-                    No Units were found.<br>
-                    Please click <a href="./unit/create">here</a> to create Units.
-                </div>
-            }
-
-            <br><br>
-            <input type="number" min="0.01" step="0.01" placeholder="Price" @bind="article.Price" required><br>
-            <input type="number" min="0.00" max="1.00" step="0.01" placeholder="Discount" @bind="article.Discount"><br>
-            <input id="chk_overruleUserDiscount" type="checkbox" @bind="article.OverruleUserDiscount"><label for="chk_overruleUserDiscount">Overrule User-Discount</label>
-
-
-            @if (artHeader == null || artHeader.ArticleHeaderId <= 0)
-            {
-                <b>
-                    No Header for Articles of this Product exists yet.<br>
-                    @if (selCompany != null && selProdGroup != null && selProduct != null)
-                    {
-                        <span>
-                            Click <a href="javascript:LightFrame('./article-header/@selCompany.CompCode/@selProdGroup.ProductGroupNr.ToString()/@selProduct.ProductNr.ToString()')">here</a> to create a Header.
-                        </span>
+                        <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
                     }
                     else
                     {
-                        <span>
-                            Please create a header at the <a href="./product">edit-view for Products</a> before proceeding.
-                        </span>
+                        <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
                     }
-                </b>
-            }
-            else
+                }
+            </select>
+            @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
             {
-                @if (!string.IsNullOrEmpty(artHeader.F1name))
-                {
-                    <div>@artHeader.F1name</div>
-                    <input type="text" maxlength="250" @bind="article.F1" /><br />
-                }
-
-                
-                @if (!string.IsNullOrEmpty(artHeader.F2name))
-                {
-                    <div>@artHeader.F2name</div>
-                    <input type="text" maxlength="250" @bind="article.F2" /><br />
-                }
-
-                
-                @if (!string.IsNullOrEmpty(artHeader.F3name))
-                {
-                    <div>@artHeader.F3name</div>
-                    <input type="text" maxlength="250" @bind="article.F3" /><br />
-                }
-
-                
-                @if (!string.IsNullOrEmpty(artHeader.F4name))
-                {
-                    <div>@artHeader.F4name</div>
-                    <input type="text" maxlength="250" @bind="article.F4" /><br />
-                }
-
-                
-                @if (!string.IsNullOrEmpty(artHeader.F5name))
-                {
-                    <div>@artHeader.F5name</div>
-                    <input type="text" maxlength="250" @bind="article.F5" /><br />
-                }
-
-                
-                @if (!string.IsNullOrEmpty(artHeader.F6name))
-                {
-                    <div>@artHeader.F6name</div>
-                    <input type="text" maxlength="250" @bind="article.F6" /><br />
-                }
+                @treeViewMarkup
             }
+        
+            <div class="hide650">
+                <br><br>
+                <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./article/create"></a>
+            </div>
+        </div><div id="managementOutputBox" class="lp18">
+            <EditForm Model="article" OnValidSubmit="Save" OnInvalidSubmit="Error">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <b class="dangerColor">@errorMessage</b>
+                    <br><br />
+                }
 
-            <br><br>
-            <textarea maxlength="700" placeholder="Description" @bind="article.ArticleDescription"></textarea>
+                @if (isEdit)
+                {
+                    <div class="bm9">@article.ArticleNr</div>
+                }
+                else
+                {
+                    <input class="bm5" type="text" placeholder="Article Nr" value="@nextPK" readonly required/><br />
+                }
 
 
-            @if (productGroups != null && productGroups.Count > 0 && products != null && products.Count > 0 && units != null && units.Count > 0 && artHeader != null && artHeader.ArticleHeaderId > 0)
-            {
-                <input type="submit" value="Save" />
-            }
+                @if (!isEdit)
+                {
+                    @* Select Companies *@
+                    <div>
+                        Company:
+                    </div>
+                    <select class="bm5" @onchange="@((e) => ChangeAssignedCompany(e))">
+                        @foreach (var _company in companies)
+                        {
+                            <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                        }
+                    </select><br />
+                    
+                
+                    @* Select Product-Groups *@
+                    @if (productGroups != null && productGroups.Count > 0)
+                    {
+                        <div>
+                            Product-Group:
+                        </div>
+                        <select class="bm5" @onchange="@((e) => ChangeProdGroup(e))">
+                            @foreach (var _prodGroup in productGroups)
+                            {
+                                <option value="@_prodGroup.ProductGroupNr">@_prodGroup.GroupName</option>
+                            }
+                        </select><br />
+                    }
+                    else
+                    {
+                        <div class="bm9">
+                            No Product-Groups were found.<br>
+                            Please select another Company or click <a class="bold primaryColor" href="./product-group/create">here</a> to create a new Product-Group.
+                        </div>
+                    }
+                    
+                
+                    @* Select Products *@
+                    @if (products != null && products.Count > 0)
+                    {
+                        <div>
+                            Products:
+                        </div>
+                        <select class="bm5" @onchange="@((e) => ChangeProduct(e))">
+                            @foreach (var _product in products)
+                            {
+                                <option value="@_product.ProductNr">@_product.ProductName</option>
+                            }
+                        </select><br />
+                    }
+                    else
+                    {
+                        <div class="bm9">
+                            No Products were found.<br>
+                            Please select another Product-Group or click <a class="bold primaryColor" href="./product/create">here</a> to create a new Product.
+                        </div>
+                    }
+                }
 
-            @if (isEdit)
-            {
-                <input type="button" value="Delete" @onclick="@(() => Delete())" />
-            }
-        </EditForm>
-        <br /><br />
-        <a href="./article/create">
-            Create a new Article
-        </a>
+
+                <input class="bm5" type="text" maxlength="150" placeholder="Article Name" @bind="article.ArticleName" required><br>
+                <input class="bm5" type="text" maxlength="30" placeholder="Code (Art.Nr.)" @bind="article.ArticleCode"><br>
+                <input class="bm5" type="text" maxlength="13" placeholder="EAN" pattern="^[0-9]{0,13}$" @bind="article.Ean"><br>
+                <div>
+                    Sort-Nr.:
+                </div>
+                <input class="bm5" type="number" min="1" placeholder="Sort Nr." @bind="article.SortNr" required><br>
+                <div>
+                    Unit amount:
+                </div>
+                <input class="bm5" type="number" min="1" placeholder="Unit amount" @bind="article.UnitAmount" required><br>
+
+
+                @if (units.Count > 0)
+                {
+                    <div>
+                        Billing-Unit:
+                    </div>
+                    <select class="bm5" @onchange="@((e) => ChangeBillingUnit(e))">
+                        @foreach (var _unit in units)
+                        {
+                            @if (isEdit && _unit.UnitCode == article.BillingUnit)
+                            {
+                                <option value="@_unit.UnitCode" selected>@_unit.UnitCode</option>
+                            }
+                            else
+                            {
+                                <option value="@_unit.UnitCode">@_unit.UnitCode</option>
+                            }
+                        }
+                    </select><br />
+                    <div>
+                        Packaging-Unit:
+                    </div>
+                    <select class="bm5" @onchange="@((e) => ChangePackagingUnit(e))">
+                        @foreach (var _unit in units)
+                        {
+                            @if (isEdit && _unit.UnitCode == article.PackagingUnit)
+                            {
+                                <option value="@_unit.UnitCode" selected>@_unit.UnitCode</option>
+                            }
+                            else
+                            {
+                                <option value="@_unit.UnitCode">@_unit.UnitCode</option>
+                            }
+                        }
+                    </select><br />
+                }
+                else
+                {
+                    <div class="bm9">
+                        No Units were found.<br>
+                        Please click <a class="bold primaryColor" href="./unit/create">here</a> to create Units.
+                    </div>
+                }
+
+                <div>
+                    Price:
+                </div>
+                <input class="bm5" type="number" min="0.01" step="0.01" placeholder="Price" @bind="article.Price" required><br>
+                <div>
+                    Discount:
+                </div>
+                <input class="bm5" type="number" min="0.00" max="1.00" step="0.01" placeholder="Discount" @bind="article.Discount"><br>
+                <input id="chk_overruleUserDiscount" type="checkbox" @bind="article.OverruleUserDiscount"><label for="chk_overruleUserDiscount">Overrule User-Discount</label>
+                <br><br>
+
+
+                @if (artHeader == null || artHeader.ArticleHeaderId <= 0)
+                {
+                    <b class="bm9">
+                        No Header for Articles of this Product exists yet.<br>
+                        @if (selCompany != null && selProdGroup != null && selProduct != null)
+                        {
+                            <span>
+                                Click <a class="primaryColor" href="javascript:LightFrame('./article-header/@selCompany.CompCode/@selProdGroup.ProductGroupNr.ToString()/@selProduct.ProductNr.ToString()')">here</a> to create a Header.
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                Please create a header at the <a class="primaryColor" href="./product">edit-view for Products</a> before proceeding.
+                            </span>
+                        }
+                    </b><br />
+                }
+                else
+                {
+                    @if (!string.IsNullOrEmpty(artHeader.F1name))
+                    {
+                        <div>@artHeader.F1name</div>
+                        <input class="bm5" type="text" maxlength="250" @bind="article.F1" /><br />
+                    }
+
+                
+                    @if (!string.IsNullOrEmpty(artHeader.F2name))
+                    {
+                        <div>@artHeader.F2name</div>
+                        <input class="bm5" type="text" maxlength="250" @bind="article.F2" /><br />
+                    }
+
+                
+                    @if (!string.IsNullOrEmpty(artHeader.F3name))
+                    {
+                        <div>@artHeader.F3name</div>
+                        <input class="bm5" type="text" maxlength="250" @bind="article.F3" /><br />
+                    }
+
+                
+                    @if (!string.IsNullOrEmpty(artHeader.F4name))
+                    {
+                        <div>@artHeader.F4name</div>
+                        <input class="bm5" type="text" maxlength="250" @bind="article.F4" /><br />
+                    }
+
+                
+                    @if (!string.IsNullOrEmpty(artHeader.F5name))
+                    {
+                        <div>@artHeader.F5name</div>
+                        <input class="bm5" type="text" maxlength="250" @bind="article.F5" /><br />
+                    }
+
+                
+                    @if (!string.IsNullOrEmpty(artHeader.F6name))
+                    {
+                        <div>@artHeader.F6name</div>
+                        <input class="bm5" type="text" maxlength="250" @bind="article.F6" /><br />
+                    }
+                }
+
+                <textarea maxlength="700" placeholder="Description" @bind="article.ArticleDescription"></textarea>
+                <br><br>
+
+                <a class="show650 mIcon mIconNew backSignalColor hoverBackDarkSignalColor rm18" href="./article/create"></a>
+                @if (productGroups != null && productGroups.Count > 0 && products != null && products.Count > 0 && units != null && units.Count > 0 && artHeader != null && artHeader.ArticleHeaderId > 0)
+                {
+                    <input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+                }
+
+                @if (isEdit)
+                {
+                    <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+                }
+            </EditForm>
+        </div>
     }
     else
     {
         <div>
             No companies were found.<br>
-            Please click <a href="./company/create">here</a> to create a new company before proceeding.
+            Please click <a class="bold primaryColor" href="./company/create">here</a> to create a new company before proceeding.
         </div>
     }
 }

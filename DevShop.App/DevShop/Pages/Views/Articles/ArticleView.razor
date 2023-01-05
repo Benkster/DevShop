@@ -9,42 +9,39 @@
 
 
 
-<h1>Articles</h1>
+<h1 class="bm18">Articles</h1>
 @if (companies != null)
 {
     @if (companies.Count > 0)
     {
-        <select @onchange="@((e) => ChangeCompany(e))">
-            <option value="0">Please select a company</option>
-            @foreach (var _company in companies)
+        <div id="managementSelectBox" class="selectTree">
+            <select class="bm9" @onchange="@((e) => ChangeCompany(e))">
+                <option value="0">Please select a company</option>
+                @foreach (var _company in companies)
+                {
+                    @if (!changedCompany && !string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
+                    {
+                        <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                    else
+                    {
+                        <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                }
+            </select>
+            @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
             {
-                @if (!changedCompany && !string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
-                {
-                    <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
-                }
-                else
-                {
-                    <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
-                }
-            }
-        </select>
-        @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
-        {
-            <br />
-            <div>
                 @treeViewMarkup
-            </div>
-        }
-        <br /><br />
-        <a href="./article/create">
-            Create a new Article
-        </a>
+            }
+            <br /><br />
+            <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./article/create"></a>
+        </div>
     }
     else
     {
         <div>
             No companies have been found.<br>
-            Click <a href="./company/create">here</a> to create a company before proceeding.
+            Click <a class="bold primaryColor" href="./company/create">here</a> to create a company before proceeding.
         </div>
     }
 }

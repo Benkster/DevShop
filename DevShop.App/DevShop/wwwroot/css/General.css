@@ -20,6 +20,13 @@ h1 { font-size: 230%; line-height: 2.2rem; }
 h2 { font-size: 190%; line-height: 2rem; }
 h3 { font-size: 150%; line-height: 1.6rem; }
 
+textarea {
+	width: 100% !important;
+	min-height: 70px;
+}
+
+input[readonly] { background-color: #e6e6e6 !important; }
+
 
 
 body, html { margin: 0px; }
@@ -35,14 +42,53 @@ ul, ol {
 input[type="radio"],
 input[type="checkbox"] { display: none; }
 
+select,
+textarea,
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"] {
+	max-width: 350px;
+	padding: 5px 10px;
+	background-color: #fff;
+	border: 1px solid #31a287;
+	font-size: inherit;
+	font-family: inherit;
+	line-height: inherit;
+	transition: border-color .3s ease-in-out;
+	-o-transition: border-color .3s ease-in-out;
+	-ms-transition: border-color .3s ease-in-out;
+	-moz-transition: border-color .3s ease-in-out;
+	-webkit-transition: border-color .3s ease-in-out;
+}
 
-
-*:focus-visible { outline: none; }
+select,
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"] { width: 100%; }
 
 
 
 form input[type="radio"],
 form input[type="checkbox"] { display: inline-block; }
+
+
+
+*:focus-visible { outline: none; }
+
+select:focus,
+select:hover,
+textarea:focus,
+textarea:hover,
+input[type="text"]:focus,
+input[type="text"]:hover,
+input[type="email"]:focus,
+input[type="email"]:hover,
+input[type="number"]:focus,
+input[type="number"]:hover,
+input[type="password"]:focus,
+input[type="password"]:hover { border-color: #cee818; }
 
 
 
@@ -72,6 +118,8 @@ form input[type="checkbox"] { display: inline-block; }
 	light:			#f5fcff
 	signal:			#cee818
 	darkSignal:		#c0d23b
+	danger:			#d22323
+	darkDanger:		#a21616
 	lightGray:		#f2f2f2
 	mediumGray:		#e6e6e6
 	darkGray:		#8e8e8e
@@ -84,16 +132,21 @@ form input[type="checkbox"] { display: inline-block; }
 .lightColor { color: #f5fcff; }
 .signalColor { color: #cee818; }
 .darkSignalColor { color: #c0d23b; }
+.dangerColor { color: #d22323; }
+.darkDangerColor { color: #a21616; }
 .lightGray { color: #f2f2f2; }
 .mediumGray { color: #e6e6e6; }
 .darkGray { color: #8e8e8e; }
 
+.backTrans { background-color: transparent; }
 .backClearColor { background-color: #fff; }
 .backPrimaryColor { background-color: #31a287; }
 .backSecondaryColor { background-color: #344756; }
 .backLightColor { background-color: #f5fcff; }
 .backSignalColor { background-color: #cee818; }
 .backDarkSignalColor { background-color: #c0d23b; }
+.backDangerColor { background-color: #d22323; }
+.backDarkDangerColor { background-color: #a21616; }
 .backLightGray { background-color: #f2f2f2; }
 .backMediumGray { background-color: #e6e6e6; }
 .backDarkGray { background-color: #8e8e8e; }
@@ -103,6 +156,7 @@ form input[type="checkbox"] { display: inline-block; }
 .hoverPrimaryColor:hover { color: #31a287; }
 
 .hoverBackDarkSignalColor:hover { background-color: #c0d23b; }
+.hoverBackDarkDangerColor:hover { background-color: #a21616; }
 
 
 
@@ -111,6 +165,8 @@ form input[type="checkbox"] { display: inline-block; }
 /*=======================================
 	LINES
 =======================================*/
+
+.noLine { border: none; }
 
 .darkGrayLine { border: 1px solid #8e8e8e; }
 .topDarkGrayLine { border-top: 1px solid #8e8e8e; }
@@ -143,6 +199,27 @@ form input[type="checkbox"] { display: inline-block; }
 /*=======================================
 	SPACES
 =======================================*/
+
+.lp0 { padding-left: 0px; }
+.rp0 { padding-right: 0px; }
+.tp0 { padding-top: 0px; }
+.bp0 { padding-bottom: 0px; }
+.hp0 { padding-left: 0px; padding-right: 0px; }
+.vp0 { padding-top: 0px; padding-bottom: 0px; }
+
+.lp5 { padding-left: .5rem; }
+.rp5 { padding-right: .5rem; }
+.tp5 { padding-top: .5rem; }
+.bp5 { padding-bottom: .5rem; }
+.hp5 { padding-left: .5rem; padding-right: .5rem; }
+.vp5 { padding-top: .5rem; padding-bottom: .5rem; }
+
+.lm5 { margin-left: .5rem; }
+.rm5 { margin-right: .5rem; }
+.tm5 { margin-top: .5rem; }
+.bm5 { margin-bottom: .5rem; }
+.hm5 { margin-left: .5rem; margin-right: .5rem; }
+.vm5 { margin-top: .5rem; margin-bottom: .5rem; }
 
 .lp9 { padding-left: .9rem; }
 .rp9 { padding-right: .9rem; }
@@ -231,6 +308,16 @@ form input[type="checkbox"] { display: inline-block; }
 }
 
 
+@media screen and (min-width: 651px) {
+	.show650 { display: none !important; }
+}
+
+
+@media screen and (max-width: 650px) {
+	.hide650 { display: none !important; }
+}
+
+
 
 
 
@@ -287,6 +374,10 @@ form input[type="checkbox"] { display: inline-block; }
 .center { text-align: center; }
 
 .bold { font-weight: bold; }
+
+.fullSize { font-size: inherit; }
+
+.regular { font-family: inherit; }
 
 
 
