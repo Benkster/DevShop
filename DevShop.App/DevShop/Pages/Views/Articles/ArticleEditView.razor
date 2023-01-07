@@ -4,6 +4,7 @@
 @inject IUnitOfWork uow
 @inject TreeBuilder treeBuilder
 @inject NavigationManager nav
+@inject FileManager fileManager
 @attribute [Authorize(Roles = "7")]
 @layout ManagementLayout
 
@@ -190,7 +191,7 @@
                         @if (selCompany != null && selProdGroup != null && selProduct != null)
                         {
                             <span>
-                                Click <a class="primaryColor" href="javascript:LightFrame('./article-header/@selCompany.CompCode/@selProdGroup.ProductGroupNr.ToString()/@selProduct.ProductNr.ToString()')">here</a> to create a Header.
+                                Click <a class="primaryColor" href="javascript:LightFrame('./article-header/@selCompany.CompCode/@selProdGroup.ProductGroupNr.ToString()/@selProduct.ProductNr.ToString()', '100%', '650px', '850px', '80vh', true)">here</a> to create a Header.
                             </span>
                         }
                         else
@@ -247,6 +248,27 @@
 
                 <textarea maxlength="700" placeholder="Description" @bind="article.ArticleDescription"></textarea>
                 <br><br>
+
+                @if (isEdit)
+                {
+                    @if (!string.IsNullOrEmpty(fileUploadMessage))
+                    {
+                        <b>@fileUploadMessage</b><br />
+                    }
+
+                    @if (fileExists)
+                    {
+                        <a class="fileContent bm9" href="javascript:LightFrame('@artPicPath', '100%', '450px', '650px', '80vh', false);" style="background-image: url('@artPicPath');"></a>
+                    }
+                    else
+                    {
+                        <div class="fileContent bm9 iconNoPic"></div>
+                    }
+                    <div class="dib vt rm9 bm5">
+                        <InputFile id="fileUpload" class="rm5 bm5" accept="image/jpeg, image/jpg" OnChange="StoreFile"></InputFile><label class="dib vm vp5 hp9 backSignalColor hoverBackDarkSignalColor clearColor pointer bold" for="fileUpload">Choose file</label>
+                    </div><input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="button" @onclick="@(() => UploadFile())"><input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => DeleteFile())">
+                    <br><br><br>
+                }
 
                 <a class="show650 mIcon mIconNew backSignalColor hoverBackDarkSignalColor rm18" href="./article/create"></a>
                 @if (productGroups != null && productGroups.Count > 0 && products != null && products.Count > 0 && units != null && units.Count > 0 && artHeader != null && artHeader.ArticleHeaderId > 0)

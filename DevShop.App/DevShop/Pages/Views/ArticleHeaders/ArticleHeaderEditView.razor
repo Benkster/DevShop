@@ -6,28 +6,29 @@
 
 
 
-<h1>Article-Header</h1>
+<link rel="stylesheet" href="./css/Management.css" />
+<h1 class="bm18">Article-Header</h1>
 @if (artHeader != null)
 {
     <EditForm Model="artHeader" OnValidSubmit="Save" OnInvalidSubmit="Error">
         @if (!string.IsNullOrEmpty(errorMessage))
         {
-            <b>@errorMessage</b>
+            <b class="dangerColor">@errorMessage</b>
             <br /><br />
         }
 
-
-        <input type="text" maxlength="50" placeholder="F1" @bind="artHeader.F1name"><br>
-        <input type="text" maxlength="50" placeholder="F2" @bind="artHeader.F2name"><br>
-        <input type="text" maxlength="50" placeholder="F3" @bind="artHeader.F3name"><br>
-        <input type="text" maxlength="50" placeholder="F4" @bind="artHeader.F4name"><br>
-        <input type="text" maxlength="50" placeholder="F5" @bind="artHeader.F5name"><br>
+        <input class="bm5" type="text" maxlength="50" placeholder="F1" @bind="artHeader.F1name"><br>
+        <input class="bm5" type="text" maxlength="50" placeholder="F2" @bind="artHeader.F2name"><br>
+        <input class="bm5" type="text" maxlength="50" placeholder="F3" @bind="artHeader.F3name"><br>
+        <input class="bm5" type="text" maxlength="50" placeholder="F4" @bind="artHeader.F4name"><br>
+        <input class="bm5" type="text" maxlength="50" placeholder="F5" @bind="artHeader.F5name"><br>
         <input type="text" maxlength="50" placeholder="F6" @bind="artHeader.F6name">
         <br /><br>
-        <input type="submit" value="Save">
+
+        <input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
         @if (isEdit)
         {
-            <input type="button" value="Delete" @onclick="@(() => Delete())" />
+            <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())" />
         }
     </EditForm>
 }
