@@ -10,7 +10,7 @@
 		#region General Patterns
 		public static string TelPattern = @"(^\+[0-9]{1,3})(\s?[0-9]*)+([0-9]$)";
 
-		public static string WebsitePattern = @"^(https?):\/\/(([a-zA-Z]|[0-9])+\.)+[a-zA-Z]+$";
+		public static string WebsitePattern = @"^(https?):\/\/(([a-zA-Z]|[0-9]|\-)+\.)+[a-zA-Z]+$";
 		#endregion
 
 
