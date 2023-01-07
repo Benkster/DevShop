@@ -514,6 +514,28 @@ li.treeItem > input[type="radio"].rad_tree_openSub:checked ~ label.lbl_tree_clos
 
 
 
+/* *** FILE-UPLOADS - START *** */
+
+.fileContent {
+	display: block;
+	width: 60px;
+	height: 60px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#fileUpload {
+	width: 100%;
+	max-width: 180px;
+}
+
+/* *** FILE-UPLOADS - END *** */
+
+
+
+
+
 /* *** FOOTER - START *** */
 
 #footerBox { 

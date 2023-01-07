@@ -1,7 +1,9 @@
 ﻿using DevShop.Data.Helpers;
 using DevShop.Data.Models;
+using DevShop.Data.ViewModels;
 using DevShop.Data.ViewModels.TreeBuilderVMs;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace DevShop.Pages.Views.Articles
 {
@@ -14,11 +16,17 @@ namespace DevShop.Pages.Views.Articles
         #region Variables/Properties
         // Determines, whether an existing model is beeing edited or a new one is beeing created
         private bool isEdit = false;
+        // Determines, whether a picture of the article exists or not
+        private bool fileExists = false;
 
         private int nextPK = 0;
 
         // Displays an error message, if something went wrong
         private string errorMessage = string.Empty;
+        // Displays a message, if a file is beeing uploaded
+        private string fileUploadMessage = string.Empty;
+        // Path of the picture of the selected article
+        private string artPicPath = string.Empty;
 
         // Holds the HTML-Code for the TreeView
         MarkupString treeViewMarkup;
@@ -37,6 +45,8 @@ namespace DevShop.Pages.Views.Articles
         private Unit selPackagingUnit;
         // Header for the Article
         private ArticleHeader artHeader;
+        // Picture of the article
+        private ImageFile artImage;
 
         // List of all companies
         private List<Company> companies;
@@ -81,11 +91,28 @@ namespace DevShop.Pages.Views.Articles
 
             units = await uow.UnitRepo.GetAllModelsAsync();
 
+            artImage = new ImageFile();
+
+            fileUploadMessage = string.Empty;
+
 
             // An existing article is beeing edited
             if (!string.IsNullOrEmpty(CompCode) && !string.IsNullOrEmpty(ProductGroupNr) && !string.IsNullOrEmpty(ProductNr) && !string.IsNullOrEmpty(ArticleNr))
             {
                 isEdit = true;
+
+                // Check, whether a picture has been uploaded for this article or not
+                string filePath = @"wwwroot\pic\articles\" + CompCode + @"\pic_" + ArticleNr;
+                Dictionary<bool, string> checkFileExists = fileManager.FileExists(filePath);
+                fileExists = checkFileExists.FirstOrDefault().Key;
+                
+
+                // If a picture of the article has been uploaded, store the path of the picture in a variable (will be displayed as a preview)
+                if (fileExists)
+				{
+                    artPicPath = "/pic/articles/" + CompCode + "/pic_" + ArticleNr + "." + checkFileExists.FirstOrDefault().Value;
+				}
+
 
                 // Get the data of the article, that is beeing edited
                 article = await uow.ArticleRepo.GetModelByPkAsync(CompCode, Convert.ToInt32(ProductGroupNr), Convert.ToInt32(ProductNr), Convert.ToInt32(ArticleNr));
@@ -113,6 +140,9 @@ namespace DevShop.Pages.Views.Articles
             else
             {
                 isEdit = false;
+                fileExists = false;
+                artPicPath = string.Empty;
+
                 article = new Article();
 
                 selCompany = companies.FirstOrDefault();
@@ -340,6 +370,103 @@ namespace DevShop.Pages.Views.Articles
                 selPackagingUnit = await uow.UnitRepo.GetModelByPkAsync(args.Value.ToString());
             }
         }
+
+
+
+        /// <summary>
+        /// Loads in the file, that has been selected as picture for the article.
+        /// </summary>
+        private async Task StoreFile(InputFileChangeEventArgs args)
+        {
+            // Only load it in, if an existing article is beeing edited
+            if (isEdit)
+            {
+                // Set the name of the file
+                string fileName = "pic_" + ArticleNr;
+                // Store the data of the file
+                artImage = await fileManager.StoreFile(args, fileName);
+
+                fileUploadMessage = string.Empty;
+
+
+                StateHasChanged();
+            }
+        }
+
+
+
+        /// <summary>
+        /// Uploads the file, that has been selected as the picture of the article
+        /// </summary>
+        private async Task UploadFile()
+		{
+            // Only upload a file, if an article is beeing edited and the user has already selected a file to upload
+            if (isEdit && artImage != null && !string.IsNullOrEmpty(artImage.FileName))
+			{
+                // Location, where the file will be stored
+                string filePath = @"wwwroot\pic\articles\" + CompCode;
+
+                // Upload the file
+                bool uploadSuccess = await fileManager.UploadFile(filePath, artImage);
+
+
+                // File has been uploaded
+                if (uploadSuccess)
+				{
+                    fileUploadMessage = "File uploaded";
+
+                    // Specify, that an image now exists and get get the path of the image to display it on the view
+                    fileExists = true;
+                    artPicPath = "/pic/articles/" + CompCode + "/pic_" + ArticleNr + "." + artImage.FileType.Split("/")[1];
+
+                    artImage = new ImageFile();
+                }
+                // Error while trying to upload the file
+				else
+				{
+                    fileUploadMessage = "Could not upload file";
+				}
+
+
+                StateHasChanged();
+			}
+		}
+
+
+
+        /// <summary>
+        /// Delete the image of the article
+        /// </summary>
+        private void DeleteFile()
+		{
+            // Only delete it, if an article is beeing edited
+            if (isEdit)
+            {
+                // Location of the image
+                string filePath = @"wwwroot\pic\articles\" + CompCode + @"\pic_" + ArticleNr;
+
+                // Delete the file
+                bool deleteSuccess = fileManager.DeleteFile(filePath);
+
+
+                // Image was deleted
+                if (deleteSuccess)
+				{
+                    fileUploadMessage = "File deleted";
+
+                    fileExists = false;
+                    artPicPath = string.Empty;
+				}
+                // Error while deleting the file
+				else
+				{
+                    fileUploadMessage = "Could not delete file";
+				}
+
+
+                StateHasChanged();
+            }
+		}
         #endregion
     }
 }

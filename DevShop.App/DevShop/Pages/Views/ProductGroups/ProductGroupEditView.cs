@@ -1,7 +1,9 @@
 ﻿using DevShop.Data.Helpers;
 using DevShop.Data.Models;
+using DevShop.Data.ViewModels;
 using DevShop.Data.ViewModels.TreeBuilderVMs;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace DevShop.Pages.Views.ProductGroups
 {
@@ -14,6 +16,8 @@ namespace DevShop.Pages.Views.ProductGroups
         #region Variables/Properties
         // Determines, whether an existing model is beeing edited or a new one is beeing created
         private bool isEdit = false;
+        // Determines, whether a picture of the product-group exists or not
+        private bool fileExists = false;
 
         // Parent-ID of the model (from select-element)
         private int parentID = 0;
@@ -21,6 +25,10 @@ namespace DevShop.Pages.Views.ProductGroups
 
         // Displays an error message, if something went wrong
         private string errorMessage = string.Empty;
+        // Displays a message, if a file is beeing uploaded
+        private string fileUploadMessage = string.Empty;
+        // Path of the picture of the selected product-group
+        private string filePicPath = string.Empty;
 
         // Holds the HTML-Code for the TreeView
         MarkupString treeViewMarkup;
@@ -31,6 +39,8 @@ namespace DevShop.Pages.Views.ProductGroups
         private Category selCategory;
         // The company, to which the product-group, that is beeing created, belongs
         private Company selCompany;
+        // Picture of the product-group
+        private ImageFile fileImage;
 
         // List of product-gropus, that are allowed to be selected as parent-element
         private List<ProductGroup> formGroups;
@@ -67,6 +77,18 @@ namespace DevShop.Pages.Views.ProductGroups
             categories = await uow.CategoryRepo.GetAllModelsAsync();
             categories = categories.OrderBy(c => c.CategoryName).ToList();
 
+            // Check, whether a picture has been uploaded for this product-group or not
+            string filePath = @"wwwroot\pic\product-groups\" + CompCode + @"\pic_" + ProductGroupNr;
+            Dictionary<bool, string> checkFileExists = fileManager.FileExists(filePath);
+            fileExists = checkFileExists.FirstOrDefault().Key;
+
+
+            // If a picture of the product-group has been uploaded, store the path of the picture in a variable (will be displayed as a preview)
+            if (fileExists)
+            {
+                filePicPath = "/pic/product-groups/" + CompCode + "/pic_" + ProductGroupNr + "." + checkFileExists.FirstOrDefault().Value;
+            }
+
 
             // An existing product-gropu is beeing edited
             if (!string.IsNullOrEmpty(CompCode) && !string.IsNullOrEmpty(ProductGroupNr))
@@ -93,6 +115,9 @@ namespace DevShop.Pages.Views.ProductGroups
             else
             {
                 isEdit = false;
+                fileExists = false;
+                filePicPath = string.Empty;
+
                 productGroup = new ProductGroup();
 
                 selCategory = categories.FirstOrDefault();
@@ -293,7 +318,104 @@ namespace DevShop.Pages.Views.ProductGroups
 
             // Update the data on the view
             StateHasChanged();
-		}
+        }
+
+
+
+        /// <summary>
+        /// Loads in the file, that has been selected as picture for the product-group.
+        /// </summary>
+        private async Task StoreFile(InputFileChangeEventArgs args)
+        {
+            // Only load it in, if an existing product-group is beeing edited
+            if (isEdit)
+            {
+                // Set the name of the file
+                string fileName = "pic_" + ProductGroupNr;
+                // Store the data of the file
+                fileImage = await fileManager.StoreFile(args, fileName);
+
+                fileUploadMessage = string.Empty;
+
+
+                StateHasChanged();
+            }
+        }
+
+
+
+        /// <summary>
+        /// Uploads the file, that has been selected as the picture of the product-group
+        /// </summary>
+        private async Task UploadFile()
+        {
+            // Only upload a file, if a product-group is beeing edited and the user has already selected a file to upload
+            if (isEdit && fileImage != null && !string.IsNullOrEmpty(fileImage.FileName))
+            {
+                // Location, where the file will be stored
+                string filePath = @"wwwroot\pic\product-groups\" + CompCode;
+
+                // Upload the file
+                bool uploadSuccess = await fileManager.UploadFile(filePath, fileImage);
+
+
+                // File has been uploaded
+                if (uploadSuccess)
+                {
+                    fileUploadMessage = "File uploaded";
+
+                    // Specify, that an image now exists and get get the path of the image to display it on the view
+                    fileExists = true;
+                    filePicPath = "/pic/product-groups/" + CompCode + "/pic_" + ProductGroupNr + "." + fileImage.FileType.Split("/")[1];
+
+                    fileImage = new ImageFile();
+                }
+                // Error while trying to upload the file
+                else
+                {
+                    fileUploadMessage = "Could not upload file";
+                }
+
+
+                StateHasChanged();
+            }
+        }
+
+
+
+        /// <summary>
+        /// Delete the image of the product-group
+        /// </summary>
+        private void DeleteFile()
+        {
+            // Only delete it, if a product-group is beeing edited
+            if (isEdit)
+            {
+                // Location of the image
+                string filePath = @"wwwroot\pic\product-groups\" + CompCode + @"\pic_" + ProductGroupNr;
+
+                // Delete the file
+                bool deleteSuccess = fileManager.DeleteFile(filePath);
+
+
+                // Image was deleted
+                if (deleteSuccess)
+                {
+                    fileUploadMessage = "File deleted";
+
+                    fileExists = false;
+                    filePicPath = string.Empty;
+                }
+                // Error while deleting the file
+                else
+                {
+                    fileUploadMessage = "Could not delete file";
+                }
+
+
+                StateHasChanged();
+            }
+        }
         #endregion
     }
 }

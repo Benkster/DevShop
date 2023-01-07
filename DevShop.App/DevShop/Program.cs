@@ -33,6 +33,7 @@ builder.Services
 builder.Services.AddScoped<TokenProvider>();
 
 builder.Services.AddScoped<TreeBuilder>();
+builder.Services.AddScoped<FileManager>();
 
 
 var app = builder.Build();
