@@ -94,10 +94,20 @@ namespace DevShop.Pages.Views.ArticleHeaders
 			// Only delete it, if it exists
 			if (isEdit)
 			{
-				await uow.ArticleHeaderRepo.DeleteModelAsync(CompCode, Convert.ToInt32(ProductGroupNr), Convert.ToInt32(ProductNr));
+				List<Article> allArticles = await uow.ArticleRepo.GetAllModelsAsync(CompCode);
 
-				artHeader = new ArticleHeader();
-				errorMessage = "Header deleted.";
+
+				if (allArticles.Any(a => a.ArticleHeaderId == artHeader.ArticleHeaderId))
+				{
+					errorMessage = "Header can not be deleted, if one or more articles are assigned.";
+				}
+				else
+				{
+					await uow.ArticleHeaderRepo.DeleteModelAsync(CompCode, Convert.ToInt32(ProductGroupNr), Convert.ToInt32(ProductNr));
+
+					artHeader = new ArticleHeader();
+					errorMessage = "Header deleted.";
+				}
 
 				StateHasChanged();
 			}

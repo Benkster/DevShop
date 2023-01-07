@@ -466,3 +466,13 @@ input[type="password"]:hover { border-color: #cee818; }
 	-moz-transform: rotate(-45deg);
 	-webkit-transform: rotate(-45deg);
 }
+
+
+
+
+
+/*=======================================
+	ICON
+=======================================*/
+
+.iconNoPic { background-image: url('/pic/icon_no-pic.svg'); }

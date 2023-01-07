@@ -352,6 +352,11 @@ li.treeItem > input[type="radio"].rad_tree_openSub:checked ~ label.lbl_tree_clos
 
 @media screen and (min-width: 651px) {
 	label.lbl_toggleTree { display: none; }
+
+	ul#treeLayer_1 {
+		max-height: 550px;
+		overflow-y: auto;
+	}
 }
 
 
@@ -509,6 +514,28 @@ li.treeItem > input[type="radio"].rad_tree_openSub:checked ~ label.lbl_tree_clos
 #artHeaderSideBox:hover > span { opacity: 1; }
 
 /* *** ART-HEADER - END *** */
+
+
+
+
+
+/* *** FILE-UPLOADS - START *** */
+
+.fileContent {
+	display: block;
+	width: 60px;
+	height: 60px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#fileUpload {
+	width: 100%;
+	max-width: 180px;
+}
+
+/* *** FILE-UPLOADS - END *** */
 
 
 

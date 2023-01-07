@@ -16,4 +16,10 @@
     <PackageReference Include="SpecFlow" Version="3.9.74" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\pic\articles\" />
+    <Folder Include="wwwroot\pic\product-groups\" />
+    <Folder Include="wwwroot\pic\products\" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,9 @@
 ﻿using DevShop.Data.Helpers;
 using DevShop.Data.Models;
+using DevShop.Data.ViewModels;
 using DevShop.Data.ViewModels.TreeBuilderVMs;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace DevShop.Pages.Views.Products
 {
@@ -14,11 +16,17 @@ namespace DevShop.Pages.Views.Products
         #region Variables/Properties
         // Determines, whether an existing model is beeing edited or a new one is beeing created
         private bool isEdit = false;
+        // Determines, whether a picture of the product exists or not
+        private bool fileExists = false;
 
         private int nextPK = 0;
 
         // Displays an error message, if something went wrong
         private string errorMessage = string.Empty;
+        // Displays a message, if a file is beeing uploaded
+        private string fileUploadMessage = string.Empty;
+        // Path of the picture of the selected product
+        private string filePicPath = string.Empty;
 
         // Holds the HTML-Code for the TreeView
         MarkupString treeViewMarkup;
@@ -29,6 +37,8 @@ namespace DevShop.Pages.Views.Products
         private ProductGroup selProdGroup;
         // The company, to which the product, that is beeing created, belongs
         private Company selCompany;
+        // Picture of the product
+        private ImageFile fileImage;
 
         // List of all companies
         private List<Company> companies;
@@ -63,12 +73,28 @@ namespace DevShop.Pages.Views.Products
             companies = await uow.CompanyRepo.GetAllModelsAsync(true);
             companies = companies.OrderBy(c => c.CompName).OrderBy(c => c.CompCode.Substring(0, 2)).ToList();
 
+            fileImage = new ImageFile();
+
+            fileUploadMessage = string.Empty;
+
 
             // An existing product is beeing edited
             if (!string.IsNullOrEmpty(CompCode) && !string.IsNullOrEmpty(ProductGroupNr) && !string.IsNullOrEmpty(ProductNr))
             {
                 isEdit = true;
-                
+
+                // Check, whether a picture has been uploaded for this product or not
+                string filePath = @"wwwroot\pic\products\" + CompCode + @"\pic_" + ProductNr;
+                Dictionary<bool, string> checkFileExists = fileManager.FileExists(filePath);
+                fileExists = checkFileExists.FirstOrDefault().Key;
+
+
+                // If a picture of the product has been uploaded, store the path of the picture in a variable (will be displayed as a preview)
+                if (fileExists)
+                {
+                    filePicPath = "/pic/products/" + CompCode + "/pic_" + ProductNr + "." + checkFileExists.FirstOrDefault().Value;
+                }
+
                 // Get the product, that is beeing edited
                 product = await uow.ProductRepo.GetModelByPkAsync(CompCode, Convert.ToInt32(ProductGroupNr), Convert.ToInt32(ProductNr));
                 selProdGroup = await uow.ProductGroupRepo.GetModelByPkAsync(CompCode, Convert.ToInt32(ProductGroupNr));
@@ -83,6 +109,9 @@ namespace DevShop.Pages.Views.Products
             else
             {
                 isEdit = false;
+                fileExists = false;
+                filePicPath = string.Empty;
+
                 product = new Product();
 
                 selCompany = companies.FirstOrDefault();
@@ -238,6 +267,103 @@ namespace DevShop.Pages.Views.Products
             if (!string.IsNullOrEmpty(args.Value.ToString()))
             {
                 selProdGroup = await uow.ProductGroupRepo.GetModelByPkAsync(selCompany.CompCode, Convert.ToInt32(args.Value));
+            }
+        }
+
+
+
+        /// <summary>
+        /// Loads in the file, that has been selected as picture for the product.
+        /// </summary>
+        private async Task StoreFile(InputFileChangeEventArgs args)
+        {
+            // Only load it in, if an existing product is beeing edited
+            if (isEdit)
+            {
+                // Set the name of the file
+                string fileName = "pic_" + ProductNr;
+                // Store the data of the file
+                fileImage = await fileManager.StoreFile(args, fileName);
+
+                fileUploadMessage = string.Empty;
+
+
+                StateHasChanged();
+            }
+        }
+
+
+
+        /// <summary>
+        /// Uploads the file, that has been selected as the picture of the product
+        /// </summary>
+        private async Task UploadFile()
+        {
+            // Only upload a file, if a product is beeing edited and the user has already selected a file to upload
+            if (isEdit && fileImage != null && !string.IsNullOrEmpty(fileImage.FileName))
+            {
+                // Location, where the file will be stored
+                string filePath = @"wwwroot\pic\products\" + CompCode;
+
+                // Upload the file
+                bool uploadSuccess = await fileManager.UploadFile(filePath, fileImage);
+
+
+                // File has been uploaded
+                if (uploadSuccess)
+                {
+                    fileUploadMessage = "File uploaded";
+
+                    // Specify, that an image now exists and get get the path of the image to display it on the view
+                    fileExists = true;
+                    filePicPath = "/pic/products/" + CompCode + "/pic_" + ProductNr + "." + fileImage.FileType.Split("/")[1];
+
+                    fileImage = new ImageFile();
+                }
+                // Error while trying to upload the file
+                else
+                {
+                    fileUploadMessage = "Could not upload file";
+                }
+
+
+                StateHasChanged();
+            }
+        }
+
+
+
+        /// <summary>
+        /// Delete the image of the product
+        /// </summary>
+        private void DeleteFile()
+        {
+            // Only delete it, if a product is beeing edited
+            if (isEdit)
+            {
+                // Location of the image
+                string filePath = @"wwwroot\pic\products\" + CompCode + @"\pic_" + ProductNr;
+
+                // Delete the file
+                bool deleteSuccess = fileManager.DeleteFile(filePath);
+
+
+                // Image was deleted
+                if (deleteSuccess)
+                {
+                    fileUploadMessage = "File deleted";
+
+                    fileExists = false;
+                    filePicPath = string.Empty;
+                }
+                // Error while deleting the file
+                else
+                {
+                    fileUploadMessage = "Could not delete file";
+                }
+
+
+                StateHasChanged();
             }
         }
         #endregion
