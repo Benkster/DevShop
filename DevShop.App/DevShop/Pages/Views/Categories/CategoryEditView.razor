@@ -9,52 +9,66 @@
 
 
 
-<h1>Category</h1>
+<h1 class="bm18">Categories</h1>
 @if (category != null)
 {
-    @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
-    {
-        <div>
+    <div id="managementSelectBox" class="selectTree">
+        @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
+        {
             @treeViewMarkup
-        </div>
-    }
-    <EditForm Model="category" OnValidSubmit="Save" OnInvalidSubmit="Error">
-        <div>
-            @errorMessage
-        </div>
-        <input type="text" placeholder="Category" @bind="@category.CategoryName"><br>
-        <textarea placeholder="Description" @bind="@category.Description"></textarea><br>
-        @if (formCategories != null)
-        {
-            <select @onchange="@((e) => ChangeParentElem(e))">
-                <option value="0">root</option>
-                @foreach (var _category in formCategories)
-                {
-                    @if (isEdit && category.ParentId != null && _category.CategoryId == category.ParentId)
-                    {
-                        <option value="@_category.CategoryId" selected>
-                            @_category.CategoryName
-                        </option>
-                    }
-                    else
-                    {
-                        <option value="@_category.CategoryId">
-                            @_category.CategoryName
-                        </option>
-                    }
-                }
-            </select>
         }
-        <br><br>
-        @if (isEdit)
-        {
-            <input type="submit" value="save"><input type="button" value="delete" @onclick="@(() => Delete())">
+        
+        <div class="hide650">
             <br><br>
-        }
-        <a href="./category">
-            Back
-        </a>
-    </EditForm>
+            <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./category/create"></a>
+        </div>
+    </div><div id="managementOutputBox" class="lp18">
+        <EditForm Model="category" OnValidSubmit="Save" OnInvalidSubmit="Error">
+            @if (isEdit)
+            {
+                <div class="bm9">@category.CategoryId</div>
+            }
+
+            @if (!string.IsNullOrEmpty(errorMessage.Value))
+            {
+                <b class="dangerColor">@errorMessage</b>
+                <br /><br />
+            }
+
+            <input class="bm5" type="text" placeholder="Category" maxlength="150" @bind="@category.CategoryName" required><br>
+            <textarea class="bm5" placeholder="Description" @bind="@category.Description"></textarea><br>
+            @if (formCategories != null)
+            {
+                <div>
+                    Parent-Element:
+                </div>
+                <select @onchange="@((e) => ChangeParentElem(e))">
+                    <option value="0">root</option>
+                    @foreach (var _category in formCategories)
+                    {
+                        @if (isEdit && category.ParentId != null && _category.CategoryId == category.ParentId)
+                        {
+                            <option value="@_category.CategoryId" selected>
+                                @_category.CategoryName
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@_category.CategoryId">
+                                @_category.CategoryName
+                            </option>
+                        }
+                    }
+                </select>
+            }
+            <br><br>
+            <a class="show650 mIcon mIconNew backSignalColor hoverBackDarkSignalColor rm18" href="./category/create"></a><input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+            @if (isEdit)
+            {
+                <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+            }
+        </EditForm>
+    </div>
 }
 else
 {

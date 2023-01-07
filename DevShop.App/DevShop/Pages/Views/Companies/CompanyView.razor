@@ -7,20 +7,20 @@
 
 
 
-<h1>Companies</h1>
+<h1 class="bm18">Companies</h1>
 @if (companies != null)
 {
-    <select @onchange="@((e) => ChangeCompany(e))">
-        <option value="0">Please select a company</option>
-        @foreach (var _company in companies)
-        {
-            <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
-        }
-    </select>
-    <br /><br />
-    <a href="./company/create">
-        Create a new company
-    </a>
+    <div id="managementSelectBox">
+        <select @onchange="@((e) => ChangeCompany(e))">
+            <option value="0">Please select a company</option>
+            @foreach (var _company in companies)
+            {
+                <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+            }
+        </select>
+        <br /><br />
+        <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./company/create"></a>
+    </div>
 }
 else
 {

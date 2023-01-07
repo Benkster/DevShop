@@ -9,80 +9,85 @@
 
 
 
-<h1>Companies</h1>
+<h1 class="bm18">Companies</h1>
 @if (dropDownCompanies != null && dropDownCountries != null)
 {
     @if (dropDownCountries.Count > 0)
     {
-        <select @onchange="@((e) => ChangeCompany(e))">
-            <option value="0">Please select a company</option>
-            @foreach (var _company in dropDownCompanies)
-            {
-                @if (isEdit && !companyChanged && company != null && _company.Value == company.CompCode)
+        <div id="managementSelectBox">
+            <select @onchange="@((e) => ChangeCompany(e))">
+                <option value="0">Please select a company</option>
+                @foreach (var _company in dropDownCompanies)
                 {
-                    <option value="@_company.Value" selected>@_company.DisplayName</option>
+                    @if (isEdit && !companyChanged && company != null && _company.Value == company.CompCode)
+                    {
+                        <option value="@_company.Value" selected>@_company.DisplayName</option>
+                    }
+                    else
+                    {
+                        <option value="@_company.Value">@_company.DisplayName</option>
+                    }
+                }
+            </select>
+        
+            <div class="hide650">
+                <br><br>
+                <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./company/create"></a>
+            </div>
+        </div><div id="managementOutputBox" class="lp18">
+            <EditForm Model="company" OnValidSubmit="Save" OnInvalidSubmit="Error">
+                @if (!string.IsNullOrEmpty(errorMessage.Value))
+                {
+                    <b class="dangerColor">@errorMessage</b>
+                    <br><br />
+                }
+
+                @if (isEdit)
+                {
+                    <div class="bm9">@company.CompCode</div>
                 }
                 else
                 {
-                    <option value="@_company.Value">@_company.DisplayName</option>
+                    <select class="bm5" @onchange="@((e) => ChangeCountry(e))">
+                        @foreach (var _elem in dropDownCountries)
+                        {
+                            @if (_elem.Value == selCountryCode)
+                            {
+                                <option value="@_elem.Value" selected>@_elem.DisplayName</option>
+                            }
+                            else
+                            {
+                                <option value="@_elem.Value">@_elem.DisplayName</option>
+                            }
+                        }
+                    </select><br />
+                    <input class="bm5" type="text" placeholder="AT1520" maxlength="6" pattern="@ViewPatterns.CompCodePattern" @bind="company.CompCode" required readonly><br>
                 }
-            }
-        </select>
-        <br /><br />
-        <EditForm Model="company" OnValidSubmit="Save" OnInvalidSubmit="Error">
-            @if (!string.IsNullOrEmpty(errorMessage.Value))
-            {
-                <b>@errorMessage</b>
-                <br><br />
-            }
 
-            @if (isEdit)
-            {
-                <div>@company.CompCode</div>
-            }
-            else
-            {
-                <select @onchange="@((e) => ChangeCountry(e))">
-                    @foreach (var _elem in dropDownCountries)
-                    {
-                        @if (_elem.Value == selCountryCode)
-                        {
-                            <option value="@_elem.Value" selected>@_elem.DisplayName</option>
-                        }
-                        else
-                        {
-                            <option value="@_elem.Value">@_elem.DisplayName</option>
-                        }
-                    }
-                </select><br />
-                <input type="text" placeholder="AT1520" maxlength="6" pattern="@ViewPatterns.CompCodePattern" @bind="company.CompCode" required readonly><br>
-            }
-            <input type="text" placeholder="Name of company" maxlength="250" @bind="company.CompName" required><br>
-            <input type="text" placeholder="Additional name of company" maxlength="250" @bind="company.CompAddName"><br>
-            <label for="chk_producer">
-                Company is a producer
-            </label> <input id="chk_producer" type="checkbox" @bind="company.IsProducer"><br>
-            <input type="text" placeholder="+43 660 5203 444" pattern="@ViewPatterns.TelPattern" @bind="company.Tel"><br>
-            <input type="email" placeholder="E-Mail" @bind="company.Mail"><br>
-            <input type="text" placeholder="https://www.devshop.com" pattern="@ViewPatterns.WebsitePattern" @bind="company.Website"><br>
-            <textarea placeholder="Description" @bind="company.Description"></textarea>
-            <br><br>
-            <input type="submit" value="Save">
-            @if (isEdit)
-            {
-                <input type="button" value="Delete" @onclick="@(() => Delete())" />
-            }
-            <br><br>
-            <a href="./company/create">
-                Create a new company
-            </a>
-        </EditForm>
+                <input class="bm5" type="text" placeholder="Name of company" maxlength="250" @bind="company.CompName" required><br>
+                <input class="bm5" type="text" placeholder="Additional name of company" maxlength="250" @bind="company.CompAddName"><br>
+                <label for="chk_producer">
+                    Company is a producer
+                </label> <input id="chk_producer" type="checkbox" @bind="company.IsProducer"><br>
+                <input class="vm5" type="text" placeholder="+43 660 5203 444" pattern="@ViewPatterns.TelPattern" @bind="company.Tel"><br>
+                <input class="bm5" type="email" placeholder="E-Mail" @bind="company.Mail"><br>
+                <input class="bm5" type="text" placeholder="https://www.devshop.com" pattern="@ViewPatterns.WebsitePattern" @bind="company.Website"><br>
+                <textarea placeholder="Description" @bind="company.Description"></textarea>
+                <br><br>
+
+                <a class="show650 mIcon mIconNew backSignalColor hoverBackDarkSignalColor rm18" href="./company/create"></a><input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+                @if (isEdit)
+                {
+                    <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+                }
+            </EditForm>
+        </div>
     }
     else
     {
         <div>
             No countries have been found.<br>
-            Please click <a href="./country/create">here</a> to create a country before proceeding
+            Please click <a class="bold primaryColor" href="./country/create">here</a> to create a country before proceeding
         </div>
     }
 }
