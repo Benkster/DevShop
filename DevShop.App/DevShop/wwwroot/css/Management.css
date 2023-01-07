@@ -352,6 +352,11 @@ li.treeItem > input[type="radio"].rad_tree_openSub:checked ~ label.lbl_tree_clos
 
 @media screen and (min-width: 651px) {
 	label.lbl_toggleTree { display: none; }
+
+	ul#treeLayer_1 {
+		max-height: 550px;
+		overflow-y: auto;
+	}
 }
 
 
