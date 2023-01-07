@@ -92,11 +92,11 @@ namespace DevShop.Data
 			// Get the selected file
 			var selFile = _args.File;
 			// Resize the file -> if the file is too big, it won't upload correctly and get corrupted (due to limited buffer-size)
-			var resizedFile = await selFile.RequestImageFileAsync(selFile.ContentType, 640, 480);
+			var resizedFile = await selFile.RequestImageFileAsync(selFile.ContentType, 600, 400);
 			var buffer = new byte[resizedFile.Size];
 
 
-			using (var stream = resizedFile.OpenReadStream())
+			using (var stream = resizedFile.OpenReadStream(maxAllowedSize: 50000000))
 			{
 				await stream.ReadAsync(buffer);
 			}
