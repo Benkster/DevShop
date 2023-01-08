@@ -1,1 +1,58 @@
-﻿/* DEVSHOP */
+﻿/* *** MENU TOP - START *** */
+
+.tpMenu { padding-top: 80px; }
+
+#shopMenu {
+	height: 80px;
+	font-size: 120%;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+	top: 0px;
+	left: 0px;
+	z-index: 10;
+}
+
+ul#menu_layer_1 { list-style-type: none; }
+
+li.menuItem {
+	display: inline-block;
+	vertical-align: top;
+}
+
+li#menuIconBox {
+	float: right;
+	margin-right: 0px;
+	margin-top: -5px;
+}
+
+
+
+@media screen and (max-width: 650px) {
+	#shopMenu {
+		height: 60px;
+		font-size: 100%;
+		padding-top: 1.2rem;
+		padding-bottom: 1.2rem;
+	}
+
+	.tpMenu { padding-top: 60px; }
+}
+
+/* *** MENU TOP - END *** */
+
+
+
+
+
+/* *** ICONS - START *** */
+
+.menuIcon {
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+
+/* *** ICONS - END *** */
