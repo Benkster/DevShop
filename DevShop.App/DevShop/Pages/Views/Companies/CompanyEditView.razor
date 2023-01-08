@@ -32,7 +32,7 @@
         
             <div class="hide650">
                 <br><br>
-                <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./company/create"></a>
+                <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./company/create"></a>
             </div>
         </div><div id="managementOutputBox" class="lp18">
             <EditForm Model="company" OnValidSubmit="Save" OnInvalidSubmit="Error">
@@ -75,10 +75,10 @@
                 <textarea placeholder="Description" @bind="company.Description"></textarea>
                 <br><br>
 
-                <a class="show650 mIcon mIconNew backSignalColor hoverBackDarkSignalColor rm18" href="./company/create"></a><input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+                <a class="show650 mIcon iconNew backSignalColor hoverBackDarkSignalColor rm18" href="./company/create"></a><input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
                 @if (isEdit)
                 {
-                    <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+                    <input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
                 }
             </EditForm>
         </div>

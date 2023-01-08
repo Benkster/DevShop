@@ -25,10 +25,10 @@
         <input type="text" maxlength="50" placeholder="F6" @bind="artHeader.F6name">
         <br /><br>
 
-        <input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+        <input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
         @if (isEdit)
         {
-            <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())" />
+            <input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())" />
         }
     </EditForm>
 }

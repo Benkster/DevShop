@@ -37,7 +37,7 @@
         
             <div class="hide650">
                 <br><br>
-                <a class="mIcon mIconNew backSignalColor hoverBackDarkSignalColor" href="./product/create"></a>
+                <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./product/create"></a>
             </div>
         </div><div id="managementOutputBox" class="lp18">
             <EditForm Model="product" OnValidSubmit="Save" OnInvalidSubmit="Error">
@@ -116,20 +116,20 @@
                     }
                     <div class="dib vt rm9 bm5">
                         <InputFile id="fileUpload" class="rm5 bm5" accept="image/jpeg, image/jpg" OnChange="StoreFile"></InputFile><label class="dib vm vp5 hp9 backSignalColor hoverBackDarkSignalColor clearColor pointer bold" for="fileUpload">Choose file</label>
-                    </div><input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="button" @onclick="@(() => UploadFile())"><input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => DeleteFile())">
+                    </div><input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="button" @onclick="@(() => UploadFile())"><input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => DeleteFile())">
                     <br><br><br>
                 }
 
 
-                <a class="show650 mIcon mIconNew backSignalColor hoverBackDarkSignalColor rm18" href="./product/create"></a>
+                <a class="show650 mIcon iconNew backSignalColor hoverBackDarkSignalColor rm18" href="./product/create"></a>
                 @if (productGroups != null && productGroups.Count > 0)
                 {
-                    <input class="mIcon mIconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+                    <input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
                 }
 
                 @if (isEdit)
                 {
-                    <input class="mIcon mIconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+                    <input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
                 }
             </EditForm>
         </div>
@@ -137,7 +137,7 @@
 
         @if (isEdit)
         {
-            <a id="artHeaderSideBox" class="backSecondaryColor transColor hoverPrimaryColor block absolute mIconArticleHeaderCyan noRepeat" href="javascript:LightFrame('./article-header/@CompCode/@ProductGroupNr/@ProductNr', '100%', '650px', '850px', '80vh', true);">
+            <a id="artHeaderSideBox" class="backSecondaryColor transColor hoverPrimaryColor block absolute iconArticleHeaderCyan noRepeat" href="javascript:LightFrame('./article-header/@CompCode/@ProductGroupNr/@ProductNr', '100%', '650px', '850px', '80vh', true);">
                 <span class="bold absolute centerY">Article-Header</span>
             </a>
         }

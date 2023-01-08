@@ -402,6 +402,14 @@ input[type="password"]:hover { border-color: #cee818; }
 .oAuto { overflow: auto; }
 .oAutoY { overflow-y: auto; }
 
+.content {
+	display: block;
+	width: 100%;
+	max-width: 1440px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 
 
 .pointer:hover { cursor: pointer; }
@@ -476,3 +484,10 @@ input[type="password"]:hover { border-color: #cee818; }
 =======================================*/
 
 .iconNoPic { background-image: url('/pic/icon_no-pic.svg'); }
+.iconUser { background-image: url('/pic/icon_user.svg'); }
+.iconDelete { background-image: url('/pic/icon_delete.svg'); }
+.iconLoc { background-image: url('/pic/icon_loc.svg'); }
+
+.iconLocCyan { background-image: url('/pic/icon_loc_cyan.svg'); }
+.iconUserCyan { background-image: url('/pic/icon_user_cyan.svg'); }
+.iconLogoutCyan { background-image: url('/pic/icon_logout_cyan.svg'); }
