@@ -10,6 +10,7 @@ namespace DevShop.Data
 	{
 		#region Variables/Properties
 		private readonly DevShopContext _context;
+		private readonly IWebHostEnvironment _env;
 		private readonly TreeBuilder _treeBuilder = new TreeBuilder();
 
 		private CompanyRepo _companyRepo;
@@ -153,7 +154,7 @@ namespace DevShop.Data
 			get
 			{
 				// Create a new instance, if it has not yet been done
-				_articleRepo = (_articleRepo == null) ? new ArticleRepo(_context) : _articleRepo;
+				_articleRepo = (_articleRepo == null) ? new ArticleRepo(_context, _env) : _articleRepo;
 
 				return _articleRepo;
 			}
@@ -187,9 +188,10 @@ namespace DevShop.Data
 
 
 		#region Constructors
-		public UnitOfWork(DevShopContext context)
+		public UnitOfWork(DevShopContext context, IWebHostEnvironment env)
 		{
 			_context = context;
+			_env = env;
 		}
 		#endregion
 	}

@@ -56,3 +56,20 @@ li#menuIconBox {
 }
 
 /* *** ICONS - END *** */
+
+
+
+
+
+/* *** FOOTER - START *** */
+
+#shopFooter {
+	height: 50px;
+	bottom: 0px;
+	left: 0px;
+	z-index: 1;
+}
+
+.bpFooter { padding-bottom: 50px; }
+
+/* *** FOOTER - END *** */

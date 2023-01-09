@@ -13,5 +13,7 @@
 		public int? ParentID { get; set; }
 
 		public string ElemLink { get; set; }
-	}
+
+        public int? SortNr { get; set; }
+    }
 }

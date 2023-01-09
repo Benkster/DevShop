@@ -1,9 +1,43 @@
 ﻿@page "/"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject TreeBuilder treeBuilder
 
 
 
-<PageTitle>Index</PageTitle>
+<h1 class="bm18">DevShop</h1>
+<div>
+    Welcome to DevShop!<br />
+    This website is solely used for demonstration. All articles and every information displayed on this website are to be viewed as test-data.
+    <br /><br />
+    Thank you for understanding. Enjoy your testing.
+</div>
+@if (!string.IsNullOrEmpty(categoryTree.Value))
+{
+    <div id="categoryTree">
+        @categoryTree
+    </div>
+}
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+@if (randomArticles != null)
+{
+    @if (randomArticles.Count > 0)
+    {
+        <div id="artBoxWrapper" class="flex wrap tm18">
+            @foreach (var _art in randomArticles)
+            {
+                <div class="artBox dib vt darkGrayLine hoverPrimaryColorLine">
+                    <div class="artBoxPicWrapper hp9 vp9">
+                        <a class="artBoxPic noRepeat backCenter contain" href="@_art.Link" style="background-image: url('@_art.PicSource');"></a>
+                    </div>
+                    <div class="artBoxText backLightGray hp9 vp9">
+                        <a class="bold hoverPrimaryColor" href="@_art.Link">@_art.ArticleName</a><br>
+                        @_art.ArticleCode
+                        <br><br>
+                        € @_art.Price
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
