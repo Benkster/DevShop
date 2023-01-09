@@ -82,7 +82,7 @@ li#menuIconBox {
 
 
 
-@media screen and (max-width: 1260px) and (min-width: 1025) {
+@media screen and (max-width: 1260px) and (min-width: 1025px) {
 	.artBox { width: calc(25% - 1.35rem); }
 }
 
