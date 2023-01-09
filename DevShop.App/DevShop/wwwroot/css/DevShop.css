@@ -61,6 +61,222 @@ li#menuIconBox {
 
 
 
+/* *** SHOP ARTICLES - START *** */
+
+#artBoxWrapper {
+	column-gap: 1.8rem;
+	row-gap: 1.8rem;
+}
+
+.artBox { width: calc(20% - 1.45rem); }
+
+.artBoxPicWrapper { height: 150px; }
+
+.artBoxPic {
+	display: block;
+	height: 100%;
+	position: relative;
+}
+
+.artBoxText { height: 160px; }
+
+
+
+@media screen and (max-width: 1260px) and (min-width: 1025) {
+	.artBox { width: calc(25% - 1.35rem); }
+}
+
+
+@media screen and (max-width: 1024px) and (min-width: 769px) {
+	.artBox { width: calc(33.333% - 1.2rem); }
+}
+
+
+@media screen and (max-width: 768px) and (min-width: 521px) {
+	.artBox { width: calc(50% - 0.9rem); }
+}
+
+
+@media screen and (max-width: 520px) {
+	.artBox {
+		width: 100%;
+		max-width: 350px;
+		margin: auto;
+	}
+
+	.artBoxText {
+		height: auto;
+		min-height: 160px;
+	}
+}
+
+/* *** SHOP ARTICLES - END *** */
+
+
+
+
+
+/* *** CATEGORY TREE - START *** */
+
+#categoryTree ul#treeLayer_1 {
+	color: #cee818;
+	font-weight: bold;
+	position: fixed;
+	z-index: 20;
+}
+
+#categoryTree label#lbl_closeTree_layerBack { display: none; }
+
+#categoryTree label#lbl_openTree {
+	display: block;
+	width: 45px;
+	height: 45px;
+	background-color: #344756;
+	background-image: url('/pic/icon_menu.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 30px;
+	border-radius: 25px;
+	cursor: pointer;
+	position: fixed;
+	top: 60vh;
+	z-index: 19;
+}
+
+#categoryTree li.treeItem { border-bottom: 2px solid #cee818; }
+
+#categoryTree .treeLink {
+	display: inline-block;
+	width: calc(100% - 20px);
+	padding: 10px .9rem 10px 0px;
+	vertical-align: middle;
+}
+
+#categoryTree ul#treeLayer_1 ul { position: absolute; }
+
+
+
+ul#treeLayer_1 > label#lbl_closeTree {
+	display: block;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	position: absolute;
+	top: .9rem;
+	right: .9rem;
+	z-index: 1;
+}
+
+#categoryTree li.treeItem > label.lbl_tree_openSub { display: inline-block; }
+
+#categoryTree li.treeItem > label.lbl_tree_closeSub { display: none; }
+
+
+
+#categoryTree ul#treeLayer_1,
+#categoryTree ul#treeLayer_1 ul {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: 350px;
+	padding: .9rem;
+	padding-top: calc(30px + 1.8rem);
+	list-style-type: none;
+	background-color: #527fa2;
+	top: 0px;
+	left: -350px;
+	transition: left .3s ease-in-out;
+	-o-transition: left .3s ease-in-out;
+	-ms-transition: left .3s ease-in-out;
+	-moz-transition: left .3s ease-in-out;
+	-webkit-transition: left .3s ease-in-out;
+}
+
+#categoryTree li.treeItem > label.lbl_tree_openSub,
+#categoryTree li.treeItem > label.lbl_tree_closeSub {
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+	background-image: url('/pic/icon_arrow_green.svg');
+	background-position: center right;
+	background-repeat: no-repeat;
+	background-size: contain;
+	cursor: pointer;
+}
+
+
+
+#categoryTree .treeLink:hover { color: #31a287; }
+
+
+
+#categoryTree ul#treeLayer_1 > label#lbl_closeTree::before,
+#categoryTree ul#treeLayer_1 > label#lbl_closeTree::after {
+	content: '';
+	display: block;
+	width: 100%;
+	height: 3px;
+	background-color: #cee818;
+	position: absolute;
+	left: 0px;
+	top: 14px;
+}
+
+#categoryTree ul#treeLayer_1 > label#lbl_closeTree::before {
+	transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+}
+
+#categoryTree ul#treeLayer_1 > label#lbl_closeTree::after {
+	transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-webkit-transform: rotate(-45deg);
+}
+
+
+
+#categoryTree li.treeItem:last-of-type { border-bottom: none; }
+
+
+
+#categoryTree input#chk_toggleTree:checked ~ ul#treeLayer_1,
+#categoryTree ul#treeLayer_1 li.treeItem > input[type="radio"].rad_tree_openSub:checked ~ ul { left: 0px; }
+
+#categoryTree input#chk_toggleTree:checked ~ label#lbl_closeTree_layerBack {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, .3);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 19;
+}
+
+#categoryTree ul#treeLayer_1 li.treeItem > input[type="radio"].rad_tree_openSub:checked ~ label.lbl_tree_closeSub {
+	display: block;
+	position: absolute;
+	top: .9rem;
+	left: .9rem;
+	z-index: 1;
+	transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+}
+
+/* *** CATEGORY TREE - END *** */
+
+
+
+
+
 /* *** FOOTER - START *** */
 
 #shopFooter {
