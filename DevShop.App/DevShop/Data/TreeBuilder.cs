@@ -247,7 +247,7 @@ namespace DevShop.Data
                 treeViewResultHtmlStringBuilder.Append(
                     "<input id=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"rad_tree_openSub\" type=\"radio\" name=\"rad_tree_openSub_" + treeDepth.ToString() + "\">" +
                     "<input id=\"rad_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"rad_tree_closeSub\" type=\"radio\" name=\"rad_tree_openSub_" + treeDepth.ToString() + "\">" +
-                    "<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_openSub\" for=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>" +
+                    "<label id=\"lbl_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_openSub\" for=\"rad_tree_openSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>" +
                     "<label id=\"lbl_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\" class=\"lbl_tree_closeSub\" for=\"rad_tree_closeSub_" + _treeViewLevelElements.FirstOrDefault().ParentID.ToString() + "\"></label>"
                 );
 			}
