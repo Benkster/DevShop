@@ -115,6 +115,7 @@ input[type="password"]:hover { border-color: #cee818; }
 	clear:			#fff
 	primary:		#31a287
 	secondary:		#344756
+	additional:		#527fa2
 	light:			#f5fcff
 	signal:			#cee818
 	darkSignal:		#c0d23b
@@ -130,6 +131,7 @@ input[type="password"]:hover { border-color: #cee818; }
 .clearColor { color: #fff; }
 .primaryColor { color: #31a287; }
 .secondaryColor { color: #344756; }
+.additionalColor { color: #527fa2; }
 .lightColor { color: #f5fcff; }
 .signalColor { color: #cee818; }
 .darkSignalColor { color: #c0d23b; }
@@ -143,6 +145,7 @@ input[type="password"]:hover { border-color: #cee818; }
 .backClearColor { background-color: #fff; }
 .backPrimaryColor { background-color: #31a287; }
 .backSecondaryColor { background-color: #344756; }
+.backAdditionalColor { background-color: #527fa2; }
 .backLightColor { background-color: #f5fcff; }
 .backSignalColor { background-color: #cee818; }
 .backDarkSignalColor { background-color: #c0d23b; }
@@ -293,9 +296,17 @@ input[type="password"]:hover { border-color: #cee818; }
 
 .col1 { width: 100%; }
 
+.col23-1 { width: 66.666%; }
+
 .vh100 { height: 100vh; }
 
 .minVh100 { min-height: 100vh; }
+
+
+
+@media screen and (max-width: 1024px) {
+	.col23-1 { width: 100%; }
+}
 
 
 
@@ -310,6 +321,8 @@ input[type="password"]:hover { border-color: #cee818; }
 .hide { display: none; }
 .flex { display: flex; }
 .grid { display: grid; }
+
+.wrap { flex-wrap: wrap; }
 
 
 
@@ -493,6 +506,7 @@ input[type="password"]:hover { border-color: #cee818; }
 .iconUser { background-image: url('/pic/icon_user.svg'); }
 .iconDelete { background-image: url('/pic/icon_delete.svg'); }
 .iconLoc { background-image: url('/pic/icon_loc.svg'); }
+.iconMenu { background-image: url('/pic/icon_menu.svg'); }
 
 .iconLocCyan { background-image: url('/pic/icon_loc_cyan.svg'); }
 .iconUserCyan { background-image: url('/pic/icon_user_cyan.svg'); }
