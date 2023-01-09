@@ -1,0 +1,138 @@
+﻿@page "/shop"
+@page "/shop/{CategoryID}"
+@page "/shop/{CompCode}/{ProductGroupNr}/{ProductNr}/{ArticleNr}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject TreeBuilder treeBuilder
+@inject NavigationManager nav
+
+
+
+@if (category != null)
+{
+    <h1 class="bm18">@category.CategoryName</h1>
+
+    @if (!string.IsNullOrEmpty(categoryTree.Value))
+    {
+        <div id="categoryTree">
+            @categoryTree
+        </div>
+    }
+
+
+    @* *** ARTICLE DETAILS - START *** *@
+
+    @if (showArtDetails)
+    {
+        <div class="bm36">
+
+        </div>
+    }
+
+    @* *** ARTICLE DETAILS - END *** *@
+
+
+
+    @* *** LIST OF ARTICLES - START *** *@
+
+    @if (shopArticles != null && shopArticles.Count > 0)
+    {
+        <input id="rad_listView" type="radio" name="rad_toggleArtView" />
+        <input id="rad_boxView" type="radio" name="rad_toggleArtView" checked />
+        <div class="bm18">
+            <label id="lbl_setBoxView" class="dib vt rm9 lbl_toggleArtView" for="rad_boxView"></label><label id="lbl_setListView" class="dib vt lbl_toggleArtView" for="rad_listView"></label>
+        </div>
+
+        @* -- Box-View -- *@
+
+        <div id="artBoxWrapper" class="boxView flex wrap tm18">
+            @foreach (var _art in shopArticles)
+            {
+                <div class="artBox dib vt darkGrayLine hoverPrimaryColorLine">
+                    <div class="artBoxPicWrapper hp9 vp9">
+                        <a class="artBoxPic noRepeat backCenter contain" href="@_art.Link" style="background-image: url('@_art.PicSource');"></a>
+                    </div>
+                    <div class="artBoxText backLightGray hp9 vp9">
+                        <a class="bold hoverPrimaryColor" href="@_art.Link">@_art.ArticleName</a><br>
+                        @_art.ArticleCode
+                        <br><br>
+                        € @_art.Price
+                    </div>
+                </div>
+            }
+        </div>
+
+        @* -- -- *@
+
+
+        @* -- List-View -- *@
+
+        <div id="artListWrapper" class="listView hide tm18">
+            <input id="rad_hideListDetails" type="radio" name="rad_toggleListDetails" checked>
+
+            <ul id="artListHeader" class="artList grid">
+                <li class="artListThumbnail artListCol"></li>
+                <li class="artListName artListCol"></li>
+                <li class="artListCode artListCol"></li>
+                <li class="artListUnit artListCol"></li>
+                <li class="artListArrow artListCol"></li>
+            </ul>
+            @foreach (var _art in shopArticles)
+            {
+                <input id="rad_openListDetail_@_art.CompCode _@_art.ArticleNr" type="radio" name="rad_toggleListDetails" />
+                <ul class="artList grid">
+                    <li class="artListThumbnail artListCol">
+                        @if (_art.PicExists)
+                        {
+                            <a class="artThumbnail" href="@_art.Link" style="background-image: url('@_art.PicSource');"></a>
+                        }
+                        else
+                        {
+                            <div class="artThumbnail iconNoPic"></div>
+                        }
+                    </li>
+                    <li class="artListName artListCol">
+                        <a class="bold hoverPrimaryColor" href="@_art.Link">
+                            @_art.ArticleName
+                        </a>
+                    </li>
+                    <li class="artListCode artListCol">
+                        <div>@_art.ArticleCode</div>
+                        <div>@_art.Ean</div>
+                    </li>
+                    <li class="artListUnit artListCol">
+                        @if (_art.BillingUnitShort == _art.PackagingUnitShort)
+                        {
+                            @_art.UnitAmount @_art.BillingUnitShort
+                        }
+                        else
+                        {
+                            @_art.UnitAmount @_art.PackagingUnitShort @_art.BillingUnitShort
+                        }
+                    </li>
+                    <li class="artListArrow artListCol">
+                        <label class="lbl_openListDetail lbl_toggleListDetail" for="rad_openListDetail_@_art.CompCode _@_art.ArticleNr"></label>
+                        <label class="lbl_closeListDetail lbl_toggleListDetail"></label>
+                    </li>
+                </ul>
+            }
+        </div>
+
+        @* -- -- *@
+    }
+    else
+    {
+        <div class="bold">
+            No Articles could be found.<br>
+            Please select a different category.
+        </div>
+    }
+
+    @* *** LIST OF ARTICLES - END *** *@
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
