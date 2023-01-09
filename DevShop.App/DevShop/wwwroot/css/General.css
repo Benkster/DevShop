@@ -196,6 +196,10 @@ input[type="password"]:hover { border-color: #cee818; }
 
 
 
+.hoverPrimaryColorLine:hover { border-color: #31a287; }
+
+
+
 
 
 /*=======================================
@@ -290,6 +294,8 @@ input[type="password"]:hover { border-color: #cee818; }
 .col1 { width: 100%; }
 
 .vh100 { height: 100vh; }
+
+.minVh100 { min-height: 100vh; }
 
 
 

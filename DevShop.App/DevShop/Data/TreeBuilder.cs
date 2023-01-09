@@ -209,7 +209,7 @@ namespace DevShop.Data
             treeDepth = 0;
 
             // Sort the list after ParentID and ID of the elements
-            _treeViewElements = _treeViewElements.OrderBy(t => t.ParentID).OrderBy(t => t.ElemID).ToList();
+            _treeViewElements = _treeViewElements.OrderBy(t => t.ParentID).OrderBy(t => t.SortNr).OrderBy(t => t.ElemID).ToList();
 
 
             // Generate HTML-Code for the TreeView as string
