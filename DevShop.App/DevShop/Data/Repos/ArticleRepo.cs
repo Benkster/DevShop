@@ -1,5 +1,6 @@
 ﻿using DevShop.Data.Models;
 using DevShop.Data.Repos.IRepos;
+using DevShop.Data.ViewModels.ShopArticles;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevShop.Data.Repos
@@ -11,14 +12,20 @@ namespace DevShop.Data.Repos
 	{
 		#region Variables
 		private readonly DevShopContext _context;
+
+		private readonly IWebHostEnvironment _env;
+
+		private string[] fileExt;
 		#endregion
 
 
 
 		#region Constructors
-		public ArticleRepo(DevShopContext context)
+		public ArticleRepo(DevShopContext context, IWebHostEnvironment env)
 		{
 			_context = context;
+			_env = env;
+			fileExt = new string[] { "jpg", "jpeg", "gif", "png", "svg" };
 		}
 		#endregion
 
@@ -40,6 +47,68 @@ namespace DevShop.Data.Repos
 			List<Article> models = await _context.Articles.Where(a => a.CompCode == _compCode).ToListAsync();
 
 			return models;
+		}
+
+
+
+		/// <summary>
+		/// Get random Articles from the database
+		/// </summary>
+		/// <param name="_selAmount">
+		/// The amount of random Articles to select
+		/// </param>
+		/// <returns>
+		/// A list of random Articles
+		/// </returns>
+		public async Task<List<ArticleSmallVM>> GetRandomModelsAsync(int _selAmount)
+		{
+			Random rnd = new Random();
+
+			// Get all articles from the database
+			List<Article> allModels = await _context.Articles.ToListAsync();
+			// Get the specified amount of random articles
+			List<Article> randomModels = allModels.OrderBy(m => rnd.Next()).Take(_selAmount).ToList();
+
+
+			// Location of the pictures of the articles
+			string filePath = _env.ContentRootPath + @"wwwroot\pic\articles\";
+
+			// Convert the list of articles to a list of view-models
+			List<ArticleSmallVM> viewModels = randomModels.Select(m => new ArticleSmallVM()
+			{
+				ArticleNr = m.ArticleNr,
+				ProductNr = m.ProductNr,
+				ArticleName = m.ArticleName,
+				ArticleCode = m.ArticleCode,
+				CompCode = m.CompCode,
+				Ean = m.Ean,
+				Price = Math.Round(m.Price, 2),
+				PicSource = "/pic/icon_no-pic.svg",
+				Link = "./shop/" + m.CompCode + "/" + m.ProductGroupNr.ToString() + "/" + m.ProductNr.ToString() + "/" + m.ArticleNr.ToString()
+			}).ToList();
+
+
+			int index = 0;
+
+			// Check whether the article has a picture or not
+			foreach (ArticleSmallVM _model in viewModels)
+            {
+				foreach (string _extension in fileExt)
+                {
+					// A picture for the current article exists
+					if (File.Exists(filePath + _model.CompCode + @"\pic_" + _model.ArticleNr.ToString() + "." + _extension))
+                    {
+						// Save the source of the picture
+						viewModels[index].PicSource = "/pic/articles/" + _model.CompCode + "/pic_" + _model.ArticleNr.ToString() + "." + _extension;
+						break;
+                    }
+                }
+
+				index++;
+            }
+
+
+			return viewModels;
 		}
 
 

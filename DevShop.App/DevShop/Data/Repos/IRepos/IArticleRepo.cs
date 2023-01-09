@@ -1,4 +1,5 @@
 ﻿using DevShop.Data.Models;
+using DevShop.Data.ViewModels.ShopArticles;
 
 namespace DevShop.Data.Repos.IRepos
 {
@@ -13,6 +14,7 @@ namespace DevShop.Data.Repos.IRepos
 		Task<List<Article>> GetAllModelsAsync(string _compCode);
 		Task<Article> GetModelByPkAsync(string _compCode, int _prodGroupNr, int _prodNr, int _artNr);
 		Task<int> GetNextPkAsync(string _compCode);
-		Task UpdateModelAsync(Article _model);
+        Task<List<ArticleSmallVM>> GetRandomModelsAsync(int _selAmount);
+        Task UpdateModelAsync(Article _model);
 	}
 }
