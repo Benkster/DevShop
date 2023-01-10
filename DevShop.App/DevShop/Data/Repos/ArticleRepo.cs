@@ -16,6 +16,8 @@ namespace DevShop.Data.Repos
 
 		private readonly IWebHostEnvironment _env;
 
+		string filePath;
+
 		private string[] fileExt;
 		#endregion
 
@@ -26,7 +28,9 @@ namespace DevShop.Data.Repos
 		{
 			_context = context;
 			_env = env;
+
 			fileExt = new string[] { "jpg", "jpeg", "gif", "png", "svg" };
+			filePath = _env.ContentRootPath + @"wwwroot\pic\articles\";
 		}
 		#endregion
 
@@ -71,9 +75,6 @@ namespace DevShop.Data.Repos
 			List<Article> randomModels = allModels.OrderBy(m => rnd.Next()).Take(_selAmount).ToList();
 
 
-			// Location of the pictures of the articles
-			string filePath = _env.ContentRootPath + @"wwwroot\pic\articles\";
-
 			// Convert the list of articles to a list of view-models
 			List<ArticleSmallVM> viewModels = randomModels.Select(m => new ArticleSmallVM()
 			{
@@ -115,7 +116,7 @@ namespace DevShop.Data.Repos
 
 
 		/// <summary>
-		/// Get all articles, that belong to a category or to any sub-category
+		/// Get detailed information of all articles, that belong to a category or to any sub-category
 		/// </summary>
 		/// <param name="_categories">
 		/// List of the category and sub-categories, whose articles should be selected
@@ -225,9 +226,6 @@ namespace DevShop.Data.Repos
 
 			int index = 0;
 
-			// Location of the pictures of the articles
-			string filePath = _env.ContentRootPath + @"wwwroot\pic\articles\";
-
 			// Check whether the article has a picture or not
 			foreach (ArticleDetailedVM _artDetail in viewModels)
 			{
@@ -276,6 +274,134 @@ namespace DevShop.Data.Repos
 
 			return model;
 		}
+
+
+
+		/// <summary>
+		/// Get detailed information of an Article
+		/// </summary>
+		/// <param name="_compCode">
+		/// The code of the Company, to which the Article belongs
+		/// </param>
+		/// <param name="_prodGroupNr">
+		/// The number of the ProductGroup, to which the Article belongs
+		/// </param>
+		/// <param name="_prodNr">
+		/// The number of the Product, to which the Article belongs
+		/// </param>
+		/// <param name="_artNr">
+		/// The number of the Article
+		/// </param>
+		/// <returns>
+		/// Detailed information of an Article
+		/// </returns>
+		public async Task<ArticleDetailedVM> GetViewModelByPkAsync(string _compCode, int _prodGroupNr, int _prodNr, int _artNr)
+        {
+			// Get the article, whose details should be selected
+			Article article = await _context.Articles.FirstOrDefaultAsync(a => a.CompCode == _compCode && a.ProductGroupNr == _prodGroupNr && a.ProductNr == _prodNr && a.ArticleNr == _artNr);
+			// Get the category, that is associated with the article
+			Category category = await GetCategoryOfArticleAsync(_compCode, _prodGroupNr, _prodNr, _artNr);
+			// Get the billing- and packaging unit of the article
+			Unit billingUnit = await _context.Units.FirstOrDefaultAsync(u => u.UnitCode == article.BillingUnit);
+			Unit packagingUnit = await _context.Units.FirstOrDefaultAsync(u => u.UnitCode == article.PackagingUnit);
+			// Get the company, to which the article belongs (producer of the article)
+			Company company = await _context.Companies.FirstOrDefaultAsync(c => c.CompCode == article.CompCode);
+			// Get the header of the article
+			ArticleHeader artHeader = await _context.ArticleHeaders.FirstOrDefaultAsync(ah => ah.ArticleHeaderId == article.ArticleHeaderId && ah.CompCode == article.CompCode);
+
+
+			// Store all the information in a view-model
+			ArticleDetailedVM viewModel = new ArticleDetailedVM()
+			{
+				UniqueValue = article.CompCode + "_" + article.ArticleNr.ToString(),
+				ArticleNr = article.ArticleNr,
+				ArticleCode = article.ArticleCode,
+				ArticleName = article.ArticleName,
+				ArticleDescription = article.ArticleDescription,
+				BillingUnitShort = billingUnit.UnitCode,
+				BillingUnit = billingUnit.UnitName,
+				PackagingUnitShort = packagingUnit.UnitCode,
+				PackagingUnit = packagingUnit.UnitName,
+				CompCode = article.CompCode,
+				CompName = company.CompName,
+				Price = Math.Round(article.Price, 2),
+				Discount = (article.Discount != null) ? Math.Round(Convert.ToDecimal(article.Price - (article.Price + article.Discount)), 2) : 0,
+				Ean = article.Ean,
+				F1 = article.F1,
+				F1Name = artHeader.F1name,
+				F2 = article.F2,
+				F2Name = artHeader.F2name,
+				F3 = article.F3,
+				F3Name = artHeader.F3name,
+				F4 = article.F4,
+				F4Name = artHeader.F4name,
+				F5 = article.F5,
+				F5Name = artHeader.F5name,
+				F6 = article.F6,
+				F6Name = artHeader.F6name,
+				ProductGroupNr = article.ProductGroupNr,
+				ProductNr = article.ProductNr,
+				SortNr = article.SortNr,
+				UnitAmount = article.UnitAmount,
+				CategoryID = category.CategoryId,
+				CategoryName = category.CategoryName,
+				PicSource = "/pic/icon_no-pic.svg",
+				PicExists = false,
+				Link = "./shop/" + article.CompCode + "/" + article.ProductGroupNr.ToString() + "/" + article.ProductNr.ToString() + "/" + article.ArticleNr.ToString()
+			};
+
+
+
+			// Check, whether the article has a picture or not
+			foreach (string _extension in fileExt)
+			{
+				// A picture for the article exists
+				if (File.Exists(filePath + article.CompCode + @"\pic_" + article.ArticleNr.ToString() + "." + _extension))
+                {
+					// Save the source of the picture
+					viewModel.PicSource = "/pic/articles/" + article.CompCode + "/pic_" + article.ArticleNr.ToString() + "." + _extension;
+					viewModel.PicExists = true;
+					break;
+                }
+            }
+
+
+
+			return viewModel;
+        }
+
+
+
+		/// <summary>
+		/// Get the Category of a given Article
+		/// </summary>
+		/// <param name="_compCode">
+		/// The code of the Company, to which the Article belongs
+		/// </param>
+		/// <param name="_prodGroupNr">
+		/// The number of the ProductGroup, to which the Article belongs
+		/// </param>
+		/// <param name="_prodNr">
+		/// The number of the Product, to which the Article belongs
+		/// </param>
+		/// <param name="_artNr">
+		/// The number of the Article
+		/// </param>
+		/// <returns>
+		/// A single object of type Category
+		/// </returns>
+		public async Task<Category> GetCategoryOfArticleAsync(string _compCode, int _prodGroupNr, int _prodNr, int _artNr)
+        {
+			Article article = await GetModelByPkAsync(_compCode, _prodGroupNr, _prodNr, _artNr);
+
+			// Get the product-group, to which the article belongs
+			ProductGroup artGroup = await _context.ProductGroups.FirstOrDefaultAsync(pg => pg.ProductGroupNr == article.ProductGroupNr && pg.CompCode == article.CompCode);
+			// Get the category, that is assigned to the product-group
+			Category artCategory = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == artGroup.CategoryId);
+
+
+			return artCategory;
+        }
 
 
 
