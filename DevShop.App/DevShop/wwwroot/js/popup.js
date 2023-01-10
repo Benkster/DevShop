@@ -41,6 +41,7 @@ function OpenLightFrame(_popupSettings, _containerSettings) {
 
 	document.body.appendChild(lfContainer);
 
+
 	allowClose = true;
 }
 
