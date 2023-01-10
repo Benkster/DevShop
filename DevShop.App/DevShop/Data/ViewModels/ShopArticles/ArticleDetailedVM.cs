@@ -10,6 +10,8 @@
 
 		public int CategoryID { get; set; }
 
+		public string? UniqueValue { get; set; }
+
 		public string CategoryName { get; set; } = null!;
 
 		public int ProductNr { get; set; }
