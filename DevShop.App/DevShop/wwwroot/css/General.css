@@ -374,6 +374,11 @@ input[type="password"]:hover { border-color: #cee818; }
 }
 
 
+@media screen and (min-width: 376px) {
+	.show375 { display: none; }
+}
+
+
 @media screen and (max-width: 375px) {
 	.hide375 { display: none; }
 }
@@ -438,6 +443,7 @@ input[type="password"]:hover { border-color: #cee818; }
 
 .fullSize { font-size: inherit; }
 .big { font-size: 120%; }
+.small { font-size: 80%; }
 
 .regular { font-family: inherit; }
 
@@ -458,6 +464,8 @@ input[type="password"]:hover { border-color: #cee818; }
 .backRight { background-position: right; }
 
 .noRepeat { background-repeat: no-repeat; }
+
+.floatRight { float: right; }
 
 .oHide { overflow: hidden; }
 .oAuto { overflow: auto; }
