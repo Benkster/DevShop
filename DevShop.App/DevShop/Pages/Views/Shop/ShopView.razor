@@ -26,7 +26,7 @@
         @if (selArticle != null)
         {
             <div id="selectedArticleBox" class="bm36">
-                <div id="selArticlePicBox" class="dib vt center">
+                <div id="selArticlePicBox" class="dib vt center bm24">
                     @if (selArticle.PicExists)
                     {
                         <a id="selArticlePic" class="block hp9 vp9 darkGrayLine" href="javascript:LightFrame('@selArticle.PicSource', '100%', '480px', '640px', '80vh', false);">
@@ -40,20 +40,20 @@
                         </div>
                     }
 
-                    <div id="selArticlePicInfo" class="tm9">
+                    <div id="selArticlePicInfo" class="tm9 left darkGray small">
                         <div id="selArtPicInfoCategory" class="dib vt">
-                            <b>Category:</b> @selArticle.CategoryName
-                        </div><div id="selArtPicInfoArtNr" class="dib vt">
-                            <b>Art.Nr.:</b> @selArticle.ArticleCode
+                            <b>Category:</b><div class="show375"></div> @selArticle.CategoryName
+                        </div><div id="selArtPicInfoArtNr" class="dib vt floatRight">
+                            <b>Art.Nr.:</b><div class="show375"></div> @selArticle.ArticleCode
                             @if (!string.IsNullOrEmpty(selArticle.Ean))
                             {
                                 <div>
-                                    <b>EAN:</b> @selArticle.Ean
+                                    <b>EAN:</b><div class="show375"></div> @selArticle.Ean
                                 </div>
                             }
                         </div>
                     </div>
-                </div><div id="selArticleTextBox" class="dib vt lp18">
+                </div><div id="selArticleTextBox" class="dib vt lp36">
                     <h1>@selArticle.ArticleName</h1>
                     Producer: @selArticle.CompName
                     <div class="tm18">
@@ -79,57 +79,81 @@
                     <div class="tm9">
 						@if (!string.IsNullOrEmpty(selArticle.F1Name) && !string.IsNullOrEmpty(selArticle.F1))
 						{
-							<div>
-								<b>@selArticle.F1Name:</b> @selArticle.F1
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F1Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F1
+								</div>
 							</div>
 						}
 									
 						@if (!string.IsNullOrEmpty(selArticle.F2Name) && !string.IsNullOrEmpty(selArticle.F2))
 						{
-							<div>
-								<b>@selArticle.F2Name:</b> @selArticle.F2
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F2Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F2
+								</div>
 							</div>
 						}
 									
 						@if (!string.IsNullOrEmpty(selArticle.F3Name) && !string.IsNullOrEmpty(selArticle.F3))
 						{
-							<div>
-								<b>@selArticle.F3Name:</b> @selArticle.F3
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F3Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F3
+								</div>
 							</div>
 						}
 									
 						@if (!string.IsNullOrEmpty(selArticle.F4Name) && !string.IsNullOrEmpty(selArticle.F4))
 						{
-							<div>
-								<b>@selArticle.F4Name:</b> @selArticle.F4
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F4Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F4
+								</div>
 							</div>
 						}
 									
 						@if (!string.IsNullOrEmpty(selArticle.F5Name) && !string.IsNullOrEmpty(selArticle.F5))
 						{
-							<div>
-								<b>@selArticle.F5Name:</b> @selArticle.F5
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F5Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F5
+								</div>
 							</div>
 						}
 									
 						@if (!string.IsNullOrEmpty(selArticle.F6Name) && !string.IsNullOrEmpty(selArticle.F6))
 						{
-							<div>
-								<b>@selArticle.F6Name:</b> @selArticle.F6
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F6Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F6
+								</div>
 							</div>
 						}
                     </div>
 
                     @if (!string.IsNullOrEmpty(selArticle.ArticleDescription))
                     {
+                        <input id="rad_hideSelArtDescription" type="radio" name="rad_toggleSelArtDescription" checked>
                         <div id="selArtDescriptionWrapper" class="tm18">
-                            <input id="rad_hideSelArtDescription" type="radio" name="rad_toggleSelArtDescription" checked>
                             <input id="rad_showSelArtDescription_@selArticle.UniqueValue" type="radio" name="rad_toggleSelArtDescription">
 
-                            <label id="lbl_showSelArtDescription" class="lbl_toggleSelArtDescription lbl_showSelArtDescription pointer bold primaryColor topThickPrimaryLine bottomThickPrimaryLine" for="rad_showSelArtDescription_@selArticle.UniqueValue">
+                            <label id="lbl_showSelArtDescription" class="lbl_toggleSelArtDescription pointer bold primaryColor topThickPrimaryLine bottomThickPrimaryLine" for="rad_showSelArtDescription_@selArticle.UniqueValue">
                                 Description
                             </label>
-                            <label id="lbl_hideSelArtDescription" class="lbl_toggleSelArtDescription lbl_hideSelArtDescription pointer bold primaryColor topThickPrimaryLine" for="rad_hideSelArtDescription">
+                            <label id="lbl_hideSelArtDescription" class="lbl_toggleSelArtDescription pointer bold primaryColor topThickPrimaryLine" for="rad_hideSelArtDescription">
                                 Description
                             </label>
                             <div id="selArtDescription" class="bottomThickPrimaryLine">
@@ -357,43 +381,67 @@
 								<div class="artListAddInfo listDetDescriptionInfo bottomThickPrimaryLine">
 									@if (!string.IsNullOrEmpty(_art.F1Name) && !string.IsNullOrEmpty(_art.F1))
 									{
-										<div>
-											<b>@_art.F1Name:</b> @_art.F1
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F1Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F1
+											</div>
 										</div>
 									}
 									
 									@if (!string.IsNullOrEmpty(_art.F2Name) && !string.IsNullOrEmpty(_art.F2))
 									{
-										<div>
-											<b>@_art.F2Name:</b> @_art.F2
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F2Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F2
+											</div>
 										</div>
 									}
 									
 									@if (!string.IsNullOrEmpty(_art.F3Name) && !string.IsNullOrEmpty(_art.F3))
 									{
-										<div>
-											<b>@_art.F3Name:</b> @_art.F3
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F3Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F3
+											</div>
 										</div>
 									}
 									
 									@if (!string.IsNullOrEmpty(_art.F4Name) && !string.IsNullOrEmpty(_art.F4))
 									{
-										<div>
-											<b>@_art.F4Name:</b> @_art.F4
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F4Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F4
+											</div>
 										</div>
 									}
 									
 									@if (!string.IsNullOrEmpty(_art.F5Name) && !string.IsNullOrEmpty(_art.F5))
 									{
-										<div>
-											<b>@_art.F5Name:</b> @_art.F5
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F5Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F5
+											</div>
 										</div>
 									}
 									
 									@if (!string.IsNullOrEmpty(_art.F6Name) && !string.IsNullOrEmpty(_art.F6))
 									{
-										<div>
-											<b>@_art.F6Name:</b> @_art.F6
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F6Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F6
+											</div>
 										</div>
 									}
 								</div>

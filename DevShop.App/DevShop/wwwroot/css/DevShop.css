@@ -166,27 +166,9 @@ label.lbl_toggleListDetail {
 	max-width: 450px;
 }
 
-label.lbl_showListDetDescription {
-	display: block;
-	background-image: url('/pic/icon_plus.svg');
-}
+.artInfoLeftCol { width: 100px; }
 
-label.lbl_hideListDetDescription {
-	display: none;
-	background-image: url('/pic/icon_minus.svg');
-}
-
-label.lbl_toggleListDetDescription {
-	padding: 10px 50px 10px 20px;
-	background-position: calc(100% - 20px) center;
-	background-repeat: no-repeat;
-	background-size: 20px;
-}
-
-.listDetDescriptionInfo {
-	display: none;
-	padding: 10px 20px;
-}
+.artInfoRightCol { width: calc(100% - 100px); }
 
 
 
@@ -203,7 +185,37 @@ label.lbl_toggleListDetDescription {
 
 
 
+#selArtDescription,
+.listDetDescriptionInfo {
+	display: none;
+	padding: 10px 20px;
+}
+
+label#lbl_showSelArtDescription,
+label.lbl_showListDetDescription {
+	display: block;
+	background-image: url('/pic/icon_plus.svg');
+}
+
+label#lbl_hideSelArtDescription,
+label.lbl_hideListDetDescription {
+	display: none;
+	background-image: url('/pic/icon_minus.svg');
+}
+
+label.lbl_toggleSelArtDescription,
+label.lbl_toggleListDetDescription {
+	padding: 10px 50px 10px 20px;
+	background-position: calc(100% - 20px) center;
+	background-repeat: no-repeat;
+	background-size: 20px;
+}
+
+
+
 ul.artList:last-of-type { border-bottom: none; }
+
+.artInfoBox:nth-of-type(n+2) { margin-top: .9rem; }
 
 
 
@@ -221,12 +233,15 @@ input#rad_listView:checked ~ #artBoxWrapper { display: none; }
 
 .listDetDescriptionWrapper > input[name="rad_toggleListDetDescription"]:checked ~ .listDetDescriptionInfo,
 .listDetDescriptionWrapper > input[name="rad_toggleListDetDescription"]:checked ~ label.lbl_hideListDetDescription,
-#artListWrapper > input[id*="rad_openListDetail_"]:checked + ul.artList > .artListArrow > label.lbl_closeListDetail {
+#artListWrapper > input[id*="rad_openListDetail_"]:checked + ul.artList > .artListArrow > label.lbl_closeListDetail,
+#selArtDescriptionWrapper > input[name="rad_toggleSelArtDescription"]:checked ~ label#lbl_hideSelArtDescription,
+#selArtDescriptionWrapper > input[name="rad_toggleSelArtDescription"]:checked ~ #selArtDescription {
 	display: block;
 }
 
 .listDetDescriptionWrapper > input[name="rad_toggleListDetDescription"]:checked ~ label.lbl_showListDetDescription,
-#artListWrapper > input[id*="rad_openListDetail_"]:checked + ul.artList > .artListArrow > label.lbl_openListDetail {
+#artListWrapper > input[id*="rad_openListDetail_"]:checked + ul.artList > .artListArrow > label.lbl_openListDetail,
+#selArtDescriptionWrapper > input[name="rad_toggleSelArtDescription"]:checked ~ label#lbl_showSelArtDescription {
 	display: none;
 }
 
@@ -373,6 +388,13 @@ input#rad_listView:checked ~ #artBoxWrapper { display: none; }
 		height: auto;
 		min-height: 160px;
 	}
+
+	.artInfoLeftCol { padding-right: 0px; }
+
+
+
+	.artInfoLeftCol,
+	.artInfoRightCol { width: 100%; }
 }
 
 
@@ -392,6 +414,56 @@ input#rad_listView:checked ~ #artBoxWrapper { display: none; }
 }
 
 /* *** SHOP ARTICLES - END *** */
+
+
+
+
+
+/* *** SHOP ARTICLE DETAILS - START *** */
+
+#selArticlePicBox {
+	width: calc(100% - 500px);
+	max-width: 350px;
+}
+
+#selArticleTextBox {
+	width: calc(100% - 350px);
+	min-width: 500px;
+	max-width: 700px;
+}
+
+#selArtDescriptionWrapper { max-width: 550px; }
+
+
+
+#selArticlePic > .iconNoPic { padding-top: 80%; }
+
+
+
+@media screen and (max-width: 850px) {
+	#selArticlePicBox {
+		display: block;
+		width: 100%;
+		max-width: 400px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#selArticleTextBox {
+		width: 100%;
+		min-width: 0px;
+		max-width: 100%;
+		padding-left: 0px;
+	}
+
+
+
+	#selArticlePic > img { max-height: 180px; }
+
+	#selArticlePic > .iconNoPic { padding-top: 180px; }
+}
+
+/* *** SHOP ARTICLE DETAILS - END *** */
 
 
 
