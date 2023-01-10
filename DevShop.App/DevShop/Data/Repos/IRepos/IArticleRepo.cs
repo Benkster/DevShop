@@ -13,9 +13,11 @@ namespace DevShop.Data.Repos.IRepos
 		Task DeleteModelAsync(string _compCode, int _prodGroupNr, int _productNr, int _articleNr);
 		Task<List<Article>> GetAllModelsAsync(string _compCode);
 		Task<List<ArticleDetailedVM>> GetCategoryArticlesAsync(List<Category> _categories);
-		Task<Article> GetModelByPkAsync(string _compCode, int _prodGroupNr, int _prodNr, int _artNr);
+        Task<Category> GetCategoryOfArticleAsync(string _compCode, int _prodGroupNr, int _prodNr, int _artNr);
+        Task<Article> GetModelByPkAsync(string _compCode, int _prodGroupNr, int _prodNr, int _artNr);
 		Task<int> GetNextPkAsync(string _compCode);
         Task<List<ArticleSmallVM>> GetRandomModelsAsync(int _selAmount);
+        Task<ArticleDetailedVM> GetViewModelByPkAsync(string _compCode, int _prodGroupNr, int _prodNr, int _artNr);
         Task UpdateModelAsync(Article _model);
 	}
 }

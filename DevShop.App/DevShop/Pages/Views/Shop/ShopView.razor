@@ -5,13 +5,12 @@
 @inject IUnitOfWork uow
 @inject TreeBuilder treeBuilder
 @inject NavigationManager nav
+@inject IJSRuntime jsRuntime
 
 
 
 @if (category != null)
 {
-    <h1 class="bm18">@category.CategoryName</h1>
-
     @if (!string.IsNullOrEmpty(categoryTree.Value))
     {
         <div id="categoryTree">
@@ -24,12 +23,132 @@
 
     @if (showArtDetails)
     {
-        <div class="bm36">
+        @if (selArticle != null)
+        {
+            <div id="selectedArticleBox" class="bm36">
+                <div id="selArticlePicBox" class="dib vt center">
+                    @if (selArticle.PicExists)
+                    {
+                        <a id="selArticlePic" class="block hp9 vp9 darkGrayLine" href="javascript:LightFrame('@selArticle.PicSource', '100%', '480px', '640px', '80vh', false);">
+                            <img class="dib" src="@selArticle.PicSource">
+                        </a>
+                    }
+                    else
+                    {
+                        <div id="selArticlePic" class="hp9 vp9 darkGrayLine">
+                            <div class="iconNoPic noRepeat backCenter contain" style="background-image: url('@selArticle.PicSource');"></div>
+                        </div>
+                    }
 
-        </div>
+                    <div id="selArticlePicInfo" class="tm9">
+                        <div id="selArtPicInfoCategory" class="dib vt">
+                            <b>Category:</b> @selArticle.CategoryName
+                        </div><div id="selArtPicInfoArtNr" class="dib vt">
+                            <b>Art.Nr.:</b> @selArticle.ArticleCode
+                            @if (!string.IsNullOrEmpty(selArticle.Ean))
+                            {
+                                <div>
+                                    <b>EAN:</b> @selArticle.Ean
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div><div id="selArticleTextBox" class="dib vt lp18">
+                    <h1>@selArticle.ArticleName</h1>
+                    Producer: @selArticle.CompName
+                    <div class="tm18">
+                        @if (selArticle.Discount > 0)
+                        {
+                            <span>Price: </span><b class="dangerColor strike">€ @selArticle.Price</b> <b class="big">€ @selArticle.Discount</b> <span>per @selArticle.PackagingUnit</span>
+                        }
+                        else
+                        {
+                            <span>Price: </span><b class="big">€ @selArticle.Price</b> <span>per @selArticle.PackagingUnit</span>
+                        }
+                    </div>
+                    <div>
+                        @if (selArticle.BillingUnitShort == selArticle.PackagingUnitShort)
+                        {
+                            <span>Order unit: </span>@selArticle.UnitAmount<span>&nbsp;</span>@selArticle.BillingUnitShort
+                        }
+                        else
+                        {
+                            <span>Order unit: </span>@selArticle.UnitAmount<span>&nbsp;</span>@selArticle.PackagingUnitShort<span> per </span>@selArticle.BillingUnitShort
+                        }
+                    </div>
+                    <div class="tm9">
+						@if (!string.IsNullOrEmpty(selArticle.F1Name) && !string.IsNullOrEmpty(selArticle.F1))
+						{
+							<div>
+								<b>@selArticle.F1Name:</b> @selArticle.F1
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F2Name) && !string.IsNullOrEmpty(selArticle.F2))
+						{
+							<div>
+								<b>@selArticle.F2Name:</b> @selArticle.F2
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F3Name) && !string.IsNullOrEmpty(selArticle.F3))
+						{
+							<div>
+								<b>@selArticle.F3Name:</b> @selArticle.F3
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F4Name) && !string.IsNullOrEmpty(selArticle.F4))
+						{
+							<div>
+								<b>@selArticle.F4Name:</b> @selArticle.F4
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F5Name) && !string.IsNullOrEmpty(selArticle.F5))
+						{
+							<div>
+								<b>@selArticle.F5Name:</b> @selArticle.F5
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F6Name) && !string.IsNullOrEmpty(selArticle.F6))
+						{
+							<div>
+								<b>@selArticle.F6Name:</b> @selArticle.F6
+							</div>
+						}
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(selArticle.ArticleDescription))
+                    {
+                        <div id="selArtDescriptionWrapper" class="tm18">
+                            <input id="rad_hideSelArtDescription" type="radio" name="rad_toggleSelArtDescription" checked>
+                            <input id="rad_showSelArtDescription_@selArticle.UniqueValue" type="radio" name="rad_toggleSelArtDescription">
+
+                            <label id="lbl_showSelArtDescription" class="lbl_toggleSelArtDescription lbl_showSelArtDescription pointer bold primaryColor topThickPrimaryLine bottomThickPrimaryLine" for="rad_showSelArtDescription_@selArticle.UniqueValue">
+                                Description
+                            </label>
+                            <label id="lbl_hideSelArtDescription" class="lbl_toggleSelArtDescription lbl_hideSelArtDescription pointer bold primaryColor topThickPrimaryLine" for="rad_hideSelArtDescription">
+                                Description
+                            </label>
+                            <div id="selArtDescription" class="bottomThickPrimaryLine">
+                                <pre>
+                                    @selArticle.ArticleDescription
+                                </pre>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>   
+        }
     }
 
     @* *** SELECTED ARTICLE DETAILS - END *** *@
+
+
+
+    <h1 class="bm18">@category.CategoryName</h1>
 
 
 
@@ -92,6 +211,9 @@
                 <li class="artListPrice artListCol hide520"><b>Price</b></li>
                 <li class="artListArrow artListCol"></li>
             </ul>
+
+
+
             @foreach (var _art in shopArticles)
             {
                 <input id="rad_openListDetail_@_art.UniqueValue" type="radio" name="rad_toggleListDetails" />
@@ -210,11 +332,11 @@
                             <div>
                                 @if (_art.BillingUnitShort == _art.PackagingUnitShort)
                                 {
-                                    <span>Order unit: @_art.UnitAmount @_art.BillingUnitShort</span>
+                                    <span>Order unit: @_art.UnitAmount&nbsp;@_art.BillingUnitShort</span>
                                 }
                                 else
                                 {
-                                    <span>Order unit: </span>@_art.UnitAmount @_art.PackagingUnitShort <span>per</span> @_art.BillingUnitShort
+                                    <span>Order unit: </span>@_art.UnitAmount<span>&nbsp;</span>@_art.PackagingUnitShort <span>per </span> @_art.BillingUnitShort
                                 }
                             </div>
                         </div>
