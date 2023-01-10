@@ -27,6 +27,16 @@ textarea {
 
 input[readonly] { background-color: #e6e6e6 !important; }
 
+img { max-width: 100%; }
+
+pre {
+	white-space: pre-line;
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	margin: 0px;
+}
+
 
 
 body, html { margin: 0px; }
@@ -162,6 +172,7 @@ input[type="password"]:hover { border-color: #cee818; }
 
 .hoverBackDarkSignalColor:hover { background-color: #c0d23b; }
 .hoverBackDarkDangerColor:hover { background-color: #a21616; }
+.hoverBackLightGrayColor:hover { background-color: #f2f2f2; }
 
 
 
@@ -196,6 +207,18 @@ input[type="password"]:hover { border-color: #cee818; }
 .bottomThickSecondaryLine { border-bottom: 2px solid #344756; }
 .leftThickSecondaryLine { border-left: 2px solid #344756; }
 .rightThickSecondaryLine { border-right: 2px solid #344756; }
+
+.thickPrimaryLine { border: 2px solid #31a287; }
+.topThickPrimaryLine { border-top: 2px solid #31a287; }
+.bottomThickPrimaryLine { border-bottom: 2px solid #31a287; }
+.leftThickPrimaryLine { border-left: 2px solid #31a287; }
+.rightThickPrimaryLine { border-right: 2px solid #31a287; }
+
+.thickDottedMediumGrayLine { border: 2px dotted #e6e6e6 }
+.topThickDottedMediumGrayLine { border-top: 2px dotted #e6e6e6 }
+.bottomThickDottedMediumGrayLine { border-bottom: 2px dotted #e6e6e6 }
+.leftThickDottedMediumGrayLine { border-left: 2px dotted #e6e6e6 }
+.rightThickDottedMediumGrayLine { border-right: 2px dotted #e6e6e6 }
 
 
 
@@ -331,6 +354,11 @@ input[type="password"]:hover { border-color: #cee818; }
 }
 
 
+@media screen and (max-width: 1024px) {
+	.hide1024 { display: none; }
+}
+
+
 @media screen and (min-width: 651px) {
 	.show650 { display: none !important; }
 }
@@ -338,6 +366,16 @@ input[type="password"]:hover { border-color: #cee818; }
 
 @media screen and (max-width: 650px) {
 	.hide650 { display: none !important; }
+}
+
+
+@media screen and (max-width: 520px) {
+	.hide520 { display: none; }
+}
+
+
+@media screen and (max-width: 375px) {
+	.hide375 { display: none; }
 }
 
 
@@ -399,8 +437,11 @@ input[type="password"]:hover { border-color: #cee818; }
 .bold { font-weight: bold; }
 
 .fullSize { font-size: inherit; }
+.big { font-size: 120%; }
 
 .regular { font-family: inherit; }
+
+.strike { text-decoration: line-through; }
 
 
 
@@ -414,6 +455,7 @@ input[type="password"]:hover { border-color: #cee818; }
 .contain { background-size: contain; }
 
 .backCenter { background-position: center; }
+.backRight { background-position: right; }
 
 .noRepeat { background-repeat: no-repeat; }
 
