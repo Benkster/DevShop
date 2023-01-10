@@ -184,6 +184,7 @@ namespace DevShop.Data.Repos
 			// Store all the information of each article in a list of view-models
 			viewModels = articles.Select(a => new ArticleDetailedVM()
 			{
+				UniqueValue = a.CompCode + "_" + a.ArticleNr.ToString(),
 				ArticleNr = a.ArticleNr,
 				ArticleCode = a.ArticleCode,
 				ArticleName = a.ArticleName,
@@ -194,7 +195,8 @@ namespace DevShop.Data.Repos
 				PackagingUnit = units.FirstOrDefault(u => u.UnitCode == a.PackagingUnit).UnitName,
 				CompCode = a.CompCode,
 				CompName = companies.FirstOrDefault(c => c.CompCode == a.CompCode).CompName,
-				Discount = a.Discount,
+				Price = Math.Round(a.Price, 2),
+				Discount = (a.Discount != null) ? Math.Round(Convert.ToDecimal(a.Price - (a.Price * a.Discount)), 2) : 0,
 				Ean = a.Ean,
 				F1 = a.F1,
 				F1Name = articleHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F1name,
@@ -208,7 +210,6 @@ namespace DevShop.Data.Repos
 				F5Name = articleHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F5name,
 				F6 = a.F6,
 				F6Name = articleHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F6name,
-				Price = a.Price,
 				ProductGroupNr = a.ProductGroupNr,
 				ProductNr = a.ProductNr,
 				SortNr = a.SortNr,

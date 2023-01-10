@@ -56,7 +56,21 @@
                         <a class="bold hoverPrimaryColor" href="@_art.Link">@_art.ArticleName</a><br>
                         @_art.ArticleCode
                         <br><br>
-                        € @_art.Price
+                        @if (_art.Discount > 0)
+                        {
+                            <b class="dangerColor strike">
+                                € @_art.Price
+                            </b><br />
+                            <b>
+                                € @_art.Discount
+                            </b>
+                        }
+                        else
+                        {
+                            <b>
+                                € @_art.Price
+                            </b>
+                        }
                     </div>
                 </div>
             }
@@ -69,17 +83,19 @@
 
         <div id="artListWrapper" class="listView hide tm18">
             <input id="rad_hideListDetails" type="radio" name="rad_toggleListDetails" checked>
+            <input id="rad_hideListDetDescription" type="radio" name="rad_toggleListDetDescription" checked>
 
             <ul id="artListHeader" class="artList grid">
                 <li class="artListThumbnail artListCol"></li>
-                <li class="artListName artListCol"></li>
-                <li class="artListCode artListCol"></li>
-                <li class="artListUnit artListCol"></li>
+                <li class="artListName artListCol">Article</li>
+                <li class="artListCode artListCol">Art.Nr.</li>
+                <li class="artListUnit artListCol">Unit</li>
+                <li class="artListPrice artListCol">Price</li>
                 <li class="artListArrow artListCol"></li>
             </ul>
             @foreach (var _art in shopArticles)
             {
-                <input id="rad_openListDetail_@_art.CompCode _@_art.ArticleNr" type="radio" name="rad_toggleListDetails" />
+                <input id="rad_openListDetail_@_art.UniqueValue" type="radio" name="rad_toggleListDetails" />
                 <ul class="artList grid">
                     <li class="artListThumbnail artListCol">
                         @if (_art.PicExists)
@@ -107,14 +123,168 @@
                         }
                         else
                         {
-                            @_art.UnitAmount @_art.PackagingUnitShort @_art.BillingUnitShort
+                            @_art.UnitAmount @_art.PackagingUnitShort <span>per</span> @_art.BillingUnitShort
                         }
                     </li>
+                    <li class="artListPrice artListCol">
+                        @if (_art.Discount > 0)
+                        {
+                            <b class="dangerColor strike">
+                                € @_art.Price
+                            </b><br />
+                            <b>
+                                € @_art.Discount
+                            </b>
+                        }
+                        else
+                        {
+                            <b>
+                                € @_art.Price
+                            </b>
+                        }
+
+                        <br>
+                        per @_art.PackagingUnit
+                    </li>
                     <li class="artListArrow artListCol">
-                        <label class="lbl_openListDetail lbl_toggleListDetail" for="rad_openListDetail_@_art.CompCode _@_art.ArticleNr"></label>
+                        <label class="lbl_openListDetail lbl_toggleListDetail" for="rad_openListDetail_@_art.UniqueValue"></label>
                         <label class="lbl_closeListDetail lbl_toggleListDetail"></label>
                     </li>
                 </ul>
+                <div id="artListDetail_@_art.UniqueValue" class="artListDetails">
+                    <div class="artListDetailPic dib vt">
+                        @if (_art.PicExists)
+                        {
+                            <img class="artListPic" src="@_art.PicSource" />
+                        }
+                        else
+                        {
+                            <div class="iconNoPic artListPic"></div>
+                        }
+                    </div><div class="artListDetailText dib vt">
+                        <div>
+                            Producer: @_art.CompName
+                        </div>
+                        <h3>
+                            @_art.ArticleName
+                        </h3>
+                        <div>
+                            Category: @_art.CategoryName<br>
+                            Art. Nr.: @_art.ArticleCode
+
+                            @if (!string.IsNullOrEmpty(_art.Ean))
+                            {
+                                <div>
+                                    EAN: @_art.Ean
+                                </div>
+                            }
+                        </div>
+                        <div>
+                            @if (_art.Discount > 0)
+                            {
+                                <span>Price: </span><b>€ @_art.Discount</b><span> per @_art.PackagingUnit</span>
+                            }
+                            else
+                            {
+                                <span>Price: </span><b>€ @_art.Price</b><span> per @_art.PackagingUnit</span>
+                            }
+
+                            <div>
+                                @if (_art.BillingUnitShort == _art.PackagingUnitShort)
+                                {
+                                    <span>Order unit: @_art.UnitAmount @_art.BillingUnitShort</span>
+                                }
+                                else
+                                {
+                                    <span>Order unit: </span>@_art.UnitAmount @_art.PackagingUnitShort <span>per</span> @_art.BillingUnitShort
+                                }
+                            </div>
+                        </div>
+
+                        @* -- Add. information (F1-F6) -- *@
+
+                        @if (!string.IsNullOrEmpty(_art.F1) || !string.IsNullOrEmpty(_art.F2) || !string.IsNullOrEmpty(_art.F3) || !string.IsNullOrEmpty(_art.F4) || !string.IsNullOrEmpty(_art.F5) || !string.IsNullOrEmpty(_art.F6))
+                        {
+                            <div>
+                                <input id="rad_showListDetInfo_@_art.UniqueValue" type="radio" name="rad_toggleListDetDescription">
+
+                                <label id="lbl_showListDetInfo" class="lbl_toggleListDetDescription pointer" for="rad_showListDetInfo_@_art.UniqueValue">
+                                    Additional information
+                                </label>
+                                <label id="lbl_hideListDetInfo" class="lbl_toggleListDetDescription pointer" for="rad_hideListDetDescription">
+                                    Additional information
+                                </label>
+								<div class="artListAddInfo">
+									@if (!string.IsNullOrEmpty(_art.F1Name) && !string.IsNullOrEmpty(_art.F1))
+									{
+										<div>
+											@_art.F1Name: @_art.F1
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F2Name) && !string.IsNullOrEmpty(_art.F2))
+									{
+										<div>
+											@_art.F2Name: @_art.F2
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F3Name) && !string.IsNullOrEmpty(_art.F3))
+									{
+										<div>
+											@_art.F3Name: @_art.F3
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F4Name) && !string.IsNullOrEmpty(_art.F4))
+									{
+										<div>
+											@_art.F4Name: @_art.F4
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F5Name) && !string.IsNullOrEmpty(_art.F5))
+									{
+										<div>
+											@_art.F5Name: @_art.F5
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F6Name) && !string.IsNullOrEmpty(_art.F6))
+									{
+										<div>
+											@_art.F6Name: @_art.F6
+										</div>
+									}
+								</div>
+                            </div>
+                        }
+
+                        @* -- -- *@
+
+
+                        @* -- Description -- *@
+
+                        @if (!string.IsNullOrEmpty(_art.ArticleDescription))
+                        {
+                            <div>
+                                <input id="rad_showListDetDescription_@_art.UniqueValue" type="radio" name="rad_toggleListDetDescription">
+
+                                <label id="lbl_showListDetDescription" class="lbl_toggleListDetDescription pointer" for="rad_showListDetDescription_@_art.UniqueValue">
+                                    Additional information
+                                </label>
+                                <label id="lbl_hideListDetDescription" class="lbl_toggleListDetDescription pointer" for="rad_hideListDetDescription">
+                                    Additional information
+                                </label>
+                                <div class="artListDescription">
+                                    @_art.ArticleDescription
+                                </div>
+                            </div>
+                        }
+
+                        @* -- -- *@
+                    </div>
+                </div>
             }
         </div>
 
