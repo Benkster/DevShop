@@ -465,6 +465,7 @@ input[type="password"]:hover { border-color: #cee818; }
 
 .noRepeat { background-repeat: no-repeat; }
 
+.floatLeft { float: left; }
 .floatRight { float: right; }
 
 .oHide { overflow: hidden; }
@@ -557,7 +558,24 @@ input[type="password"]:hover { border-color: #cee818; }
 .iconDelete { background-image: url('/pic/icon_delete.svg'); }
 .iconLoc { background-image: url('/pic/icon_loc.svg'); }
 .iconMenu { background-image: url('/pic/icon_menu.svg'); }
+.iconSearch { background-image: url('/pic/icon_search.svg'); }
+.iconArrow { background-image: url('/pic/icon_arrow.svg'); }
+
+.iconArrowGreen { background-image: url('/pic/icon_arrow_green.svg'); }
 
 .iconLocCyan { background-image: url('/pic/icon_loc_cyan.svg'); }
 .iconUserCyan { background-image: url('/pic/icon_user_cyan.svg'); }
 .iconLogoutCyan { background-image: url('/pic/icon_logout_cyan.svg'); }
+
+
+
+
+
+/*=======================================
+	LOGIN
+=======================================*/
+
+#loginWrapper {
+	width: 100%;
+	max-width: 470px;
+}

@@ -190,7 +190,7 @@ namespace DevShop.Data.Repos
 
 
 			// Get either all articles, or the max. 20 articles of the current page
-			Range selArtRange = (_ignorePageNumber || _pageNumber <= 1) ? new Range(0, articles.Count) : new Range(20 * (_pageNumber - 1), 20 * _pageNumber);
+			Range selArtRange = (_ignorePageNumber || _pageNumber < 1) ? new Range(0, articles.Count) : new Range(20 * (_pageNumber - 1), 20 * _pageNumber);
 
 			// Store all the information of each article in a list of view-models
 			viewModels = articles.Select(a => new ArticleDetailedVM()
