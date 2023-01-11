@@ -1,0 +1,67 @@
+﻿@page "/unit/create"
+@page "/unit/edit/{UnitCode}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">Units</h1>
+@if (dropDownUnits != null)
+{
+    <div id="managementSelectBox">
+        <select @onchange="@((e) => ChangeUnit(e))">
+            <option value="0">Please select a Unit</option>
+            @foreach (var _unit in dropDownUnits)
+            {
+                @if (isEdit && !unitChanged && _unit.Value == UnitCode)
+                {
+                    <option value="@_unit.Value" selected>@_unit.Value - @_unit.DisplayName</option>
+                }
+                else
+                {
+                    <option value="@_unit.Value">@_unit.Value - @_unit.DisplayName</option>
+                }
+            }
+        </select>
+        <div class="hide650">
+            <br><br>
+            <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./unit/create"></a>
+        </div>
+    </div><div id="managementOutputBox" class="lp18">
+        <EditForm Model="unit" OnValidSubmit="Save" OnInvalidSubmit="Error">
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <b class="dangerColor">@errorMessage</b>
+                <br /><br />
+            }
+
+            @if (isEdit)
+            {
+                <div class="bm9">
+                    @unit.UnitCode
+                </div>
+            }
+            else
+            {
+                <input class="bm5" type="text" maxlength="3" placeholder="PAL" pattern="[A-Z]{3}" @bind="unit.UnitCode" required><br />
+            }
+
+            <input type="text" maxlength="50" placeholder="Palette" @bind="unit.UnitName" required>
+            <br><br>
+            <a class="show650 mIcon iconNew backSignalColor hoverBackDarkSignalColor rm18" href="./unit/create"></a><input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+            @if (isEdit)
+            {
+                <input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+            }
+        </EditForm>
+    </div>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

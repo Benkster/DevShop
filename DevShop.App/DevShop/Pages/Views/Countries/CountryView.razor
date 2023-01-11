@@ -1,0 +1,34 @@
+﻿@page "/country"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">Countries</h1>
+@if (countries != null)
+{
+    <div id="managementSelectBox">
+        @if (countries.Count > 0)
+        {
+            <select @onchange="@((e) => ChangeCountry(e))">
+                <option value="0">Please select a country</option>
+                @foreach (var _country in countries)
+                {
+                    <option value="@_country.CountryCode">@_country.CountryName</option>
+                }
+            </select>
+        }
+
+        <br><br>
+        <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./country/create"></a>
+    </div>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

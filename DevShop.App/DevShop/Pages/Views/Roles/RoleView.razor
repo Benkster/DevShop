@@ -1,0 +1,30 @@
+﻿@page "/role"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">Roles</h1>
+@if (roles != null)
+{
+    <div id="managementSelectBox">
+        <select @onchange="@((e) => ChangeRole(e))">
+            <option value="0">Please select a role</option>
+            @foreach (var _role in roles)
+            {
+                <option value="@_role.RoleNr">@_role.RoleName</option>
+            }
+        </select>
+        <br /><br />
+        <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./role/create"></a>
+    </div>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

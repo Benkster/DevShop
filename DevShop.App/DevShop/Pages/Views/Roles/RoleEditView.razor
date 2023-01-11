@@ -1,0 +1,71 @@
+﻿@page "/role/create"
+@page "/role/edit/{RoleNr}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">Roles</h1>
+@if (dropDownRoles != null)
+{
+    <div id="managementSelectBox">
+        <select @onchange="@((e) => ChangeRole(e))">
+            <option value="0">Please select a role</option>
+            @foreach (var _role in dropDownRoles)
+            {
+                if (isEdit && !roleChanged && Convert.ToInt32(_role.Value) == role.RoleNr)
+                {
+                    <option value="@_role.Value" selected>@_role.DisplayName</option>
+                }
+                else
+                {
+                    <option value="@_role.Value">@_role.DisplayName</option>
+                }
+            }
+        </select>
+        
+        <div class="hide650">
+            <br><br>
+            <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./role/create"></a>
+        </div>
+    </div><div id="managementOutputBox" class="lp18">
+        <EditForm Model="role" OnValidSubmit="Save" OnInvalidSubmit="Error">
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <b class="dangerColor">@errorMessage</b>
+                <br /><br />
+            }
+
+            @if (isEdit)
+            {
+                <div class="bm9">@role.RoleNr</div>
+            }
+            else
+            {
+                <div>
+                    Role-Nr.:
+                </div>
+                <input class="bm5" type="number" min="1" placeholder="Role-Nr" @bind="role.RoleNr" required><br>
+            }
+
+            <input class="bm5" type="text" maxlength="100" placeholder="Role" @bind="role.RoleName" required><br>
+            <textarea placeholder="Description" maxlength="250" @bind="role.Description"></textarea>
+            <br><br>
+
+            <a class="show650 mIcon iconNew backSignalColor hoverBackDarkSignalColor rm18" href="./role/create"></a><input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+            @if (isEdit)
+            {
+                <input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+            }
+        </EditForm>
+    </div>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

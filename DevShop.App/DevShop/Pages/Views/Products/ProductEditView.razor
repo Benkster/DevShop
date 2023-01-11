@@ -1,0 +1,158 @@
+﻿@page "/product/create"
+@page "/product/edit/{CompCode}/{ProductGroupNr}/{ProductNr}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject TreeBuilder treeBuilder
+@inject NavigationManager nav
+@inject FileManager fileManager
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">Products</h1>
+@if (companies != null)
+{
+    @if (companies.Count > 0)
+    {
+        <div id="managementSelectBox" class="selectTree">
+            <select class="bm9" @onchange="@((e) => ChangeCompany(e))">
+                <option value="0">Please select a company</option>
+                @foreach (var _company in companies)
+                {
+                    @if (!string.IsNullOrEmpty(CompCode) && _company.CompCode == CompCode)
+                    {
+                        <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                    else
+                    {
+                        <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                }
+            </select>
+            @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
+            {
+                @treeViewMarkup
+            }
+        
+            <div class="hide650">
+                <br><br>
+                <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./product/create"></a>
+            </div>
+        </div><div id="managementOutputBox" class="lp18">
+            <EditForm Model="product" OnValidSubmit="Save" OnInvalidSubmit="Error">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <b class="dangerColor">@errorMessage</b>
+                    <br /><br />
+                }
+
+                @if (isEdit)
+                {
+                    <div class="bm9">@product.ProductNr</div>
+                }
+                else
+                {
+                    <input class="bm5" type="text" placeholder="Product Nr" value="@nextPK" readonly required/><br />
+                }
+
+                @if (!isEdit)
+                {
+                    <div>
+                        Company:
+                    </div>
+                    <select class="bm5" @onchange="@((e) => ChangeAssignedCompany(e))">
+                        @foreach (var _company in companies)
+                        {
+                            <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                        }
+                    </select><br />
+                    
+                    
+                    @if (productGroups != null && productGroups.Count > 0)
+                    {
+                        <div>
+                            Product-Group:
+                        </div>
+                        <select class="bm5" @onchange="@((e) => ChangeProdGroup(e))">
+                            @foreach (var _prodGroup in productGroups)
+                            {
+                                <option value="@_prodGroup.ProductGroupNr">@_prodGroup.GroupName</option>
+                            }
+                        </select><br />
+                    }
+                    else
+                    {
+                        <div class="bm9">
+                            No Product-Groups were found.<br>
+                            Please select another Company or click <a class="bold primaryColor" href="./product-group/create">here</a> to create a new Product-Group.
+                        </div>
+                    }
+                }
+
+
+                <input class="bm5" type="text" maxlength="150" placeholder="Product-Name" @bind="product.ProductName" required><br>
+                <div>
+                    Sort-Nr.:
+                </div>
+                <input class="bm5" type="number" min="1" placeholder="Sort-Nr" @bind="product.SortNr" required><br>
+                <textarea maxlength="700" placeholder="Description" @bind="product.ProductDescription"></textarea>
+                <br><br>
+
+                @if (isEdit)
+                {
+                    @if (!string.IsNullOrEmpty(fileUploadMessage))
+                    {
+                        <b>@fileUploadMessage</b><br />
+                    }
+
+                    @if (fileExists)
+                    {
+                        <a class="fileContent bm9" href="javascript:LightFrame('@filePicPath', '100%', '450px', '650px', '80vh', false);" style="background-image: url('@filePicPath');"></a>
+                    }
+                    else
+                    {
+                        <div class="fileContent bm9 iconNoPic"></div>
+                    }
+                    <div class="dib vt rm9 bm5">
+                        <InputFile id="fileUpload" class="rm5 bm5" accept="image/jpeg, image/jpg" OnChange="StoreFile"></InputFile><label class="dib vm vp5 hp9 backSignalColor hoverBackDarkSignalColor clearColor pointer bold" for="fileUpload">Choose file</label>
+                    </div><input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="button" @onclick="@(() => UploadFile())"><input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => DeleteFile())">
+                    <br><br><br>
+                }
+
+
+                <a class="show650 mIcon iconNew backSignalColor hoverBackDarkSignalColor rm18" href="./product/create"></a>
+                @if (productGroups != null && productGroups.Count > 0)
+                {
+                    <input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+                }
+
+                @if (isEdit)
+                {
+                    <input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+                }
+            </EditForm>
+        </div>
+
+
+        @if (isEdit)
+        {
+            <a id="artHeaderSideBox" class="backSecondaryColor transColor hoverPrimaryColor block absolute iconArticleHeaderCyan noRepeat" href="javascript:LightFrame('./article-header/@CompCode/@ProductGroupNr/@ProductNr', '100%', '650px', '850px', '80vh', true);">
+                <span class="bold absolute centerY">Article-Header</span>
+            </a>
+        }
+    }
+    else
+    {
+        <div>
+            No companies were found.<br>
+            Please click <a class="bold primaryColor" href="./company/create">here</a> to create a new company before proceeding.
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
