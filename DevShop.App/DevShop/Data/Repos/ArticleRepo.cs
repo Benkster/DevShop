@@ -85,6 +85,7 @@ namespace DevShop.Data.Repos
 				CompCode = m.CompCode,
 				Ean = m.Ean,
 				Price = Math.Round(m.Price, 2),
+				Discount = (m.Discount > 0) ? Math.Round(Convert.ToDecimal(m.Price - (m.Price * m.Discount)), 2) : 0,
 				PicSource = "/pic/icon_no-pic.svg",
 				Link = "./shop/" + m.CompCode + "/" + m.ProductGroupNr.ToString() + "/" + m.ProductNr.ToString() + "/" + m.ArticleNr.ToString()
 			}).ToList();

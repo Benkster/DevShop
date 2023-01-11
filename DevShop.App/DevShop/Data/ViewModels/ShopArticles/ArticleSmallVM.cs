@@ -20,6 +20,8 @@
 
         public decimal Price { get; set; }
 
+        public decimal? Discount { get; set; }
+
         public string PicSource { get; set; } = null!;
 
         public string Link { get; set; } = null!;
