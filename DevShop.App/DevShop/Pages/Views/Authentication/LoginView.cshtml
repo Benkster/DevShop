@@ -1,18 +1,29 @@
 ﻿@page "/login"
+@using Microsoft.JSInterop
 @model DevShop.Pages.Views.Authentication.LoginModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 
 
-<form method="post">
-    <h1>Login</h1>
-    <div>
-        E-Mail/Username<br />
-        <input asp-for="LoginForm.UserName" type="text" />
+<div id="popup" class="vp9 hp9 col1 vh100 oAutoY backClearColor">
+    <div id="loginWrapper" class="centerPos absolute backMediumGray hp36 vp18">
+        <form method="post">
+            <h1 class="bm18">Login</h1>
+            <div class="bm9">
+                <input asp-for="LoginForm.UserName" type="text" placeholder="E-Mail / Username" />
+            </div>
+            <div class="bm18">
+                <input asp-for="LoginForm.Password" type="password" placeholder="Password" />
+            </div>
+            <input class="fontColor fullSize vp5 hp18 backSignalColor hoverBackDarkSignalColor pointer noLine bold clearColor" type="submit" value="Login" />
+        </form>
     </div>
-    <div>
-        Password<br />
-        <input asp-for="LoginForm.Password" type="password" />
-    </div>
-    <input type="submit" value="login" />
-</form>
+</div>
+
+
+
+
+
+@{
+    Layout = "_Layout";
+}

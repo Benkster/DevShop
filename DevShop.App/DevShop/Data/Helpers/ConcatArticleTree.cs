@@ -36,7 +36,8 @@ namespace DevShop.Data.Helpers
 				ElemID = p.ProductGroupNr,
 				ElemText = p.GroupName,
 				ParentID = p.ParentId,
-				ElemLink = "./product-group/edit/" + p.CompCode + "/" + p.ProductGroupNr.ToString()
+				ElemLink = "./product-group/edit/" + p.CompCode + "/" + p.ProductGroupNr.ToString(),
+				SortNr = p.SortNr
 			}).ToList();
 
 			// Convert the list of Products into a list of treeview-elements
@@ -45,7 +46,8 @@ namespace DevShop.Data.Helpers
 				ElemID = p.ProductNr + 100000,
 				ElemText = p.ProductName,
 				ParentID = p.ProductGroupNr,
-				ElemLink = "./product/edit/" + p.CompCode + "/" + p.ProductGroupNr.ToString() + "/" + p.ProductNr.ToString()
+				ElemLink = "./product/edit/" + p.CompCode + "/" + p.ProductGroupNr.ToString() + "/" + p.ProductNr.ToString(),
+				SortNr = p.SortNr
 			}).ToList();
 
 			// Convert the list of Articles into a list of treeview-elements
@@ -54,7 +56,8 @@ namespace DevShop.Data.Helpers
 				ElemID = a.ArticleNr + 200000,
 				ElemText = a.ArticleName,
 				ParentID = a.ProductNr + 100000,
-				ElemLink = "./article/edit/" + a.CompCode + "/" + a.ProductGroupNr.ToString() + "/" + a.ProductNr.ToString() + "/" + a.ArticleNr.ToString()
+				ElemLink = "./article/edit/" + a.CompCode + "/" + a.ProductGroupNr.ToString() + "/" + a.ProductNr.ToString() + "/" + a.ArticleNr.ToString(),
+				SortNr = a.SortNr
 			}).ToList();
 
 

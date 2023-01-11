@@ -214,20 +214,14 @@ li.menuItem_layer_2:last-of-type { margin-bottom: 0px; }
 	cursor: pointer;
 }
 
-.mIcon.mIconDelete { background-size: auto calc(100% - 10px); }
+.mIcon.iconDelete { background-size: auto calc(100% - 10px); }
 
-.mIconNew { background-image: url('/pic/m_icon_new.svg'); }
-.mIconSave { background-image: url('/pic/m_icon_save.svg'); }
-.mIconDelete { background-image: url('/pic/m_icon_delete.svg'); }
-.mIconLoc { background-image: url('/pic/m_icon_loc.svg'); }
-.mIconUser { background-image: url('/pic/m_icon_user.svg'); }
-.mIconArticle { background-image: url('/pic/m_icon_article.svg'); }
-.mIconMenu { background-image: url('/pic/m_icon_menu.svg'); }
+.iconNew { background-image: url('/pic/icon_new.svg'); }
+.iconSave { background-image: url('/pic/icon_save.svg'); }
+.iconArticle { background-image: url('/pic/icon_article.svg'); }
 
-.mIconLocCyan { background-image: url('/pic/m_icon_loc_cyan.svg'); }
-.mIconUserCyan { background-image: url('/pic/m_icon_user_cyan.svg'); }
-.mIconArticleCyan { background-image: url('/pic/m_icon_article_cyan.svg'); }
-.mIconArticleHeaderCyan { background-image: url('/pic/m_icon_article-header_cyan.svg'); }
+.iconArticleCyan { background-image: url('/pic/icon_article_cyan.svg'); }
+.iconArticleHeaderCyan { background-image: url('/pic/icon_article-header_cyan.svg'); }
 
 /* *** ICONS - END *** */
 
@@ -252,9 +246,9 @@ li.menuItem_layer_2:last-of-type { margin-bottom: 0px; }
 	background-repeat: no-repeat;
 }
 
-.mIconOverview.mIconUser { width: 40px; }
+.mIconOverview.iconUser { width: 40px; }
 
-.mIconOverview.mIconArticle { width: 60px; }
+.mIconOverview.iconArticle { width: 60px; }
 
 
 
@@ -303,12 +297,12 @@ li.treeItem {
 
 label.lbl_tree_openSub { 
 	display: inline-block;
-	background-image: url('/pic/m_icon_plus.svg'); 
+	background-image: url('/pic/icon_plus.svg'); 
 }
 
 label.lbl_tree_closeSub { 
 	display: none; 
-	background-image: url('/pic/m_icon_minus.svg');
+	background-image: url('/pic/icon_minus.svg');
 }
 
 
@@ -401,7 +395,7 @@ li.treeItem > input[type="radio"].rad_tree_openSub:checked ~ label.lbl_tree_clos
 		height: 45px;
 		border-radius: 25px;
 		background-color: #cee818;
-		background-image: url('/pic/m_icon_tree.svg');
+		background-image: url('/pic/icon_tree.svg');
 		background-repeat: no-repeat;
 		background-position: center;
 		background-size: auto 30px;

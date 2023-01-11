@@ -27,6 +27,16 @@ textarea {
 
 input[readonly] { background-color: #e6e6e6 !important; }
 
+img { max-width: 100%; }
+
+pre {
+	white-space: pre-line;
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	margin: 0px;
+}
+
 
 
 body, html { margin: 0px; }
@@ -115,6 +125,7 @@ input[type="password"]:hover { border-color: #cee818; }
 	clear:			#fff
 	primary:		#31a287
 	secondary:		#344756
+	additional:		#527fa2
 	light:			#f5fcff
 	signal:			#cee818
 	darkSignal:		#c0d23b
@@ -130,6 +141,7 @@ input[type="password"]:hover { border-color: #cee818; }
 .clearColor { color: #fff; }
 .primaryColor { color: #31a287; }
 .secondaryColor { color: #344756; }
+.additionalColor { color: #527fa2; }
 .lightColor { color: #f5fcff; }
 .signalColor { color: #cee818; }
 .darkSignalColor { color: #c0d23b; }
@@ -143,6 +155,7 @@ input[type="password"]:hover { border-color: #cee818; }
 .backClearColor { background-color: #fff; }
 .backPrimaryColor { background-color: #31a287; }
 .backSecondaryColor { background-color: #344756; }
+.backAdditionalColor { background-color: #527fa2; }
 .backLightColor { background-color: #f5fcff; }
 .backSignalColor { background-color: #cee818; }
 .backDarkSignalColor { background-color: #c0d23b; }
@@ -159,6 +172,7 @@ input[type="password"]:hover { border-color: #cee818; }
 
 .hoverBackDarkSignalColor:hover { background-color: #c0d23b; }
 .hoverBackDarkDangerColor:hover { background-color: #a21616; }
+.hoverBackLightGrayColor:hover { background-color: #f2f2f2; }
 
 
 
@@ -193,6 +207,22 @@ input[type="password"]:hover { border-color: #cee818; }
 .bottomThickSecondaryLine { border-bottom: 2px solid #344756; }
 .leftThickSecondaryLine { border-left: 2px solid #344756; }
 .rightThickSecondaryLine { border-right: 2px solid #344756; }
+
+.thickPrimaryLine { border: 2px solid #31a287; }
+.topThickPrimaryLine { border-top: 2px solid #31a287; }
+.bottomThickPrimaryLine { border-bottom: 2px solid #31a287; }
+.leftThickPrimaryLine { border-left: 2px solid #31a287; }
+.rightThickPrimaryLine { border-right: 2px solid #31a287; }
+
+.thickDottedMediumGrayLine { border: 2px dotted #e6e6e6 }
+.topThickDottedMediumGrayLine { border-top: 2px dotted #e6e6e6 }
+.bottomThickDottedMediumGrayLine { border-bottom: 2px dotted #e6e6e6 }
+.leftThickDottedMediumGrayLine { border-left: 2px dotted #e6e6e6 }
+.rightThickDottedMediumGrayLine { border-right: 2px dotted #e6e6e6 }
+
+
+
+.hoverPrimaryColorLine:hover { border-color: #31a287; }
 
 
 
@@ -289,7 +319,17 @@ input[type="password"]:hover { border-color: #cee818; }
 
 .col1 { width: 100%; }
 
+.col23-1 { width: 66.666%; }
+
 .vh100 { height: 100vh; }
+
+.minVh100 { min-height: 100vh; }
+
+
+
+@media screen and (max-width: 1024px) {
+	.col23-1 { width: 100%; }
+}
 
 
 
@@ -305,10 +345,17 @@ input[type="password"]:hover { border-color: #cee818; }
 .flex { display: flex; }
 .grid { display: grid; }
 
+.wrap { flex-wrap: wrap; }
+
 
 
 @media screen and (min-width: 1025px) {
 	.show1024 { display: none; }
+}
+
+
+@media screen and (max-width: 1024px) {
+	.hide1024 { display: none; }
 }
 
 
@@ -319,6 +366,21 @@ input[type="password"]:hover { border-color: #cee818; }
 
 @media screen and (max-width: 650px) {
 	.hide650 { display: none !important; }
+}
+
+
+@media screen and (max-width: 520px) {
+	.hide520 { display: none; }
+}
+
+
+@media screen and (min-width: 376px) {
+	.show375 { display: none; }
+}
+
+
+@media screen and (max-width: 375px) {
+	.hide375 { display: none; }
 }
 
 
@@ -380,8 +442,12 @@ input[type="password"]:hover { border-color: #cee818; }
 .bold { font-weight: bold; }
 
 .fullSize { font-size: inherit; }
+.big { font-size: 120%; }
+.small { font-size: 80%; }
 
 .regular { font-family: inherit; }
+
+.strike { text-decoration: line-through; }
 
 
 
@@ -395,12 +461,24 @@ input[type="password"]:hover { border-color: #cee818; }
 .contain { background-size: contain; }
 
 .backCenter { background-position: center; }
+.backRight { background-position: right; }
 
 .noRepeat { background-repeat: no-repeat; }
+
+.floatLeft { float: left; }
+.floatRight { float: right; }
 
 .oHide { overflow: hidden; }
 .oAuto { overflow: auto; }
 .oAutoY { overflow-y: auto; }
+
+.content {
+	display: block;
+	width: 100%;
+	max-width: 1440px;
+	margin-left: auto;
+	margin-right: auto;
+}
 
 
 
@@ -476,3 +554,28 @@ input[type="password"]:hover { border-color: #cee818; }
 =======================================*/
 
 .iconNoPic { background-image: url('/pic/icon_no-pic.svg'); }
+.iconUser { background-image: url('/pic/icon_user.svg'); }
+.iconDelete { background-image: url('/pic/icon_delete.svg'); }
+.iconLoc { background-image: url('/pic/icon_loc.svg'); }
+.iconMenu { background-image: url('/pic/icon_menu.svg'); }
+.iconSearch { background-image: url('/pic/icon_search.svg'); }
+.iconArrow { background-image: url('/pic/icon_arrow.svg'); }
+
+.iconArrowGreen { background-image: url('/pic/icon_arrow_green.svg'); }
+
+.iconLocCyan { background-image: url('/pic/icon_loc_cyan.svg'); }
+.iconUserCyan { background-image: url('/pic/icon_user_cyan.svg'); }
+.iconLogoutCyan { background-image: url('/pic/icon_logout_cyan.svg'); }
+
+
+
+
+
+/*=======================================
+	LOGIN
+=======================================*/
+
+#loginWrapper {
+	width: 100%;
+	max-width: 470px;
+}

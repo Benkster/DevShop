@@ -34,7 +34,8 @@ namespace DevShop.Pages.Views.Categories
                 ElemID = c.CategoryId,
                 ElemText = c.CategoryName,
                 ParentID = c.ParentId,
-                ElemLink = "./category/edit/" + c.CategoryId.ToString()
+                ElemLink = "./category/edit/" + c.CategoryId.ToString(),
+                SortNr = c.ParentId
             }).ToList();
 
 
