@@ -1,9 +1,63 @@
 ﻿@page "/"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject TreeBuilder treeBuilder
+@inject NavigationManager nav
 
 
 
-<PageTitle>Index</PageTitle>
+<h1 class="bm18">DevShop</h1>
+<div class="col23-1">
+    Welcome to DevShop!<br />
+    This website is solely used for demonstration. All articles and every information displayed on this website are to be viewed as test-data.<br />
+    To browse through the different articles, open the menu and select the desired category.
+    <br /><br />
+    Thank you for understanding. Enjoy your testing.
+</div>
+@if (!string.IsNullOrEmpty(categoryTree.Value))
+{
+    <div id="categoryTree">
+        @categoryTree
+    </div>
+}
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+@if (randomArticles != null)
+{
+    @if (randomArticles.Count > 0)
+    {
+        <div id="shopSearchBox" class="tm36 relative right">
+            <input id="shopSearch" type="text" placeholder="Search ..." @bind="searchString" />
+            <input id="shopSearchButton" class="pointer absolute hp0 vp0 backTrans noLine backCenter noRepeat contain iconSearch" type="button" value="" @onclick="@(() => Search())" />
+        </div>
+        <div id="artBoxWrapper" class="flex wrap tm18">
+            @foreach (var _art in randomArticles)
+            {
+                <div class="artBox dib vt darkGrayLine hoverPrimaryColorLine">
+                    <div class="artBoxPicWrapper hp9 vp9">
+                        <a class="artBoxPic noRepeat backCenter contain" href="@_art.Link" style="background-image: url('@_art.PicSource');"></a>
+                    </div>
+                    <div class="artBoxText backLightGray hp9 vp9">
+                        <a class="bold hoverPrimaryColor" href="@_art.Link">@_art.ArticleName</a><br>
+                        @_art.ArticleCode
+                        <br><br>
+                        @if (_art.Discount > 0)
+                        {
+                            <b class="dangerColor strike">
+                                € @_art.Price
+                            </b><br />
+                            <b>
+                                € @_art.Discount
+                            </b>
+                        }
+                        else
+                        {
+                            <b>
+                                € @_art.Price
+                            </b>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}

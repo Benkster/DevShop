@@ -7,16 +7,14 @@
 
 
 
-<h1>Categories</h1>
+<h1 class="bm18">Categories</h1>
 @if (!string.IsNullOrEmpty(treeViewMarkup.Value))
 {
-    <div>
+    <div id="managementSelectBox" class="selectTree">
         @treeViewMarkup
+        <br /><br />
+        <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./category/create"></a>
     </div>
-    <br /><br />
-    <a href="./category/create">
-        Create a new category
-    </a>
 }
 else
 {

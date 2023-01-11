@@ -1,0 +1,30 @@
+﻿@page "/unit"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">Units</h1>
+@if (units != null)
+{
+    <div id="managementSelectBox">
+        <select @onchange="@((e) => ChangeUnit(e))">
+            <option value="0">Please select a Unit</option>
+            @foreach (var _unit in units)
+            {
+                <option value="@_unit.UnitCode">@_unit.UnitCode - @_unit.UnitName</option>
+            }
+        </select>
+        <br /><br />
+        <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./unit/create"></a>
+    </div>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

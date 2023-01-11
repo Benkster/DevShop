@@ -2,56 +2,106 @@
 
 
 
-<div>
-    <div>
-        <ul>
-            <li>
-                <a href="./">
-                    Articles
-                </a>
-                <ul>
-                    <li>
-                        <a href="./category">
-                            Categories
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="./country">
-                    Location
-                </a>
-                <ul>
-                    <li>
-                        <a href="./country">
-                            Countries
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./state">
-                            States
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./city">
-                            Cities
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="./">
-                    User
-                </a>
-                <ul>
-                    <li>
-                        <form method="post" action="/logout">
-                            <input type="hidden" name="__RequestVerificationToken" value="@_tokenProvider.AntiForgeryToken">
-                            <input type="submit" value="logout">
-                        </form>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+<input id="chk_toggleManagementMenu" type="checkbox" name="chk_toggleManagementMenu" />
+<label id="lbl_openManagementMenu" class="lbl_toggleManagementMenu show1024 backSecondaryColor pointer fixed centerY iconMenu backCenter noRepeat" for="chk_toggleManagementMenu"></label>
+<label id="lbl_managementMenuOverlay" class="hide fixed" for="chk_toggleManagementMenu"></label>
+<div id="managementMenu" class="backMediumGray hp18 vp18">
+	<label id="lbl_closeManagementMenu" class="lbl_toggleManagementMenu show1024 pointer" for="chk_toggleManagementMenu"></label>
+	<input id="rad_closeSubMenu" type="radio" name="rad_toggleSubMenu">
+	<ul id="menu_layer_1">
+		<li class="menuItem menuItem_layer_1 bottomThickSecondaryLine topThickSecondaryLine">
+			<input id="rad_openSubMenu_1" type="radio" name="rad_toggleSubMenu" />
+			<label class="menuLabel relative bold lbl_openSubMenu pointer" for="rad_openSubMenu_1">
+				Articles<span class="menuIcon absolute iconArticleCyan"></span>
+			</label>
+			<label class="menuLabel relative bold lbl_hideSubMenu hide pointer primaryColor" for="rad_closeSubMenu">
+				Articles<span class="menuIcon absolute iconArticleCyan"></span>
+			</label>
+			<ul id="menu_layer_2">
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./category">
+						Categories
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./unit">
+						Units
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./product-group">
+						Product-Groups
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./product">
+						Products
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./article">
+						Articles
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li class="menuItem menuItem_layer_1 bottomThickSecondaryLine">
+			<input id="rad_openSubMenu_2" type="radio" name="rad_toggleSubMenu" />
+			<label class="menuLabel relative bold lbl_openSubMenu pointer" for="rad_openSubMenu_2">
+				Location<span class="menuIcon absolute iconLocCyan"></span>
+			</label>
+			<label class="menuLabel relative bold lbl_hideSubMenu hide pointer primaryColor" for="rad_closeSubMenu">
+				Location<span class="menuIcon absolute iconLocCyan"></span>
+			</label>
+			<ul id="menu_layer_2">
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./country">
+						Countries
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./state">
+						States
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./city">
+						Cities
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li class="menuItem menuItem_layer_1 bottomThickSecondaryLine">
+			<input id="rad_openSubMenu_3" type="radio" name="rad_toggleSubMenu" />
+			<label class="menuLabel relative bold lbl_openSubMenu pointer" for="rad_openSubMenu_3">
+				Users/Companies<span class="menuIcon absolute iconUserCyan"></span>
+			</label>
+			<label class="menuLabel relative bold lbl_hideSubMenu hide pointer primaryColor" for="rad_closeSubMenu">
+				Users/Companies<span class="menuIcon absolute iconUserCyan"></span>
+			</label>
+			<ul id="menu_layer_2">
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./company">
+						Companies
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./role">
+						Roles
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<a class="menuLink hoverPrimaryColor bold" href="./user">
+						Users
+					</a>
+				</li>
+				<li class="menuItem menuItem_layer_2">
+					<form method="post" action="/logout">
+						<input type="hidden" name="__RequestVerificationToken" value="@_tokenProvider.AntiForgeryToken">
+						<input class="hp0 backTrans fontColor bold noLine fullSize regular hoverPrimaryColor pointer" type="submit" value="Logout">
+					</form>
+				</li>
+			</ul>
+		</li>
+	</ul>
 </div>

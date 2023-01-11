@@ -7,23 +7,24 @@
 
 
 
-<h1>Countries</h1>
+<h1 class="bm18">Countries</h1>
 @if (countries != null)
 {
-    @if (countries.Count > 0)
-    {
-        <select @onchange="@((e) => ChangeCountry(e))">
-            <option value="0">Please select a country</option>
-            @foreach (var _country in countries)
-            {
-                <option value="@_country.CountryCode">@_country.CountryName</option>
-            }
-        </select>
-    }
-    <br /><br />
-    <a href="./country/create">
-        Create a new country
-    </a>
+    <div id="managementSelectBox">
+        @if (countries.Count > 0)
+        {
+            <select @onchange="@((e) => ChangeCountry(e))">
+                <option value="0">Please select a country</option>
+                @foreach (var _country in countries)
+                {
+                    <option value="@_country.CountryCode">@_country.CountryName</option>
+                }
+            </select>
+        }
+
+        <br><br>
+        <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./country/create"></a>
+    </div>
 }
 else
 {

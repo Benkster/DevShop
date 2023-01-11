@@ -10,5 +10,12 @@ namespace DevShop.Data
 		CountryRepo CountryRepo { get; }
         StateRepo StateRepo { get; }
 		CityRepo CityRepo { get; }
+        UserRepo UserRepo { get; }
+        UserDiscountRepo UserDiscountRepo { get; }
+        ProductGroupRepo ProductGroupRepo { get; }
+		ProductRepo ProductRepo { get; }
+		ArticleRepo ArticleRepo { get; }
+		ArticleHeaderRepo ArticleHeaderRepo { get; }
+		UnitRepo UnitRepo { get; }
 	}
 }

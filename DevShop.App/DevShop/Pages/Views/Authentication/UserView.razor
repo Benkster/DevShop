@@ -1,0 +1,61 @@
+﻿@page "/user"
+@page "/user/{CompCode}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">Users</h1>
+@if (companies != null)
+{
+    @if (companies.Count == 0)
+    {
+        <div>
+            No company has been found.<br>
+            Please click <a class="bold primaryColor" href="./company/create">here</a> to create a new company before proceeding.
+        </div>
+    }
+    else
+    {
+        <div id="managementSelectBox">
+            <select class="bm9" @onchange="@((e) => ChangeCompany(e))">
+                <option value="0">Please select a company</option>
+                @foreach (var _company in companies)
+                {
+                    @if (selCompany != null && !companyChanged && _company.CompCode == selCompany.CompCode)
+                    {
+                        <option value="@_company.CompCode" selected>@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                    else
+                    {
+                        <option value="@_company.CompCode">@_company.CompCode.Substring(0, 2) - @_company.CompName</option>
+                    }
+                }
+            </select>
+            @if (users != null)
+            {
+                @if (users.Count > 0)
+                {
+                    <select @onchange="@((e) => ChangeUser(e))">
+                        <option value="0">Please select a user</option>
+                        @foreach (var _user in users)
+                        {
+                            <option value="@_user.UserId">@_user.LastName @_user.FirstName</option>
+                        }
+                    </select>
+                }
+            }
+            <br /><br />
+            <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./register"></a>
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}
