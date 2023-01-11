@@ -40,7 +40,21 @@
                         <a class="bold hoverPrimaryColor" href="@_art.Link">@_art.ArticleName</a><br>
                         @_art.ArticleCode
                         <br><br>
-                        € @_art.Price
+                        @if (_art.Discount > 0)
+                        {
+                            <b class="dangerColor strike">
+                                € @_art.Price
+                            </b><br />
+                            <b>
+                                € @_art.Discount
+                            </b>
+                        }
+                        else
+                        {
+                            <b>
+                                € @_art.Price
+                            </b>
+                        }
                     </div>
                 </div>
             }
