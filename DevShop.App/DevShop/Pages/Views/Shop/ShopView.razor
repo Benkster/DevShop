@@ -1,6 +1,7 @@
 ﻿@page "/shop"
 @page "/shop/{CategoryID}"
 @page "/shop/{CompCode}/{ProductGroupNr}/{ProductNr}/{ArticleNr}"
+@page "/shop/search/{SearchString}"
 @using DevShop.Data
 @inject IUnitOfWork uow
 @inject TreeBuilder treeBuilder
@@ -9,7 +10,7 @@
 
 
 
-@if (category != null)
+@if (category != null || !string.IsNullOrEmpty(SearchString))
 {
     @if (!string.IsNullOrEmpty(categoryTree.Value))
     {
@@ -172,7 +173,53 @@
 
 
 
-    <h1 class="bm18">@category.CategoryName</h1>
+    @if (string.IsNullOrEmpty(searchString))
+    {
+        <h1 class="bm5">@category.CategoryName</h1>
+    }
+    else
+    {
+        <h1 class="bm5">Search for '@searchString'</h1>
+    }
+
+    <div class="bm18">
+        @if (shopArticles != null)
+        {
+            @artCount<span> articles found</span>
+        }
+    </div>
+
+
+    <input id="rad_listView" type="radio" name="rad_toggleArtView" />
+    <input id="rad_boxView" type="radio" name="rad_toggleArtView" checked />
+    <label id="lbl_setBoxView" class="dib vt rm9 lbl_toggleArtView pointer" for="rad_boxView" @onclick="@(() => SetCookie("box"))"></label><label id="lbl_setListView" class="dib vt lbl_toggleArtView pointer" for="rad_listView" @onclick="@(() => SetCookie("list"))"></label>
+    <div id="shopSearchBox">
+        <input id="shopSearch" type="text" placeholder="Search ..." @bind="searchString" /><input id="shopSearchButton" class="pointer" type="button" value="search" @onclick="@(() => Search(currentPage, true))" />
+    </div>
+
+
+    @* -- Page-Nr -- *@
+
+    @if (maxPage > 1)
+    {
+        <div id="shopPageNav" class="tm18">
+            @if (currentPage > 1)
+            {
+                <input id="shopPrevPage" class="dib vm shopPageArrow" type="button" value="prev" @onclick="@(() => PrevPage())" />
+            }
+
+            <div id="shopCurrentPage" class="dib vm">
+                @currentPage
+            </div>
+
+            @if (currentPage < maxPage)
+            {
+                <input id="shopNextPage" class="dib vm shopPageArrow" type="button" value="next" @onclick="@(() => NextPage())" />
+            }
+        </div>
+    }
+
+    @* -- -- *@
 
 
 
@@ -180,10 +227,6 @@
 
     @if (shopArticles != null && shopArticles.Count > 0)
     {
-        <input id="rad_listView" type="radio" name="rad_toggleArtView" />
-        <input id="rad_boxView" type="radio" name="rad_toggleArtView" checked />
-        <label id="lbl_setBoxView" class="dib vt rm9 lbl_toggleArtView pointer" for="rad_boxView"></label><label id="lbl_setListView" class="dib vt lbl_toggleArtView pointer" for="rad_listView"></label>
-
         @* -- Box-View -- *@
 
         <div id="artBoxWrapper" class="boxView flex wrap tm18">
@@ -481,13 +524,6 @@
         </div>
 
         @* -- -- *@
-    }
-    else
-    {
-        <div class="bold">
-            No Articles could be found.<br>
-            Please select a different category.
-        </div>
     }
 
     @* *** LIST OF ARTICLES - END *** *@
