@@ -1,11 +1,16 @@
 ﻿@inject TokenProvider _tokenProvider
+@inject NavigationManager _nav
 
 
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    @Redirect();
+                </NotAuthorized>
+            </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>
@@ -29,5 +34,15 @@
     {
         // Store the AntiForgeryToken
         _tokenProvider.AntiForgeryToken = InitialState.AntiForgeryToken;
+    }
+
+
+
+    /// <summary>
+    /// If the user enters a page, that requires authorization, and is not loged in or does not have a right high enough, redirect to the homepage
+    /// </summary>
+    protected async Task Redirect()
+    {
+        _nav.NavigateTo("/");
     }
 }

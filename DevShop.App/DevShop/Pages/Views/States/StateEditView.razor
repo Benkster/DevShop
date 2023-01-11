@@ -1,0 +1,97 @@
+﻿@page "/state/create"
+@page "/state/edit/{CountryCode}/{StateID}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">States</h1>
+@if (countries != null)
+{
+    @if (countries.Count > 0)
+    {
+        <div id="managementSelectBox">
+            <select class="bm9" @onchange="@((e) => ChangeCountry(e))">
+                <option value="0">Please select a country</option>
+                @foreach (var _country in countries)
+                {
+                    @if (isEdit && country != null && _country.CountryCode == country.CountryCode)
+                    {
+                        <option value="@_country.CountryCode" selected>@_country.CountryName</option>
+                    }
+                    else
+                    {
+                        <option value="@_country.CountryCode">@_country.CountryName</option>
+                    }
+                }
+            </select>
+            @if (dropDownStates != null && dropDownStates.Count > 0)
+            {
+                <select @onchange="@((e) => ChangeState(e))">
+                    @foreach (var _state in dropDownStates)
+                    {
+                        @if (isEdit && state != null && Convert.ToInt32(_state.Value) == state.StateId)
+                        {
+                            <option value="@_state.Value" selected>@_state.DisplayName</option>
+                        }
+                        else
+                        {
+                            <option value="@_state.Value">@_state.DisplayName</option>
+                        }
+                    }
+                </select>
+            }
+        
+            <div class="hide650">
+                <br><br>
+                <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./state/create"></a>
+            </div>
+        </div><div id="managementOutputBox" class="lp18">
+            <EditForm Model="state" OnValidSubmit="Save" OnInvalidSubmit="Error">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <b class="dangerColor">@errorMessage</b>
+                    <br /><br />
+                }
+
+                <input class="bm5" type="text" placeholder="Tyrol" maxlength="150" pattern="*{5,}" @bind="state.StateName"><br>
+                <select @onchange="@((e) => SetCountry(e))">
+                    @foreach (var _country in countries)
+                    {
+                        @if (_country.CountryCode == selCountry.CountryCode)
+                        {
+                            <option value="@_country.CountryCode" selected>@_country.CountryName</option>
+                        }
+                        else
+                        {
+                            <option value="@_country.CountryCode">@_country.CountryName</option>
+                        }
+                    }
+                </select>
+                <br><br>
+
+                <a class="show650 mIcon iconNew backSignalColor hoverBackDarkSignalColor rm18" href="./state/create"></a><input class="mIcon iconSave backSignalColor hoverBackDarkSignalColor rm9" type="submit" value="">
+                @if(isEdit)
+                {
+                    <input class="mIcon iconDelete backDangerColor hoverBackDarkDangerColor" type="button" value="" @onclick="@(() => Delete())">
+                }
+            </EditForm>
+        </div>
+    }
+    else
+    {
+        <div>
+            No country has been found.<br>
+            Click <a class="bold primaryColor" href="./country/create">here</a> to create a country before proceeding.
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

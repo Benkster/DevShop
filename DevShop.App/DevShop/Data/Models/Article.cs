@@ -13,7 +13,7 @@ public partial class Article
 
     public string CompCode { get; set; } = null!;
 
-    public string Article1 { get; set; } = null!;
+    public string ArticleName { get; set; } = null!;
 
     public string? ArticleDescription { get; set; }
 

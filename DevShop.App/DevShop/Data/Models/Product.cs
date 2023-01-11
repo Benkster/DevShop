@@ -11,7 +11,7 @@ public partial class Product
 
     public string CompCode { get; set; } = null!;
 
-    public string Product1 { get; set; } = null!;
+    public string ProductName { get; set; } = null!;
 
     public string? ProductDescription { get; set; }
 

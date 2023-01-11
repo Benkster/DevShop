@@ -1,1 +1,24 @@
 ﻿@page "/category"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject TreeBuilder treeBuilder
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">Categories</h1>
+@if (!string.IsNullOrEmpty(treeViewMarkup.Value))
+{
+    <div id="managementSelectBox" class="selectTree">
+        @treeViewMarkup
+        <br /><br />
+        <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./category/create"></a>
+    </div>
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

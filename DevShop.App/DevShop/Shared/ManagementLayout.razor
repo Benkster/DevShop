@@ -1,0 +1,39 @@
+﻿@inherits LayoutComponentBase
+
+
+
+<PageTitle>
+    DevShop - Backend
+</PageTitle>
+
+<link rel="stylesheet" href="./css/Management.css" />
+<div id="managementContainer" class="relative">
+    <div id="managementGrid" class="grid">
+        <nav>
+            <ul id="managementNavTop" class="vp9 hp18 backSecondaryColor clearColor">
+                <li class="navItem dib rp18">
+                    <a class="navLink bold" href="./management">
+                        Overview
+                    </a>
+                </li><li class="navItem dib rp18">
+                    <a class="navLink bold" href="./">
+                        Back to shop
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <header>
+            <ManagementMenu />
+        </header>
+        <main>
+            <article class="hp18 vp18 relative">
+                @Body
+            </article>
+        </main>
+        <footer>
+            <div id="footerBox" class="center fixed centerX backLightColor col1 vp9 hp9">
+                DevShop - created by Benjamin Knoll 2022/2023
+            </div>
+        </footer>
+    </div>
+</div>

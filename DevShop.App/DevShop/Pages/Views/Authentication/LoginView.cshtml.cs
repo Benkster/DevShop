@@ -2,6 +2,7 @@ using DevShop.Authentication;
 using DevShop.Authentication.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.JSInterop;
 
 namespace DevShop.Pages.Views.Authentication
 {
@@ -50,7 +51,6 @@ namespace DevShop.Pages.Views.Authentication
 			{
 				return Page();
 			}
-
 
 			return Redirect("/");
 		}

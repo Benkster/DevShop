@@ -1,0 +1,61 @@
+﻿@page "/state"
+@page "/state/{CountryCode}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject NavigationManager nav
+@attribute [Authorize(Roles = "7")]
+@layout ManagementLayout
+
+
+
+<h1 class="bm18">States</h1>
+@if (countries != null)
+{
+    @if (countries.Count == 0)
+    {
+        <div>
+            No country has been found.<br>
+            Please click <a class="bold primaryColor" href="./country/create">here</a> to create a new country before proceeding.
+        </div>
+    }
+    else
+    {
+        <div id="managementSelectBox">
+            <select class="bm9" @onchange="@((e) => ChangeCountry(e))">
+                <option value="0">Please select a country</option>
+                @foreach (var _country in countries)
+                {
+                    @if (selCountry != null && !countryChanged && _country.CountryCode == selCountry.CountryCode)
+                    {
+                        <option value="@_country.CountryCode" selected>@_country.CountryName</option>
+                    }
+                    else
+                    {
+                        <option value="@_country.CountryCode">@_country.CountryName</option>
+                    }
+                }
+            </select>
+            @if (states != null)
+            {
+                @if (states.Count > 0)
+                {
+                    <select @onchange="@((e) => ChangeState(e))">
+                        <option value="0">Please select a state</option>
+                        @foreach (var _state in states)
+                        {
+                            <option value="@_state.StateId">@_state.StateName</option>
+                        }
+                    </select>
+                }
+            }
+            <br /><br />
+            <a class="mIcon iconNew backSignalColor hoverBackDarkSignalColor" href="./state/create"></a>
+        </div>
+    }
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

@@ -1,0 +1,35 @@
+﻿@inject TokenProvider _tokenProvider
+
+
+
+<div id="shopMenu" class="backSecondaryColor clearColor hp18 vp18 fixed col1">
+    <ul id="menu_layer_1" class="content hp0">
+        <li class="menuItem menuItem_layer_1 rm18">
+            <a class="menuLink bold hoverPrimaryColor" href="./">
+                Home
+            </a>
+        </li>
+        <AuthorizeView Roles="7">
+            <Authorized>
+                <li class="menuItem menuItem_layer_1">
+                    <a class="menuLink bold hoverPrimaryColor" href="./management">
+                        Management
+                    </a>
+                </li>
+            </Authorized>
+        </AuthorizeView>
+        <li id="menuIconBox" class="menuItem menuItem_layer_1">
+            <AuthorizeView>
+                <Authorized>
+                    <form method="post" action="/logout">
+                        <input type="hidden" name="__RequestVerificationToken" value="@_tokenProvider.AntiForgeryToken">
+                        <input class="menuIcon iconLogoutCyan backTrans noLine vp0 hp0 pointer" type="submit" value="">
+                    </form>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="menuLink menuIcon iconUserCyan" href="./login"></a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </li>
+    </ul>
+</div>

@@ -9,7 +9,7 @@ public partial class City
 
     public string Zip { get; set; } = null!;
 
-    public string City1 { get; set; } = null!;
+    public string CityName { get; set; } = null!;
 
     public virtual ICollection<Address> Addresses { get; } = new List<Address>();
 

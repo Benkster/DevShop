@@ -7,7 +7,7 @@ public partial class Unit
 {
     public string UnitCode { get; set; } = null!;
 
-    public string Unit1 { get; set; } = null!;
+    public string UnitName { get; set; } = null!;
 
     public virtual ICollection<Article> ArticleBillingUnitNavigations { get; } = new List<Article>();
 

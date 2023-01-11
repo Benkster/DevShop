@@ -1,6 +1,8 @@
 ﻿using DevShop.Data.Models;
+using DevShop.Data.SortTypes;
 using DevShop.Data.Repos.IRepos;
 using Microsoft.EntityFrameworkCore;
+using DevShop.Data.ViewModels.TreeBuilderVMs;
 
 namespace DevShop.Data.Repos
 {
@@ -11,33 +13,139 @@ namespace DevShop.Data.Repos
     {
         #region Variables/Properties
         private readonly DevShopContext _context;
+        private readonly TreeBuilder _treeBuilder;
 		#endregion
 
 
 
-		#region Constructors
-		public CategoryRepo(DevShopContext context)
+        #region Constructors
+        public CategoryRepo(DevShopContext context, TreeBuilder treeBuilder)
         {
             _context = context;
+            _treeBuilder = treeBuilder;
         }
-		#endregion
+        #endregion
 
 
 
-		#region Methods
-		#region Get
-		/// <summary>
-		/// Get all existing Categories from the database
-		/// </summary>
-		/// <returns>
-		/// A list of objects of type Category
-		/// </returns>
-		public async Task<List<Category>> GetAllModelsAsync()
+        #region Methods
+        #region Get
+        /// <summary>
+        /// Get all existing Categories from the database
+        /// </summary>
+        /// <returns>
+        /// A list of objects of type Category
+        /// </returns>
+        public async Task<List<Category>> GetAllModelsAsync()
         {
             List<Category> models = await _context.Categories.ToListAsync();
 
             return models;
         }
+
+        /// <summary>
+        /// Get all existing Categories ordered from the database
+        /// </summary>
+        /// <param name="sortType">
+        /// Specifies the column after which the models should be sorted
+        /// </param>
+        /// <param name="descending">
+        /// If true, sorts models in descending order
+        /// </param>
+        /// <returns>
+        /// An ordered list of objects of type Category
+        /// </returns>
+        public async Task<List<Category>> GetAllModelsAsync(CategorySortType.SortType sortType, bool descending = false)
+        {
+            List<Category> models = new List<Category>();
+
+            switch (sortType)
+            {
+                // Sort by ID
+                case CategorySortType.SortType.ID:
+                    models = (descending) ? await _context.Categories.OrderByDescending(m => m.CategoryId).ToListAsync() : await _context.Categories.OrderBy(m => m.CategoryId).ToListAsync();
+                    break;
+                // Sort by Name
+                case CategorySortType.SortType.Name:
+                    models = (descending) ? await _context.Categories.OrderByDescending(m => m.CategoryName).ToListAsync() : await _context.Categories.OrderBy(m => m.CategoryName).ToListAsync();
+                    break;
+            }
+
+
+            return models;
+        }
+
+
+
+        /// <summary>
+        /// Exclude all the children of a specified element
+        /// </summary>
+        /// <param name="_rootID">
+        /// ID of the element, whose child-elements should be excluded from the list
+        /// </param>
+        /// <returns>
+        /// A list of elements excluding all children of the given element
+        /// </returns>
+        public async Task<List<Category>> GetModelsWithoutChildrenAsync(int _rootID)
+        {
+            // List of all existing elements
+            List<Category> allModels = await _context.Categories.ToListAsync();
+
+            // Convert the type of the list of all elements to SelectListDataVM, which is a general model that is used for the methods of the TreeBuilder
+            List<SelectListDataVM> allSelectListModels = allModels.Select(m => new SelectListDataVM()
+            {
+                ElemID = m.CategoryId,
+                ElemName = m.CategoryName,
+                ParentID = m.ParentId
+            }).ToList();
+
+
+            // Exclude all children of the given element and get a list of all allowed elements
+            List<SelectListDataVM> resultSelectList = _treeBuilder.ExcludeChildrenFromSelectList(allSelectListModels, _rootID);
+
+            // Convert the type of the result-list back to the type of the model, that is used in the view
+            List<Category> modelsWithoutChildren = allModels.Where(m => !resultSelectList.All(r => r.ElemID != m.CategoryId)).ToList();
+
+
+            return modelsWithoutChildren;
+        }
+
+
+
+        /// <summary>
+        /// Include only the children of a given element in a select-list
+        /// </summary>
+        /// <param name="_rootID">
+        /// ID of the element, the children of which should be included
+        /// </param>
+        /// <param name="_includeParent">
+        /// Indicates, whether the root-element is also allowed to be selected or not
+        /// </param>
+        /// <returns>
+        /// A list of all child-elements
+        /// </returns>
+        public async Task<List<Category>> GetChildrenAsync(int _rootID, bool _includeParent = false)
+		{
+            // List of all existing elements
+            List<Category> allModels = await _context.Categories.ToListAsync();
+
+            // Convert the type of the list of all elements to SelectListDataVM, which is a general model that is used for the methods of the TreeBuilder
+            List<SelectListDataVM> allSelectListModels = allModels.Select(m => new SelectListDataVM()
+            {
+                ElemID = m.CategoryId,
+                ElemName = m.CategoryName,
+                ParentID = m.ParentId
+            }).ToList();
+
+            // Add all children of the given element to the result-list
+            List<SelectListDataVM> resultSelectList = _treeBuilder.AddChildrenToSelectList(allSelectListModels, _rootID, _includeParent);
+
+            // Convert the type of the result-list back to the type of the model, that is used in the view
+            List<Category> childModels = allModels.Where(m => !resultSelectList.All(r => r.ElemID != m.CategoryId)).ToList();
+
+
+            return childModels;
+		}
 
 
 

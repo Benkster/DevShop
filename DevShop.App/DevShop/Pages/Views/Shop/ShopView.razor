@@ -1,0 +1,578 @@
+﻿@page "/shop"
+@page "/shop/{CategoryID}"
+@page "/shop/{CompCode}/{ProductGroupNr}/{ProductNr}/{ArticleNr}"
+@page "/shop/search/{SearchString}"
+@using DevShop.Data
+@inject IUnitOfWork uow
+@inject TreeBuilder treeBuilder
+@inject NavigationManager nav
+@inject IJSRuntime jsRuntime
+
+
+
+@if (category != null || !string.IsNullOrEmpty(SearchString))
+{
+    @if (!string.IsNullOrEmpty(categoryTree.Value))
+    {
+        <div id="categoryTree">
+            @categoryTree
+        </div>
+    }
+
+
+    @* *** SELECTED ARTICLE DETAILS - START *** *@
+
+    @if (showArtDetails)
+    {
+        @if (selArticle != null)
+        {
+            <div id="selectedArticleBox" class="bm36">
+                <div id="selArticlePicBox" class="dib vt center bm24">
+                    @if (selArticle.PicExists)
+                    {
+                        <a id="selArticlePic" class="block hp9 vp9 darkGrayLine" href="javascript:LightFrame('@selArticle.PicSource', '100%', '480px', '640px', '80vh', false);">
+                            <img class="dib" src="@selArticle.PicSource">
+                        </a>
+                    }
+                    else
+                    {
+                        <div id="selArticlePic" class="hp9 vp9 darkGrayLine">
+                            <div class="iconNoPic noRepeat backCenter contain" style="background-image: url('@selArticle.PicSource');"></div>
+                        </div>
+                    }
+
+                    <div id="selArticlePicInfo" class="tm9 left darkGray small">
+                        <div id="selArtPicInfoCategory" class="dib vt">
+                            <b>Category:</b><div class="show375"></div> @selArticle.CategoryName
+                        </div><div id="selArtPicInfoArtNr" class="dib vt floatRight">
+                            <b>Art.Nr.:</b><div class="show375"></div> @selArticle.ArticleCode
+                            @if (!string.IsNullOrEmpty(selArticle.Ean))
+                            {
+                                <div>
+                                    <b>EAN:</b><div class="show375"></div> @selArticle.Ean
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div><div id="selArticleTextBox" class="dib vt lp36">
+                    <h1>@selArticle.ArticleName</h1>
+                    Producer: @selArticle.CompName
+                    <div class="tm18">
+                        @if (selArticle.Discount > 0)
+                        {
+                            <span>Price: </span><b class="dangerColor strike">€ @selArticle.Price</b> <b class="big">€ @selArticle.Discount</b> <span>per @selArticle.PackagingUnit</span>
+                        }
+                        else
+                        {
+                            <span>Price: </span><b class="big">€ @selArticle.Price</b> <span>per @selArticle.PackagingUnit</span>
+                        }
+                    </div>
+                    <div>
+                        @if (selArticle.BillingUnitShort == selArticle.PackagingUnitShort)
+                        {
+                            <span>Order unit: </span>@selArticle.UnitAmount<span>&nbsp;</span>@selArticle.BillingUnitShort
+                        }
+                        else
+                        {
+                            <span>Order unit: </span>@selArticle.UnitAmount<span>&nbsp;</span>@selArticle.PackagingUnitShort<span> per </span>@selArticle.BillingUnitShort
+                        }
+                    </div>
+                    <div class="tm9">
+						@if (!string.IsNullOrEmpty(selArticle.F1Name) && !string.IsNullOrEmpty(selArticle.F1))
+						{
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F1Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F1
+								</div>
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F2Name) && !string.IsNullOrEmpty(selArticle.F2))
+						{
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F2Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F2
+								</div>
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F3Name) && !string.IsNullOrEmpty(selArticle.F3))
+						{
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F3Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F3
+								</div>
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F4Name) && !string.IsNullOrEmpty(selArticle.F4))
+						{
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F4Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F4
+								</div>
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F5Name) && !string.IsNullOrEmpty(selArticle.F5))
+						{
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F5Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F5
+								</div>
+							</div>
+						}
+									
+						@if (!string.IsNullOrEmpty(selArticle.F6Name) && !string.IsNullOrEmpty(selArticle.F6))
+						{
+							<div class="artInfoBox">
+								<div class="artInfoLeftCol dib vt rp5">
+									<b>@selArticle.F6Name:</b>
+								</div><div class="artInfoRightCol dib vt">
+									@selArticle.F6
+								</div>
+							</div>
+						}
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(selArticle.ArticleDescription))
+                    {
+                        <input id="rad_hideSelArtDescription" type="radio" name="rad_toggleSelArtDescription" checked>
+                        <div id="selArtDescriptionWrapper" class="tm18">
+                            <input id="rad_showSelArtDescription_@selArticle.UniqueValue" type="radio" name="rad_toggleSelArtDescription">
+
+                            <label id="lbl_showSelArtDescription" class="lbl_toggleSelArtDescription pointer bold primaryColor topThickPrimaryLine bottomThickPrimaryLine" for="rad_showSelArtDescription_@selArticle.UniqueValue">
+                                Description
+                            </label>
+                            <label id="lbl_hideSelArtDescription" class="lbl_toggleSelArtDescription pointer bold primaryColor topThickPrimaryLine" for="rad_hideSelArtDescription">
+                                Description
+                            </label>
+                            <div id="selArtDescription" class="bottomThickPrimaryLine">
+                                <pre>
+                                    @selArticle.ArticleDescription
+                                </pre>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>   
+        }
+    }
+
+    @* *** SELECTED ARTICLE DETAILS - END *** *@
+
+
+
+    @if (string.IsNullOrEmpty(searchString))
+    {
+        <h1 class="bm5">@category.CategoryName</h1>
+    }
+    else
+    {
+        <h1 class="bm5">Search for '@searchString'</h1>
+    }
+
+    <div class="bm18">
+        @if (shopArticles != null)
+        {
+            @artCount<span> articles found</span>
+        }
+    </div>
+
+
+    <input id="rad_listView" type="radio" name="rad_toggleArtView" />
+    <input id="rad_boxView" type="radio" name="rad_toggleArtView" checked />
+    <label id="lbl_setBoxView" class="dib vm rm9 lbl_toggleArtView pointer" for="rad_boxView" @onclick="@(() => SetCookie("box"))">
+    </label><label id="lbl_setListView" class="dib vm lbl_toggleArtView pointer" for="rad_listView" @onclick="@(() => SetCookie("list"))">
+    </label><div id="shopSearchBox" class="dib vm right relative lp36">
+        <input id="shopSearch" type="text" placeholder="Search ..." @bind="searchString" />
+        <input id="shopSearchButton" class="pointer absolute hp0 vp0 backTrans noLine backCenter noRepeat contain iconSearch" type="button" value="" @onclick="@(() => Search(currentPage, true))" />
+    </div>
+
+
+    @* -- Page-Nr -- *@
+
+    @if (maxPage > 1)
+    {
+        <div id="shopPageNav" class="tm18 center big">
+            @if (currentPage > 1)
+            {
+                <input id="shopPrevPage" class="dib vm shopPageArrow pointer hp0 vp0 noLine backTrans iconArrowGreen noRepeat contain backCenter" type="button" value="" @onclick="@(() => PrevPage())" />
+            }
+            else
+            {
+                <div id="shopPrevPage" class="dib vm shopPageArrow hp0 vp0 noLine backTrans iconArrow noRepeat contain backCenter"></div>
+            }
+
+            <div id="shopCurrentPage" class="dib vm hm9">
+                @currentPage
+            </div>
+
+            @if (currentPage < maxPage)
+            {
+                <input id="shopNextPage" class="dib vm shopPageArrow pointer hp0 vp0 noLine backTrans iconArrowGreen noRepeat contain backCenter" type="button" value="" @onclick="@(() => NextPage())" />
+            }
+            else
+            {
+                <div id="shopNextPage" class="dib vm shopPageArrow hp0 vp0 noLine backTrans iconArrow noRepeat contain backCenter"></div>
+            }
+        </div>
+    }
+
+    @* -- -- *@
+
+
+
+    @* *** LIST OF ARTICLES - START *** *@
+
+    @if (shopArticles != null && shopArticles.Count > 0)
+    {
+        @* -- Box-View -- *@
+
+        <div id="artBoxWrapper" class="boxView flex wrap tm18">
+            @foreach (var _art in shopArticles)
+            {
+                <div class="artBox dib vt darkGrayLine hoverPrimaryColorLine">
+                    <div class="artBoxPicWrapper hp9 vp9">
+                        <a class="artBoxPic noRepeat backCenter contain" href="@_art.Link" style="background-image: url('@_art.PicSource');"></a>
+                    </div>
+                    <div class="artBoxText backLightGray hp9 vp9">
+                        <a class="bold hoverPrimaryColor" href="@_art.Link">@_art.ArticleName</a><br>
+                        @_art.ArticleCode
+                        <br><br>
+                        @if (_art.Discount > 0)
+                        {
+                            <b class="dangerColor strike">
+                                € @_art.Price
+                            </b><br />
+                            <b>
+                                € @_art.Discount
+                            </b>
+                        }
+                        else
+                        {
+                            <b>
+                                € @_art.Price
+                            </b>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        @* -- -- *@
+
+
+        @* -- List-View -- *@
+
+        <div id="artListWrapper" class="listView hide tm18">
+            <input id="rad_hideListDetails" type="radio" name="rad_toggleListDetails" checked>
+            <input id="rad_hideListDetDescription" type="radio" name="rad_toggleListDetDescription" checked>
+
+            <ul id="artListHeader" class="artList grid backMediumGray">
+                <li class="artListThumbnail artListCol hide375"></li>
+                <li class="artListName artListCol"><b>Article</b></li>
+                <li class="artListProducer artListCol hide1024"><b>Producer</b></li>
+                <li class="artListCode artListCol hide650"><b>Art.Nr.</b></li>
+                <li class="artListUnit artListCol hide1024"><b>Unit</b></li>
+                <li class="artListPrice artListCol hide520"><b>Price</b></li>
+                <li class="artListArrow artListCol"></li>
+            </ul>
+
+
+
+            @foreach (var _art in shopArticles)
+            {
+                <input id="rad_openListDetail_@_art.UniqueValue" type="radio" name="rad_toggleListDetails" />
+                <ul class="artList grid bottomThickDottedMediumGrayLine hoverBackLightGrayColor">
+                    <li class="artListThumbnail artListCol hide375">
+                        @if (_art.PicExists)
+                        {
+                            <a class="artThumbnail noRepeat backCenter contain" href="@_art.Link" style="background-image: url('@_art.PicSource');"></a>
+                        }
+                        else
+                        {
+                            <a class="artThumbnail iconNoPic noRepeat backCenter contain" href="@_art.Link"></a>
+                        }
+                    </li>
+                    <li class="artListName artListCol">
+                        <a class="bold hoverPrimaryColor" href="@_art.Link">
+                            @_art.ArticleName
+                        </a>
+                    </li>
+                    <li class="artListProducer artListCol">
+                        <label class="pointer" for="rad_openListDetail_@_art.UniqueValue">
+                            @_art.CompName
+                        </label>
+                    </li>
+                    <li class="artListCode artListCol hide650">
+                        <label class="pointer" for="rad_openListDetail_@_art.UniqueValue">
+                            <div>@_art.ArticleCode</div>
+                            <div>@_art.Ean</div>
+                        </label>
+                    </li>
+                    <li class="artListUnit artListCol hide650">
+                        @if (_art.BillingUnitShort == _art.PackagingUnitShort)
+                        {
+                            <label class="pointer" for="rad_openListDetail_@_art.UniqueValue">
+                                @_art.UnitAmount @_art.BillingUnitShort
+                            </label>
+                        }
+                        else
+                        {
+                            <label class="pointer" for="rad_openListDetail_@_art.UniqueValue">
+                                @_art.UnitAmount @_art.PackagingUnitShort <span>per</span> @_art.BillingUnitShort
+                            </label>
+                        }
+                    </li>
+                    <li class="artListPrice artListCol hide520">
+                        @if (_art.Discount > 0)
+                        {
+                            <b class="dangerColor strike">
+                                € @_art.Price
+                            </b><br />
+                            <b>
+                                € @_art.Discount
+                            </b>
+                        }
+                        else
+                        {
+                            <b>
+                                € @_art.Price
+                            </b>
+                        }
+
+                        <br>
+                        per @_art.PackagingUnit
+                    </li>
+                    <li class="artListArrow artListCol">
+                        <label class="lbl_openListDetail lbl_toggleListDetail backCenter noRepeat contain pointer" for="rad_openListDetail_@_art.UniqueValue"></label>
+                        <label class="lbl_closeListDetail lbl_toggleListDetail backCenter noRepeat contain pointer" for="rad_hideListDetails"></label>
+                    </li>
+                </ul>
+
+
+                @* -- Details -- *@
+
+                <div id="artListDetail_@_art.UniqueValue" class="artListDetails vp9 bottomThickDottedMediumGrayLine">
+                    <div class="artListDetailPic dib vt right">
+                        @if (_art.PicExists)
+                        {
+                            <a href="@_art.Link">
+                                <img class="artListPic" src="@_art.PicSource" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="block iconNoPic artListPic backRight noRepeat contain" href="@_art.Link"></a>
+                        }
+                    </div><div class="artListDetailText dib vt rp9">
+                        <div>
+                            Producer: @_art.CompName
+                        </div>
+                        <h3 class="tm5 bm9">
+                            <a class="hoverPrimaryColor" href="@_art.Link">
+                                @_art.ArticleName
+                            </a>
+                        </h3>
+                        <div class="bm5">
+                            Category: @_art.CategoryName<br>
+                            Art. Nr.: @_art.ArticleCode
+
+                            @if (!string.IsNullOrEmpty(_art.Ean))
+                            {
+                                <div>
+                                    EAN: @_art.Ean
+                                </div>
+                            }
+                        </div>
+                        <div class="bm18">
+                            @if (_art.Discount > 0)
+                            {
+                                <span>Price: </span><b class="dangerColor strike rm5">€ @_art.Price</b><b class="big">€ @_art.Discount</b><span> per @_art.PackagingUnit</span>
+                            }
+                            else
+                            {
+                                <span>Price: </span><b class="big">€ @_art.Price</b><span> per @_art.PackagingUnit</span>
+                            }
+
+                            <div>
+                                @if (_art.BillingUnitShort == _art.PackagingUnitShort)
+                                {
+                                    <span>Order unit: @_art.UnitAmount&nbsp;@_art.BillingUnitShort</span>
+                                }
+                                else
+                                {
+                                    <span>Order unit: </span>@_art.UnitAmount<span>&nbsp;</span>@_art.PackagingUnitShort <span>per </span> @_art.BillingUnitShort
+                                }
+                            </div>
+                        </div>
+
+                        @* -- Add. information (F1-F6) -- *@
+
+                        @if (!string.IsNullOrEmpty(_art.F1) || !string.IsNullOrEmpty(_art.F2) || !string.IsNullOrEmpty(_art.F3) || !string.IsNullOrEmpty(_art.F4) || !string.IsNullOrEmpty(_art.F5) || !string.IsNullOrEmpty(_art.F6))
+                        {
+                            <div class="listDetDescriptionWrapper">
+                                <input id="rad_showListDetInfo_@_art.UniqueValue" type="radio" name="rad_toggleListDetDescription">
+
+                                <label id="lbl_showListDetInfo" class="lbl_toggleListDetDescription lbl_showListDetDescription pointer bold primaryColor topThickPrimaryLine bottomThickPrimaryLine" for="rad_showListDetInfo_@_art.UniqueValue">
+                                    Additional information
+                                </label>
+                                <label id="lbl_hideListDetInfo" class="lbl_toggleListDetDescription lbl_hideListDetDescription pointer bold primaryColor topThickPrimaryLine" for="rad_hideListDetDescription">
+                                    Additional information
+                                </label>
+								<div class="artListAddInfo listDetDescriptionInfo bottomThickPrimaryLine">
+									@if (!string.IsNullOrEmpty(_art.F1Name) && !string.IsNullOrEmpty(_art.F1))
+									{
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F1Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F1
+											</div>
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F2Name) && !string.IsNullOrEmpty(_art.F2))
+									{
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F2Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F2
+											</div>
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F3Name) && !string.IsNullOrEmpty(_art.F3))
+									{
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F3Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F3
+											</div>
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F4Name) && !string.IsNullOrEmpty(_art.F4))
+									{
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F4Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F4
+											</div>
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F5Name) && !string.IsNullOrEmpty(_art.F5))
+									{
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F5Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F5
+											</div>
+										</div>
+									}
+									
+									@if (!string.IsNullOrEmpty(_art.F6Name) && !string.IsNullOrEmpty(_art.F6))
+									{
+										<div class="artInfoBox">
+											<div class="artInfoLeftCol dib vt rp5">
+												<b>@_art.F6Name:</b>
+											</div><div class="artInfoRightCol dib vt">
+												@_art.F6
+											</div>
+										</div>
+									}
+								</div>
+                            </div>
+                        }
+
+                        @* -- -- *@
+
+
+                        @* -- Description -- *@
+
+                        @if (!string.IsNullOrEmpty(_art.ArticleDescription))
+                        {
+                            <div class="listDetDescriptionWrapper">
+                                <input id="rad_showListDetDescription_@_art.UniqueValue" type="radio" name="rad_toggleListDetDescription">
+
+                                <label id="lbl_showListDetDescription" class="lbl_toggleListDetDescription lbl_showListDetDescription pointer bold primaryColor topThickPrimaryLine bottomThickPrimaryLine" for="rad_showListDetDescription_@_art.UniqueValue">
+                                    Description
+                                </label>
+                                <label id="lbl_hideListDetDescription" class="lbl_toggleListDetDescription lbl_hideListDetDescription pointer bold primaryColor topThickPrimaryLine" for="rad_hideListDetDescription">
+                                    Description
+                                </label>
+                                <div class="artListDescription listDetDescriptionInfo bottomThickPrimaryLine">
+                                    <pre>
+                                        @_art.ArticleDescription
+                                    </pre>
+                                </div>
+                            </div>
+                        }
+
+                        @* -- -- *@
+                    </div>
+                </div>
+
+                @* -- -- *@
+            }
+        </div>
+
+        @* -- -- *@
+    }
+
+    @* *** LIST OF ARTICLES - END *** *@
+
+
+    @* -- Page-Nr -- *@
+
+    @if (maxPage > 1)
+    {
+        <div id="shopPageNav" class="tm18 center big">
+            @if (currentPage > 1)
+            {
+                <input id="shopPrevPage" class="dib vm shopPageArrow pointer hp0 vp0 noLine backTrans iconArrowGreen noRepeat contain backCenter" type="button" value="" @onclick="@(() => PrevPage())" />
+            }
+            else
+            {
+                <div id="shopPrevPage" class="dib vm shopPageArrow hp0 vp0 noLine backTrans iconArrow noRepeat contain backCenter"></div>
+            }
+
+            <div id="shopCurrentPage" class="dib vm hm9">
+                @currentPage
+            </div>
+
+            @if (currentPage < maxPage)
+            {
+                <input id="shopNextPage" class="dib vm shopPageArrow pointer hp0 vp0 noLine backTrans iconArrowGreen noRepeat contain backCenter" type="button" value="" @onclick="@(() => NextPage())" />
+            }
+            else
+            {
+                <div id="shopNextPage" class="dib vm shopPageArrow hp0 vp0 noLine backTrans iconArrow noRepeat contain backCenter"></div>
+            }
+        </div>
+    }
+
+    @* -- -- *@
+}
+else
+{
+    <span>
+        Loading ...
+    </span>
+}

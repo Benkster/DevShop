@@ -1,4 +1,5 @@
 ﻿using DevShop.Data.Models;
+using DevShop.Data.SortTypes;
 
 namespace DevShop.Data.Repos.IRepos
 {
@@ -11,7 +12,10 @@ namespace DevShop.Data.Repos.IRepos
         Task CreateModelAsync(Category _category);
         Task DeleteModelAsync(int _pk);
         Task<List<Category>> GetAllModelsAsync();
-        Task<Category> GetModelByPkAsync(int _pk);
+        Task<List<Category>> GetAllModelsAsync(CategorySortType.SortType sortType, bool descending = false);
+		Task<List<Category>> GetChildrenAsync(int _rootID, bool _includeParent = false);
+		Task<Category> GetModelByPkAsync(int _pk);
+        Task<List<Category>> GetModelsWithoutChildrenAsync(int _rootID);
         Task UpdateModelAsync(Category _category);
     }
 }
