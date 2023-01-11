@@ -3,6 +3,7 @@ using DevShop.Data.ViewModels.ShopArticles;
 using DevShop.Data.ViewModels.TreeBuilderVMs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Transactions;
 
 namespace DevShop.Pages.Views.Shop
 {
@@ -15,6 +16,16 @@ namespace DevShop.Pages.Views.Shop
 		#region Variables/Properties
 		// Determines, whether an articles' details are viewed or not
 		private bool showArtDetails;
+
+		// The users search-text will be stored here
+		private string searchString;
+
+		// The page, that the user is currently on (page 1, 2, ...)
+		private int currentPage;
+		// Total amount of all articles, that have been found
+		private int artCount;
+		// The last page, that the user can view (= total amoung of pages)
+		private int maxPage;
 
 		// HTML-Code for the menu (= tree) of the shop
 		private MarkupString categoryTree;
@@ -48,6 +59,9 @@ namespace DevShop.Pages.Views.Shop
 		// Nr of the article, whose details should be displayed
 		[Parameter]
 		public string ArticleNr { get; set; }
+
+		[Parameter]
+		public string SearchString { get; set; }
 		#endregion
 
 
@@ -63,17 +77,13 @@ namespace DevShop.Pages.Views.Shop
 			// Display all articles that are part of the selected category or all sub-categories
 			if (!string.IsNullOrEmpty(CategoryID))
 			{
+				currentPage = 1;
+
 				showArtDetails = false;
+				searchString = string.Empty;
 
-				selArticle = new ArticleDetailedVM();
 
-				// Information of the selected category
-				category = await uow.CategoryRepo.GetModelByPkAsync(Convert.ToInt32(CategoryID));
-
-				// Get all sub-categories of the selected category
-				List<Category> childCategories = await uow.CategoryRepo.GetChildrenAsync(Convert.ToInt32(CategoryID), true);
-				// Get all articles, that are associated with the selected category or any sub-category
-				shopArticles = await uow.ArticleRepo.GetCategoryArticlesAsync(childCategories);
+				await GetArticles();
 
 
 				// Only create the tree, if it has not been done yet (to reduce traffic)
@@ -88,25 +98,11 @@ namespace DevShop.Pages.Views.Shop
 			// Display the details of an article
 			else if (!string.IsNullOrEmpty(CompCode) && !string.IsNullOrEmpty(ProductGroupNr) && !string.IsNullOrEmpty(ProductNr) && !string.IsNullOrEmpty(ArticleNr))
 			{
+				currentPage = (currentPage > 0) ? currentPage : 1;
 				showArtDetails = true;
 
-				// Get detailed information about the selected article
-				selArticle = await uow.ArticleRepo.GetViewModelByPkAsync(CompCode, Convert.ToInt32(ProductGroupNr), Convert.ToInt32(ProductNr), Convert.ToInt32(ArticleNr));
 
-
-				
-				// The user never selected a category -> clicked on one of the random articles on the entry-page (index) of the website
-                if (category == null)
-                {
-					// Get the category, that is associated with the selected article
-					category = await uow.ArticleRepo.GetCategoryOfArticleAsync(CompCode, Convert.ToInt32(ProductGroupNr), Convert.ToInt32(ProductNr), Convert.ToInt32(ArticleNr));
-				}
-
-
-				// Get all sub-categories of the category
-				List<Category> childCategories = await uow.CategoryRepo.GetChildrenAsync(category.CategoryId, true);
-				// Get all articles, that are associated with the category or any sub-category
-				shopArticles = await uow.ArticleRepo.GetCategoryArticlesAsync(childCategories);
+				await GetArticles();
 
 
 				// Only create the tree, if it has not been done yet (to reduce traffic)
@@ -118,11 +114,29 @@ namespace DevShop.Pages.Views.Shop
 
 				StateHasChanged();
 			}
+			// The user used the search-field on the entry-page of the website (index)
+			else if (!string.IsNullOrEmpty(SearchString))
+			{
+				currentPage = 1;
+				searchString = SearchString;
+
+				await Search(currentPage, true);
+
+
+				// Only create the tree, if it has not been done yet (to reduce traffic)
+				if (string.IsNullOrEmpty(categoryTree.Value))
+				{
+					await GenerateTreeView();
+				}
+			}
 			// Nothing has been selected -> return to entry page
 			else
 			{
 				nav.NavigateTo("/");
 			}
+
+
+			maxPage = Convert.ToInt32(Math.Ceiling((decimal)artCount / 20));
 		}
 
 
@@ -141,7 +155,7 @@ namespace DevShop.Pages.Views.Shop
 
 
 			// Call a JS-Function, that closes the menu
-			await module.InvokeVoidAsync("CloseTreeView");
+			await module.InvokeVoidAsync("ResetPage");
 		}
 		#endregion
 
@@ -165,6 +179,157 @@ namespace DevShop.Pages.Views.Shop
 
 
 			categoryTree = treeBuilder.BuildTree(tvCategories);
+		}
+
+
+
+		/// <summary>
+		/// Load all articles
+		/// </summary>
+		private async Task GetArticles()
+		{
+			// Load all articles that are part of the selected category or all sub-categories
+			if (!showArtDetails)
+			{
+				selArticle = new ArticleDetailedVM();
+
+				// Information of the selected category
+				category = await uow.CategoryRepo.GetModelByPkAsync(Convert.ToInt32(CategoryID));
+
+				// Get all sub-categories of the selected category
+				List<Category> childCategories = await uow.CategoryRepo.GetChildrenAsync(Convert.ToInt32(CategoryID), true);
+				// Get all articles, that are associated with the selected category or any sub-category
+				shopArticles = await uow.ArticleRepo.GetCategoryArticlesAsync(childCategories, currentPage);
+
+				artCount = await uow.ArticleRepo.GetTotalArticleAmount(childCategories);
+			}
+			// Load the details of an article
+			else
+			{
+				// Get detailed information about the selected article
+				selArticle = await uow.ArticleRepo.GetViewModelByPkAsync(CompCode, Convert.ToInt32(ProductGroupNr), Convert.ToInt32(ProductNr), Convert.ToInt32(ArticleNr));
+
+
+
+				// The user never selected a category -> clicked on one of the random articles on the entry-page (index) of the website
+				if (category == null)
+				{
+					// Get the category, that is associated with the selected article
+					category = await uow.ArticleRepo.GetCategoryOfArticleAsync(CompCode, Convert.ToInt32(ProductGroupNr), Convert.ToInt32(ProductNr), Convert.ToInt32(ArticleNr));
+				}
+
+
+				if (string.IsNullOrEmpty(searchString))
+				{
+					// Get all sub-categories of the category
+					List<Category> childCategories = await uow.CategoryRepo.GetChildrenAsync(category.CategoryId, true);
+					// Get all articles, that are associated with the category or any sub-category
+					shopArticles = await uow.ArticleRepo.GetCategoryArticlesAsync(childCategories, currentPage);
+
+					artCount = await uow.ArticleRepo.GetTotalArticleAmount(childCategories);
+				}
+			}
+		}
+
+
+
+		/// <summary>
+		/// Search for articles
+		/// </summary>
+		/// <param name="_pageNumber">
+		/// Number of the current page
+		/// </param>
+		/// <param name="_initialPageNr">
+		/// If true, the page-number will be reset to 1
+		/// </param>
+		private async Task Search(int _pageNumber, bool _initialPageNr = true)
+        {
+			// The user has typed in a search-text
+			if (!string.IsNullOrEmpty(searchString))
+            {
+				// Reset the page-number
+				if (_initialPageNr)
+				{
+					_pageNumber = 1;
+					currentPage = 1;
+				}
+
+
+				shopArticles = await uow.ArticleRepo.SearchArticleAsync(searchString, _pageNumber);
+				artCount = await uow.ArticleRepo.GetTotalArticleAmount(searchString);
+
+				maxPage = Convert.ToInt32(Math.Ceiling((decimal)artCount / 20));
+
+
+				StateHasChanged();
+			}
+			// The search-field is empty
+			else
+			{
+				await OnParametersSetAsync();
+			}
+        }
+
+
+
+		/// <summary>
+		/// Set a cookie in order to select the list-view or box-view, if the page reloads
+		/// </summary>
+		/// <param name="_cookieValue">
+		/// Determines, whether the list-view or the box-view should be selected
+		/// </param>
+		private async Task SetCookie(string _cookieValue)
+		{
+			// Import the JS-file of the shop to be able to access its functions
+			var module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Pages/Views/Shop/ShopView.razor.js");
+
+
+			// Call the function in the JS-file, that sets the cookie
+			await module.InvokeVoidAsync("SetCookie", new string[] { _cookieValue });
+		}
+
+
+
+		/// <summary>
+		/// Get the next 20 available articles
+		/// </summary>
+		private async Task NextPage()
+		{
+			currentPage++;
+
+
+			// Get the next page of the search-results
+			if (!string.IsNullOrEmpty(searchString))
+			{
+				await Search(currentPage, false);
+			}
+			// Get the next page of articles
+			else
+			{
+				await GetArticles();
+			}
+		}
+
+
+
+		/// <summary>
+		/// Get the previous 20 available articles
+		/// </summary>
+		private async Task PrevPage()
+		{
+			currentPage--;
+
+
+			// Get the previous page of the search-results
+			if (!string.IsNullOrEmpty(searchString))
+			{
+				await Search(currentPage, false);
+			}
+			// Get the previous page of articles
+			else
+			{
+				await GetArticles();
+			}
 		}
 		#endregion
 	}

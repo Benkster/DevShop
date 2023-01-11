@@ -121,10 +121,16 @@ namespace DevShop.Data.Repos
 		/// <param name="_categories">
 		/// List of the category and sub-categories, whose articles should be selected
 		/// </param>
+		/// <param name="_pageNumber">
+		/// Specifies the current page number (only 20 articles will be displayed per page)
+		/// </param>
+		/// <param name="_ignorePageNumber">
+		/// If true, all articles are beeing selected, instead of just 20
+		/// </param>
 		/// <returns>
 		/// A list of detailed information of articles
 		/// </returns>
-		public async Task<List<ArticleDetailedVM>> GetCategoryArticlesAsync(List<Category> _categories)
+		public async Task<List<ArticleDetailedVM>> GetCategoryArticlesAsync(List<Category> _categories, int _pageNumber, bool _ignorePageNumber = false)
 		{
 			// List of detailed information of all articles, that should be selected
 			List<ArticleDetailedVM> viewModels = new List<ArticleDetailedVM>();
@@ -182,6 +188,10 @@ namespace DevShop.Data.Repos
 			}
 
 
+
+			// Get either all articles, or the max. 20 articles of the current page
+			Range selArtRange = (_ignorePageNumber || _pageNumber <= 1) ? new Range(0, articles.Count) : new Range(20 * (_pageNumber - 1), 20 * _pageNumber);
+
 			// Store all the information of each article in a list of view-models
 			viewModels = articles.Select(a => new ArticleDetailedVM()
 			{
@@ -220,7 +230,7 @@ namespace DevShop.Data.Repos
 				PicSource = "/pic/icon_no-pic.svg",
 				PicExists = false,
 				Link = "./shop/" + a.CompCode + "/" + a.ProductGroupNr.ToString() + "/" + a.ProductNr.ToString() + "/" + a.ArticleNr.ToString()
-			}).OrderBy(a => a.SortNr).ToList();
+			}).Take(selArtRange).OrderBy(a => a.SortNr).ToList();
 
 
 
@@ -237,6 +247,8 @@ namespace DevShop.Data.Repos
 						// Save the source of the picture
 						viewModels[index].PicSource = "/pic/articles/" + _artDetail.CompCode + "/pic_" + _artDetail.ArticleNr.ToString() + "." + _extension;
 						viewModels[index].PicExists = true;
+
+						break;
 					}
 				}
 
@@ -247,6 +259,170 @@ namespace DevShop.Data.Repos
 
 			return viewModels;
 		}
+
+
+
+		/// <summary>
+		/// Get a list of Articles, that match a given search-string
+		/// </summary>
+		/// <param name="_searchString">
+		/// The search-text
+		/// </param>
+		/// <param name="_pageNumber">
+		/// Specifies the current page number (only 20 articles will be displayed per page)
+		/// </param>
+		/// <param name="_ignorePageNumber">
+		/// If true, all articles are beeing selected, instead of just 20
+		/// </param>
+		/// <returns>
+		/// A detailed list of Articles
+		/// </returns>
+		public async Task<List<ArticleDetailedVM>> SearchArticleAsync(string _searchString, int _pageNumber, bool _ignorePageNumber = false)
+		{
+			// List of detailed information of all articles, that should be selected
+			List<ArticleDetailedVM> viewModels = new List<ArticleDetailedVM>();
+
+			// Get all articles, that match the given search-string
+			List<Article> articles = await _context.Articles.Where(a => 
+					a.ArticleName.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.ArticleDescription) && a.ArticleDescription.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.Ean) && a.Ean.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.ArticleCode) && a.ArticleCode.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.F1) && a.F1.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.F2) && a.F2.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.F3) && a.F3.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.F4) && a.F4.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.F5) && a.F5.Contains(_searchString) ||
+					!string.IsNullOrEmpty(a.F6) && a.F6.Contains(_searchString)
+				).ToListAsync();
+
+			List<Unit> units = await _context.Units.ToListAsync();
+			List<Company> companies = new List<Company>();
+			List<ArticleHeader> artHeaders = new List<ArticleHeader>();
+			List<ProductGroup> productGroups = new List<ProductGroup>();
+			List<Category> categories = new List<Category>();
+
+
+
+			// Distinct list of the codes of each company, that sell the articles
+			List<string> compCodes = articles.GroupBy(a => a.CompCode).Select(a => a.First().CompCode).ToList();
+
+			// Get all companies, that sell the articles
+			foreach (string _compCode in compCodes)
+            {
+				Company currentComp = await _context.Companies.FirstOrDefaultAsync(c => c.CompCode == _compCode);
+
+
+				// Distinct lits of all product-group-numbers, to which each article of the current company belongs
+				List<int> compGroupNrs = articles.Where(a => a.CompCode == _compCode).GroupBy(a => a.ProductGroupNr).Select(a => a.First().ProductGroupNr).ToList();
+
+				// Get all product-groups
+				foreach (int _compGroupNr in compGroupNrs)
+				{
+					ProductGroup currentGroup = await _context.ProductGroups.FirstOrDefaultAsync(pg => pg.ProductGroupNr == _compGroupNr && pg.CompCode == _compCode);
+
+					productGroups.Add(currentGroup);
+				}
+
+
+				companies.Add(currentComp);
+            }
+
+
+			// Distinct list of the IDs of the headers, that are used for the articles
+			List<int> artHeaderIDs = articles.GroupBy(a => a.ArticleHeaderId).Select(a => a.First().ArticleHeaderId).ToList();
+
+			// Get all headers, that are used for the articles
+			foreach (int _artHeaderID in artHeaderIDs)
+            {
+				ArticleHeader currentHeader = await _context.ArticleHeaders.FirstOrDefaultAsync(ah => ah.ArticleHeaderId == _artHeaderID);
+
+				artHeaders.Add(currentHeader);
+            }
+
+
+			// Distinct list of the IDs of the categories, with which the articles are associated
+			List<int> categoryIDs = productGroups.GroupBy(pg => pg.CategoryId).Select(pg => pg.First().CategoryId).ToList();
+
+			// Get all categories
+			foreach (int _categoryID in categoryIDs)
+			{
+				Category currentCategory = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryId == _categoryID);
+
+				categories.Add(currentCategory);
+			}
+
+
+			// Get either all articles, or the max. 20 articles of the current page
+			Range selArtRange = (_ignorePageNumber) ? new Range(0, articles.Count) : new Range(20 * (_pageNumber - 1), 20 * _pageNumber);
+
+			// Store all the information of each article in a list of view-models
+			viewModels = articles.Select(a => new ArticleDetailedVM()
+			{
+				UniqueValue = a.CompCode + "_" + a.ArticleNr.ToString(),
+				ArticleNr = a.ArticleNr,
+				ArticleCode = a.ArticleCode,
+				ArticleName = a.ArticleName,
+				ArticleDescription = a.ArticleDescription,
+				BillingUnitShort = a.BillingUnit,
+				BillingUnit = units.FirstOrDefault(u => u.UnitCode == a.BillingUnit).UnitName,
+				PackagingUnitShort = a.PackagingUnit,
+				PackagingUnit = units.FirstOrDefault(u => u.UnitCode == a.PackagingUnit).UnitName,
+				CompCode = a.CompCode,
+				CompName = companies.FirstOrDefault(c => c.CompCode == a.CompCode).CompName,
+				Price = Math.Round(a.Price, 2),
+				Discount = (a.Discount != null) ? Math.Round(Convert.ToDecimal(a.Price - (a.Price * a.Discount)), 2) : 0,
+				Ean = a.Ean,
+				F1 = a.F1,
+				F1Name = artHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F1name,
+				F2 = a.F2,
+				F2Name = artHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F2name,
+				F3 = a.F3,
+				F3Name = artHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F3name,
+				F4 = a.F4,
+				F4Name = artHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F4name,
+				F5 = a.F5,
+				F5Name = artHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F5name,
+				F6 = a.F6,
+				F6Name = artHeaders.FirstOrDefault(ah => ah.ArticleHeaderId == a.ArticleHeaderId).F6name,
+				ProductGroupNr = a.ProductGroupNr,
+				ProductNr = a.ProductNr,
+				SortNr = a.SortNr,
+				UnitAmount = a.UnitAmount,
+				CategoryID = productGroups.FirstOrDefault(pg => pg.CompCode == a.CompCode && pg.ProductGroupNr == a.ProductGroupNr).CategoryId,
+				CategoryName = categories.FirstOrDefault(c => c.CategoryId == productGroups.FirstOrDefault(pg => pg.CompCode == a.CompCode && pg.ProductGroupNr == a.ProductGroupNr).CategoryId).CategoryName,
+				PicSource = "/pic/icon_no-pic.svg",
+				PicExists = false,
+				Link = "./shop/" + a.CompCode + "/" + a.ProductGroupNr.ToString() + "/" + a.ProductNr.ToString() + "/" + a.ArticleNr.ToString()
+			}).Take(selArtRange).OrderBy(a => a.SortNr).ToList();
+
+
+
+			int index = 0;
+
+			// Check whether the article has a picture or not
+			foreach (ArticleDetailedVM _artDetail in viewModels)
+			{
+				foreach (string _extension in fileExt)
+				{
+					// A picture for the current article exists
+					if (File.Exists(filePath + _artDetail.CompCode + @"\pic_" + _artDetail.ArticleNr.ToString() + "." + _extension))
+					{
+						// Save the source of the picture
+						viewModels[index].PicSource = "/pic/articles/" + _artDetail.CompCode + "/pic_" + _artDetail.ArticleNr.ToString() + "." + _extension;
+						viewModels[index].PicExists = true;
+
+						break;
+					}
+				}
+
+				index++;
+			}
+
+
+
+			return viewModels;
+        }
 
 
 
@@ -325,7 +501,7 @@ namespace DevShop.Data.Repos
 				CompCode = article.CompCode,
 				CompName = company.CompName,
 				Price = Math.Round(article.Price, 2),
-				Discount = (article.Discount != null) ? Math.Round(Convert.ToDecimal(article.Price - (article.Price + article.Discount)), 2) : 0,
+				Discount = (article.Discount != null) ? Math.Round(Convert.ToDecimal(article.Price - (article.Price * article.Discount)), 2) : 0,
 				Ean = article.Ean,
 				F1 = article.F1,
 				F1Name = artHeader.F1name,
@@ -432,6 +608,42 @@ namespace DevShop.Data.Repos
 
 
 			return nextPk;
+		}
+
+
+
+		/// <summary>
+		/// Get the total amount of articles of the selected category
+		/// </summary>
+		/// <param name="_categories">
+		/// List of the category and sub-categories, whose articles should be selected
+		/// </param>
+		/// <returns>
+		/// The amount of articles
+		/// </returns>
+		public async Task<int> GetTotalArticleAmount(List<Category> _categories)
+		{
+			List<ArticleDetailedVM> allArticles = await GetCategoryArticlesAsync(_categories, 1, true);
+
+			return allArticles.Count;
+		}
+
+
+
+		/// <summary>
+		/// Get the total amount of articles that match the searched string
+		/// </summary>
+		/// <param name="_searchString">
+		/// The search-text
+		/// </param>
+		/// <returns>
+		/// The amount of articles
+		/// </returns>
+		public async Task<int> GetTotalArticleAmount(string _searchString)
+		{
+			List<ArticleDetailedVM> allArticles = await SearchArticleAsync(_searchString, 1, true);
+
+			return allArticles.Count;
 		}
 		#endregion
 
