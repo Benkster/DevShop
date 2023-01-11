@@ -14,6 +14,8 @@ namespace DevShop.Pages
 		#region Variables
 		private MarkupString categoryTree;
 
+		private string searchString;
+
 		// List of random articles, that are displayed in the view
 		private List<ArticleSmallVM> randomArticles;
 		#endregion
@@ -43,6 +45,22 @@ namespace DevShop.Pages
 
 
 			categoryTree = treeBuilder.BuildTree(tvCategories);
+		}
+		#endregion
+
+
+
+		#region Side Methods
+		/// <summary>
+		/// Search for articles
+		/// </summary>
+		private async Task Search()
+		{
+			if (!string.IsNullOrEmpty(searchString))
+			{
+				// Redirect to the shop-view and apply the search
+				nav.NavigateTo("/shop/search/" + searchString);
+			}
 		}
 		#endregion
 	}

@@ -2,6 +2,7 @@
 @using DevShop.Data
 @inject IUnitOfWork uow
 @inject TreeBuilder treeBuilder
+@inject NavigationManager nav
 
 
 
@@ -24,6 +25,9 @@
 {
     @if (randomArticles.Count > 0)
     {
+        <div id="shopSearchBox" class="tm36">
+            <input id="shopSearch" type="text" placeholder="Search ..." @bind="searchString" /><input id="shopSearchButton" class="pointer" type="button" value="search" @onclick="@(() => Search())" />
+        </div>
         <div id="artBoxWrapper" class="flex wrap tm18">
             @foreach (var _art in randomArticles)
             {
