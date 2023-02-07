@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 316 420" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Sheet" transform="matrix(1,0,0,1,0,-57.8234)">
+        <g id="Border">
+            <path d="M207.987,437.823L0,437.823L0,57.823L217.186,57.823L287.186,127.823L287.186,358.625L207.987,437.823ZM201.36,421.823L271.186,351.997L271.186,134.451L210.558,73.823L16,73.823C16,73.823 16,421.823 16,421.823L201.36,421.823Z" style="fill:rgb(82,127,162);"/>
+            <g transform="matrix(1.15391,0,0,1.15391,-10.6412,-8.89942)">
+                <path d="M192.475,57.823L197.44,57.823L258.103,118.487L258.103,123.452L192.475,123.452L192.475,57.823ZM206.341,86.334L206.341,109.586L229.593,109.586L206.341,86.334Z" style="fill:rgb(82,127,162);"/>
+            </g>
+        </g>
+        <g id="Point-1" serif:id="Point 1">
+            <g transform="matrix(1.58797,0,0,1.58797,-43.4377,-117.817)">
+                <circle cx="61.045" cy="189.186" r="11.02" style="fill:rgb(82,127,162);"/>
+            </g>
+            <path d="M99.561,182.605L232.213,182.605" style="fill:none;stroke:rgb(82,127,162);stroke-width:16px;"/>
+        </g>
+        <g id="Point-2" serif:id="Point 2" transform="matrix(1,0,0,1,0,55)">
+            <g transform="matrix(1.58797,0,0,1.58797,-43.4377,-117.817)">
+                <circle cx="61.045" cy="189.186" r="11.02" style="fill:rgb(82,127,162);"/>
+            </g>
+            <path d="M99.561,182.605L232.213,182.605" style="fill:none;stroke:rgb(82,127,162);stroke-width:16px;"/>
+        </g>
+        <g id="Point-3" serif:id="Point 3" transform="matrix(1,0,0,1,0,110)">
+            <g transform="matrix(1.58797,0,0,1.58797,-43.4377,-117.817)">
+                <circle cx="61.045" cy="189.186" r="11.02" style="fill:rgb(82,127,162);"/>
+            </g>
+            <path d="M99.561,182.605L232.213,182.605" style="fill:none;stroke:rgb(82,127,162);stroke-width:16px;"/>
+        </g>
+        <g id="Point-4" serif:id="Point 4" transform="matrix(1,0,0,1,0,165)">
+            <g transform="matrix(1.58797,0,0,1.58797,-43.4377,-117.817)">
+                <circle cx="61.045" cy="189.186" r="11.02" style="fill:rgb(82,127,162);"/>
+            </g>
+            <path d="M99.561,182.605L232.213,182.605" style="fill:none;stroke:rgb(82,127,162);stroke-width:16px;"/>
+        </g>
+    </g>
+    <g transform="matrix(0.707107,0.707107,-0.837363,0.837363,238.498,-245.855)">
+        <path d="M420.973,424.048L403.473,454.048L385.973,424.048L385.973,264.048L420.973,264.048L420.973,424.048ZM405.466,442.11L416.029,424.032L403.473,417.338L390.969,424.032L401.517,442.11L405.466,442.11Z" style="fill:rgb(71,137,135);"/>
+        <path d="M420.973,424.048L403.473,454.048L385.973,424.048L385.973,264.048L420.973,264.048L420.973,424.048ZM405.466,442.11L416.029,424.032L403.473,417.338L390.969,424.032L401.517,442.11L405.466,442.11ZM401.973,403.886C402.97,403.807 403.975,403.807 404.973,403.886L404.973,277.559L401.973,277.559L401.973,403.886Z" style="fill:rgb(71,137,135);"/>
+    </g>
+</svg>
